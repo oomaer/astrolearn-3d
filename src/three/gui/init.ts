@@ -11,7 +11,7 @@ export const init3DWorld = () => {
 }
 
 
-export const addLights = () => {
+const addLights = () => {
     const scene = useScene()
 
     // --- LIGHTS
