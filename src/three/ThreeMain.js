@@ -25,7 +25,7 @@ class ThreeMain {
         this.controls
         this.character
         this.characterSphere
-        this.physics
+        this.physicsWorld
         this.clock = new THREE.Clock()
 
 
@@ -50,7 +50,7 @@ class ThreeMain {
     async init(RAPIER){
        
         let gravity = { x: 0.0, y: -9.81, z: 0.0 };
-        this.physics = new RAPIER.World(gravity);
+        this.physicsWorld = new RAPIER.World(gravity);
 
         
 
@@ -74,7 +74,13 @@ class ThreeMain {
         this.characterSphere.position.set(30, 5, 35)
         this.scene.add(this.characterSphere)
         
-        const sphereBody = createBody(RAPIER, this.scene, this.physics, 'kinematicPositionBased', 'sphere',
+        // The gap the controller will leave between the character and its environment.
+        let offset = 0.01;
+        // Create the controller.
+        let characterController = this.physicsWorld.createCharacterController(offset);
+        console.log(characterController)
+
+        const sphereBody = createBody(RAPIER, this.scene, this.physicsWorld, 'kinematicPositionBased', 'sphere',
         { radius: 0.7 }, { x: 4, y: 15, z: 2 },
         { x: 0, y: 1, z: 0 }, 'blue');
         this.characterSphere.body = sphereBody.rigid;
@@ -192,19 +198,19 @@ class ThreeMain {
         // loop
         const animate = () => {
             
-            this.characterSphere.position.set(this.characterSphere.body.translation().x, this.characterSphere.body.translation().y, this.characterSphere.body.translation().z)
+            // this.characterSphere.position.set(this.characterSphere.body.translation().x, this.characterSphere.body.translation().y, this.characterSphere.body.translation().z)
            
             let delta = this.clock.getDelta()
 
-            this.physics.step();
+            this.physicsWorld.step();
 
             // this.physics.update(delta * 1000)
             
             // this.physics.updateDebugger()
             
-            if (this.character.characterControls) {
-                this.character.characterControls.update(delta, this.keysPressed, this.characterSphere);
-            }
+            // if (this.character.characterControls) {
+            //     this.character.characterControls.update(delta, this.keysPressed, this.characterSphere);
+            // }
 
             this.renderer.setViewport(0, 0, this.size.width, this.size.height)
             this.renderer.render(this.scene, this.camera);
