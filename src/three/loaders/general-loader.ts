@@ -77,10 +77,7 @@ class GeneralLoader {
         return file
       }
 
-      case 'png': {
-        file = await _loadTexture(path)
-        return file
-      }
+    
 
       default: {
         console.error(`GeneralLoader: File type ${fileType} is not supported.`)

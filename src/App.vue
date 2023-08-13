@@ -22,11 +22,13 @@ initEngine()
 </script>
 
 <template>
-  <div></div>
+  <div class="canvas"></div>
 </template>
 
 <style>
   body, html{
-    background-color: #4AB6DF;
+    /* background-color: #4AB6DF; */
+    margin: 0;
+    padding: 0;
   }
 </style>

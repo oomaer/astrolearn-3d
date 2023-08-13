@@ -3,6 +3,7 @@ import { useScene } from "../init";
 import * as THREE from 'three'
 import { addPhysics } from "../physics/physics";
 import {Character} from '../controllers/character-controller';
+import { initCentralPark } from "./initCentralPark";
 
 export const init3DWorld = () => {
 
@@ -26,6 +27,7 @@ export const init3DWorld = () => {
 
     addLights();
     addGroundAndSky();
+    initCentralPark();
   
 }
 
@@ -97,12 +99,12 @@ const addGroundAndSky = () => {
 }
 
 export const addCharacter = () => {
-    const scene = useScene();
     const characterCapsule = new THREE.CapsuleGeometry(1, 2, 3, 20)
     const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
     const characterMesh = new THREE.Mesh( characterCapsule, characterMat );
     characterMesh.name = 'character'
     characterMesh.position.y = 2;
+    characterMesh.position.x = 15;
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
     // scene.add( characterMesh );
@@ -110,3 +112,5 @@ export const addCharacter = () => {
     const character = new Character(characterPhysics)
     return character;
 }
+
+
