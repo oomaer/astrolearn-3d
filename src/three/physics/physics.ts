@@ -12,7 +12,7 @@ export interface PhysicsObject  {
 }
 
 export const addPhysics = ({
-  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType, colliderSettings
+  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", colliderSettings
 }:{
   mesh: THREE.Mesh,
   rigidBodyType: 'dynamic' | 'kinematicPositionBased' | 'kinematicVelocityBased' | 'fixed',
@@ -36,12 +36,12 @@ export const addPhysics = ({
 
   let colliderDesc
 
-  console.log(mesh)
+
   switch (colliderType) {
     case 'cuboid':
       {
         const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters
-        colliderDesc = RAPIER.ColliderDesc.cuboid(width, height, depth)
+        colliderDesc = RAPIER.ColliderDesc.cuboid(width/2, height/2, depth/2)
       }
       break
 
@@ -54,8 +54,8 @@ export const addPhysics = ({
 
     case 'capsule':
       {
-        const { halfHeight, radius } = colliderSettings
-        colliderDesc = RAPIER.ColliderDesc.capsule(halfHeight, radius)
+        const params:any = (mesh.geometry as THREE.CapsuleGeometry).parameters
+        colliderDesc = RAPIER.ColliderDesc.capsule(params.height/2, params.radius)
       }
       break
 
@@ -69,9 +69,14 @@ export const addPhysics = ({
       break
   }
 
+  console.log(colliderDesc)
+
   if (!colliderDesc) {
     console.error('Collider Mesh Error: convex mesh creation failed.')
   }
+
+  // colliderDesc.setTranslation(mesh.position.x, mesh.position.y, mesh.position.z)
+  // colliderDesc.setRotation({x: mesh.quaternion.x, y: mesh.quaternion.y, z: mesh.quaternion.z, w: mesh.quaternion.w})
 
   // * Responsible for collision detection
   const collider = physics.createCollider(colliderDesc, rigidBody)
@@ -80,11 +85,24 @@ export const addPhysics = ({
 
 
   if(debugMode){
+    // if(colliderType === 'trimesh') {
+    //     const geometry = new THREE.BufferGeometry();
+    //     const triMesh = (colliderDesc as any).shape;
+    //     geometry.setIndex(triMesh.indices);
+    //     geometry.setAttribute( 'position', new THREE.BufferAttribute( triMesh.vertices, 3 ) );
+    //     const material = new THREE.MeshBasicMaterial( { color: 'red', wireframe: true } );
+    //     debugMesh = new THREE.Mesh( geometry, material );
+        
+    // }
+    // else{
+    //   debugMesh = mesh.clone();      
+    // }
     const debugMesh = mesh.clone();
     debugMesh.material = new THREE.MeshBasicMaterial({ color: 'red', wireframe: true })
     debugMesh.position.copy(mesh.position)
     debugMesh.quaternion.copy(mesh.quaternion)
     debugMesh.scale.copy(mesh.scale)
+    console.log(debugMesh)
     scene.add(debugMesh)
     physicsObject.debugMesh = debugMesh
   }

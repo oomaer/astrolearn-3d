@@ -2,25 +2,30 @@ import { useScene } from "../init";
 
 import * as THREE from 'three'
 import { addPhysics } from "../physics/physics";
-
+import {Character} from '../controllers/character-controller';
 
 export const init3DWorld = () => {
 
 
     const scene = useScene()
     const cube = new THREE.Mesh(
-        new THREE.BoxGeometry(20, 20, 3, 3),
+        new THREE.BoxGeometry(3, 3, 3),
         new THREE.MeshStandardMaterial({color: 'brown'}),
       )
-      cube.position.set(0, 10, 0)
-    //   cube.rotation.z = Math.PI/2
-      cube.rotation.x = -Math.PI/2
-    //   console.log(cube.quaternion)
-    //   scene.add(cube)
-    // addPhysics(cube,'fixed')
+      cube.position.set(0, 10, 5)
+      scene.add(cube)
+    addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid'})
+    const ball = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 30, 30),
+        new THREE.MeshStandardMaterial({color: 'brown'}),
+      )
+      ball.position.set(0, 14, 3)
+      scene.add(ball)
+    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball'})
 
     addLights();
     addGroundAndSky();
+    addCharacter();
 }
 
 
@@ -87,4 +92,15 @@ const addGroundAndSky = () => {
     const sky = new THREE.Mesh( skyGeo, skyMat );
     scene.add( sky );
 
+}
+
+const addCharacter = () => {
+    const scene = useScene();
+    const characterCapsule = new THREE.CapsuleGeometry(1, 4, 3, 20)
+    const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
+    const characterMesh = new THREE.Mesh( characterCapsule, characterMat );
+    characterMesh.name = 'character'
+    characterMesh.position.y = 3;
+    scene.add( characterMesh );
+    addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
 }

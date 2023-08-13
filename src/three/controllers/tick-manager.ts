@@ -87,11 +87,12 @@ class TickManager extends EventTarget {
           const collider = po.collider
           mesh.position.copy(collider.translation() as THREE.Vector3)
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)
+        
         }
 
         if(debugMode) {
           const mesh = po.debugMesh as THREE.Mesh
-      
+          
           const collider = po.collider
           mesh.position.copy(collider.translation() as THREE.Vector3)
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)

@@ -8,14 +8,13 @@ import TickManager from './controllers/tick-manager'
 // wasm
 import Rapier from '@dimforge/rapier3d'
 
-import { _addCapsule } from './controllers/utils/meshes'
 import GeneralLoader from './loaders/general-loader'
 import InitRapier from './physics/RAPIER'
-import { addPhysics, type PhysicsObject } from './physics/physics'
+import { type PhysicsObject } from './physics/physics'
 import { GRAVITY } from './physics/utils/constants'
 import { init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
-import {Character} from './controllers/character-controller';
+
 
 
 let scene: THREE.Scene,
@@ -86,8 +85,6 @@ export const initEngine = async () => {
 
 
   init3DWorld();
-
-  const character = new Character();
 
 
 

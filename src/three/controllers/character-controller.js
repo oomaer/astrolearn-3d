@@ -5,7 +5,7 @@ import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { useCamera, useControls, useScene } from "../init";
 
 export class Character {
-    constructor() {
+    constructor(physicsObject) {
         this.model = null;
         this.mixer = null;
         this.camera = useCamera();
@@ -13,7 +13,9 @@ export class Character {
         this.animationsMap = new Map()
         this.characterControls;
         this.velocity = {x: 0, z: 0}
+        this.physicsObject = physicsObject
         this.loadModel()
+    
     }
 
     loadModel() {
@@ -21,7 +23,7 @@ export class Character {
         const scene = useScene();
         const funct = () => {
         
-            this.characterControls = new CharacterControls(this.model, this.mixer, this.animationsMap, this.camera, this.controls,  'Idle')
+            this.characterControls = new CharacterControls(this.model, this.mixer, this.animationsMap, this.camera, this.controls,  'Idle', this.physicsObject)
         }
 
         //initialze gltf loader
@@ -84,11 +86,12 @@ class CharacterControls {
     runVelocity = 15
     walkVelocity = 5
 
-    constructor(model, mixer, animationsMap, camera, orbitControl, currentAction) {
+    constructor(model, mixer, animationsMap, camera, orbitControl, currentAction, physicsObject) {
         this.model = model
         this.mixer = mixer
         this.animationsMap = animationsMap
         this.currentAction = currentAction
+        this.physicsObject = physicsObject 
         this.animationsMap.forEach((value, key) => {
             if (key == currentAction) {
                 value.play()
@@ -169,8 +172,7 @@ class CharacterControls {
             // characterSphere.position.x += moveX
             // characterSphere.position.z += moveZ
 
-            const translation = characterSphere.body.translation();
-            characterSphere.body.setNextKinematicTranslation({x: translation.x + moveX, y: translation.y, z: translation.z + moveZ})
+          
 
     
             if(Math.round(characterSphere.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
