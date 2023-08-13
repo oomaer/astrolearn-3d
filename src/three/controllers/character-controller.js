@@ -21,7 +21,7 @@ export class Character {
         const scene = useScene();
         const funct = () => {
         
-            // this.characterControls = new CharacterControls(this.model, this.mixer, this.animationsMap, this.camera, this.controls,  'Idle')
+            this.characterControls = new CharacterControls(this.model, this.mixer, this.animationsMap, this.camera, this.controls,  'Idle')
         }
 
         //initialze gltf loader
@@ -57,7 +57,6 @@ export class Character {
         
     }
 
-    
 
 }
 

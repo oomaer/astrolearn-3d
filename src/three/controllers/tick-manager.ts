@@ -2,6 +2,7 @@ import * as THREE from 'three'
 import {
   useCamera,
   useControls,
+  useDebugMode,
   // useComposer,
   // useControls,
   usePhysics,
@@ -60,6 +61,7 @@ class TickManager extends EventTarget {
     const physicsObjects = usePhysicsObjects()
     const controls = useControls()
     const stats = useStats()
+    const debugMode = useDebugMode();
 
     if (!renderer) {
       throw new Error('Updating Frame Failed : Uninitialized Renderer')
@@ -75,12 +77,21 @@ class TickManager extends EventTarget {
       // physics
       physics.step()
 
+
       for (let i = 0; i < physicsObjects.length; i++) {
         const po = physicsObjects[i]
         const autoAnimate = po.autoAnimate
 
         if (autoAnimate) {
           const mesh = po.mesh
+          const collider = po.collider
+          mesh.position.copy(collider.translation() as THREE.Vector3)
+          mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)
+        }
+
+        if(debugMode) {
+          const mesh = po.debugMesh as THREE.Mesh
+      
           const collider = po.collider
           mesh.position.copy(collider.translation() as THREE.Vector3)
           mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)

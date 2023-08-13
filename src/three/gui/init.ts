@@ -1,10 +1,20 @@
 import { useScene } from "../init";
 
 import * as THREE from 'three'
+import { addPhysics } from "../physics/physics";
 
 
 export const init3DWorld = () => {
 
+
+    const scene = useScene()
+    const sphere = new THREE.Mesh(
+        new THREE.SphereGeometry(1, 32, 32),
+        new THREE.MeshStandardMaterial({color: 'green'}),
+      )
+      sphere.position.set(0, 10, 0)
+      scene.add(sphere)
+      const spherePhysics = addPhysics(sphere,'dynamic')
 
     addLights();
     addGroundAndSky();
@@ -56,6 +66,7 @@ const addGroundAndSky = () => {
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
+    addPhysics(ground, 'fixed')
 
 
     const skyGeo = new THREE.SphereGeometry( 300, 320, 400 );

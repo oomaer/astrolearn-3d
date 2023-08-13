@@ -11,7 +11,7 @@ import Rapier from '@dimforge/rapier3d'
 import { _addCapsule } from './controllers/utils/meshes'
 import GeneralLoader from './loaders/general-loader'
 import InitRapier from './physics/RAPIER'
-import { type PhysicsObject } from './physics/physics'
+import { addPhysics, type PhysicsObject } from './physics/physics'
 import { GRAVITY } from './physics/utils/constants'
 import { init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
@@ -33,8 +33,10 @@ let scene: THREE.Scene,
   generalLoader: GeneralLoader,
   RAPIER: typeof Rapier,
   physicsWorld: Rapier.World,
-  physicsObjects: Array<PhysicsObject>
-  
+  physicsObjects: Array<PhysicsObject>,
+  debugMode: boolean
+
+debugMode = false;
 const size = {width: window.innerWidth -100, height: window.innerHeight - 100}
 
 const renderTickManager = new TickManager()
@@ -44,6 +46,8 @@ export const initEngine = async () => {
   RAPIER = await InitRapier()
   physicsWorld = new RAPIER.World(GRAVITY)
   physicsObjects = [] // initializing physics objects array
+
+  debugMode = true
 
   // rendering -> THREE.js
   renderer = new THREE.WebGLRenderer({
@@ -85,13 +89,12 @@ export const initEngine = async () => {
 
   const character = new Character();
 
+
+
+  
+
   stats = Stats()
   document.body.appendChild(stats.dom)
-
-
-  // controls
-  const capsule = _addCapsule(1.5, 0.5, 10, 10)
-  // controls = new AvatarController(capsule, camera)
 
   // config
   generalLoader = new GeneralLoader()
@@ -137,5 +140,6 @@ export const useTextureLoader = () => textureLoader
 export const useLoader = () => generalLoader
 export const usePhysics = () => physicsWorld
 export const usePhysicsObjects = () => physicsObjects
+export const useDebugMode = () => debugMode
 
 export { RAPIER }
