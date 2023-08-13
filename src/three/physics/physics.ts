@@ -11,14 +11,16 @@ export interface PhysicsObject  {
   debugMesh?: THREE.Mesh
 }
 
-export const addPhysics = (
+export const addPhysics = ({
+  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType, colliderSettings
+}:{
   mesh: THREE.Mesh,
   rigidBodyType: 'dynamic' | 'kinematicPositionBased' | 'kinematicVelocityBased' | 'fixed',
-  autoAnimate: boolean = true, // update the mesh's position and quaternion based on the physics world every frame
+  autoAnimate?: boolean, // update the mesh's position and quaternion based on the physics world every frame
   postPhysicsFn?: Function,
   colliderType?: string,
   colliderSettings?: any
-) => {
+}) => {
   const physics = usePhysics()
   const physicsObjects = usePhysicsObjects()
   
@@ -27,23 +29,25 @@ export const addPhysics = (
 
   const rigidBodyDesc = (RAPIER.RigidBodyDesc as any)[rigidBodyType]()
   rigidBodyDesc.setTranslation(mesh.position.x, mesh.position.y, mesh.position.z)
+  rigidBodyDesc.setRotation({x: mesh.quaternion.x, y: mesh.quaternion.y, z: mesh.quaternion.z, w: mesh.quaternion.w})
 
   // * Responsible for collision response
   const rigidBody = physics.createRigidBody(rigidBodyDesc)
 
   let colliderDesc
 
+  console.log(mesh)
   switch (colliderType) {
     case 'cuboid':
       {
-        const { width, height, depth } = colliderSettings
+        const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters
         colliderDesc = RAPIER.ColliderDesc.cuboid(width, height, depth)
       }
       break
 
     case 'ball':
       {
-        const { radius } = colliderSettings
+        const { radius } = (mesh.geometry as THREE.SphereGeometry).parameters
         colliderDesc = RAPIER.ColliderDesc.ball(radius)
       }
       break

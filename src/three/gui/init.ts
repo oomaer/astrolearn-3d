@@ -8,13 +8,16 @@ export const init3DWorld = () => {
 
 
     const scene = useScene()
-    const sphere = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 32, 32),
-        new THREE.MeshStandardMaterial({color: 'green'}),
+    const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(20, 20, 3, 3),
+        new THREE.MeshStandardMaterial({color: 'brown'}),
       )
-      sphere.position.set(0, 10, 0)
-      scene.add(sphere)
-      const spherePhysics = addPhysics(sphere,'dynamic')
+      cube.position.set(0, 10, 0)
+    //   cube.rotation.z = Math.PI/2
+      cube.rotation.x = -Math.PI/2
+    //   console.log(cube.quaternion)
+    //   scene.add(cube)
+    // addPhysics(cube,'fixed')
 
     addLights();
     addGroundAndSky();
@@ -66,7 +69,7 @@ const addGroundAndSky = () => {
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
-    addPhysics(ground, 'fixed')
+    addPhysics({mesh: ground, rigidBodyType:"fixed", colliderType: 'cuboid'})
 
 
     const skyGeo = new THREE.SphereGeometry( 300, 320, 400 );
