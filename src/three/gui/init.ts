@@ -1,4 +1,4 @@
-import { useScene } from "../init";
+import { useDraggleObjects, useScene } from "../init";
 
 import * as THREE from 'three'
 import { addPhysics } from "../physics/physics";

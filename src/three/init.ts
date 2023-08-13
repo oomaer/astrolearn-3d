@@ -121,28 +121,38 @@ export const initEngine = async () => {
   renderTickManager.startLoop()
 }
 
+
+
 const addDragControls = () => {
-  console.log(draggleObjects)
   const dragControls = new DragControls( draggleObjects, camera, renderer.domElement );
   dragControls.addEventListener( 'dragstart', function () { controls.enabled = false; } );
   dragControls.addEventListener( 'drag', onDragEvent );
-  dragControls.addEventListener( 'dragend', function () { controls.enabled = true; } );
-
+  dragControls.addEventListener( 'dragend', function (e) { controls.enabled = true; console.log(e.object.position) } );
+ 
 
   const mouse = new THREE.Vector2();
+  const canvas = renderer.domElement;
+  const canvasPosition = canvas.getBoundingClientRect();
   function onMouseMove(e:any) {
-    mouse.x = ( e.clientX / window.innerWidth ) * 2 - 1;
-    mouse.y = - ( e.clientY / window.innerHeight ) * 2 + 1;
+    mouse.x = ((e.clientX - canvasPosition.left) / canvas.width) * 2 - 1;
+    mouse.y = -((e.clientY - canvasPosition.top) / canvas.height) * 2 + 1;
   }
   window.addEventListener( 'mousemove', onMouseMove, false );
-  const plane = new THREE.Plane(new THREE.Vector3(0, 1, 0), 0);
-  const raycaster = new THREE.Raycaster();
-  const intersects = new THREE.Vector3();
 
   function onDragEvent(e:any) {
-    raycaster.setFromCamera(mouse, camera);
-    raycaster.ray.intersectPlane(plane, intersects);
-    e.object.position.set(intersects.x, intersects.y, intersects.z);
+    rayCaster.setFromCamera(mouse, camera);
+   
+    const ground = scene.getObjectByName('ground')
+    
+    const intersects = rayCaster.intersectObject(ground, true);
+    
+    if (intersects.length > 0){
+      e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
+      
+    // console.log(intersects[0].point);
+    }
+    // rayCaster.ray.intersectPlane(plane, intersects);
+    
   }
 
 }
@@ -243,7 +253,6 @@ const addWindowEvents = () => {
     mousePosition.x = ((evt.clientX - canvasPosition.left) / canvas.width) * 2 - 1;
     mousePosition.y = -((evt.clientY - canvasPosition.top) / canvas.height) * 2 + 1;
 
-    console.log(mousePosition)
     rayCaster.setFromCamera(mousePosition, camera);
     const ground = scene.getObjectByName('ground')
     
@@ -254,7 +263,7 @@ const addWindowEvents = () => {
 };
 
   
-  window.addEventListener( 'click', getClicked3DPoint );
+  // window.addEventListener( 'click', getClicked3DPoint );
 
 
 }
@@ -279,3 +288,17 @@ const loadAllModels = async () => {
 
 }
 
+
+
+const domThreeWorldPosition = (pos:any) => {
+  const canvas = renderer.domElement
+  const x = ( (pos.x - canvas.offsetLeft) / canvas.clientWidth ) * 2 - 1;
+  const y = ( (pos.y - canvas.offsetTop) / canvas.clientHeight ) * -2 + 1;
+
+  const vector = new THREE.Vector3(x, y, 0.5);
+  vector.unproject( camera );
+  const dir = vector.sub( camera.position ).normalize();
+  const distance = - camera.position.z / dir.z;
+  return camera.position.clone().add( dir.multiplyScalar( distance ) );
+
+}

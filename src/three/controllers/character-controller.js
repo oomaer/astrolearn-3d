@@ -198,7 +198,7 @@ class CharacterControls {
         this.cameraTarget.x = this.model.position.x
         this.cameraTarget.y = this.model.position.y + 1
         this.cameraTarget.z = this.model.position.z
-        this.orbitControl.target = this.cameraTarget
+        // this.orbitControl.target = this.cameraTarget
     }
 
     // directionOffset(keysPressed) {
