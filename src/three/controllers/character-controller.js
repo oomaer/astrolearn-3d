@@ -109,12 +109,12 @@ class CharacterControls {
         this.toggleRun = !this.toggleRun
     }
 
-    update(delta, keysPressed, characterSphere) {
+    update(delta, keysPressed) {
         
-        
-        this.model.position.x = characterSphere.position.x
-        this.model.position.z = characterSphere.position.z
-        this.model.position.y = characterSphere.position.y - 1.5
+        const mesh = this.physicsObject.mesh;
+        this.model.position.x = mesh.position.x
+        this.model.position.z = mesh.position.z
+        this.model.position.y = mesh.position.y - 2
 
 
         const directionPressed = this.DIRECTIONS.some(direction => keysPressed[this.keyBidings[direction]] == true)
@@ -142,7 +142,7 @@ class CharacterControls {
             this.currentAction = play
         }
 
-        this.mixer.update(delta)
+        this.mixer.update(delta*1.5)
 
         if (this.currentAction == 'Run' || this.currentAction == 'Walk') {
             // calculate towards camera direction
@@ -169,16 +169,16 @@ class CharacterControls {
             const moveX = this.walkDirection.x * -velocity * delta
             let moveZ = this.walkDirection.z * -velocity * delta
     
+            const position = this.physicsObject.rigidBody.translation();
+            this.physicsObject.rigidBody.setNextKinematicTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
             // characterSphere.position.x += moveX
             // characterSphere.position.z += moveZ
 
-          
-
-    
-            if(Math.round(characterSphere.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
+        
+            if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
                 moveZ = 0
             }
-            this.prevZ = characterSphere.position.z
+            this.prevZ = mesh.position.z
             this.updateCameraTarget(moveX, moveZ)
         }
         else{

@@ -12,7 +12,7 @@ import GeneralLoader from './loaders/general-loader'
 import InitRapier from './physics/RAPIER'
 import { type PhysicsObject } from './physics/physics'
 import { GRAVITY } from './physics/utils/constants'
-import { init3DWorld } from './gui/init'
+import { addCharacter, init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 
@@ -33,10 +33,12 @@ let scene: THREE.Scene,
   RAPIER: typeof Rapier,
   physicsWorld: Rapier.World,
   physicsObjects: Array<PhysicsObject>,
-  debugMode: boolean
+  debugMode: boolean,
+  character: any
 
 debugMode = false;
 const size = {width: window.innerWidth -100, height: window.innerHeight - 100}
+const keysPressed:any = {}
 
 const renderTickManager = new TickManager()
 
@@ -86,8 +88,10 @@ export const initEngine = async () => {
 
   init3DWorld();
 
+  character = addCharacter();
+  
 
-
+  addWindowEvents();
   
 
   stats = Stats()
@@ -138,5 +142,53 @@ export const useLoader = () => generalLoader
 export const usePhysics = () => physicsWorld
 export const usePhysicsObjects = () => physicsObjects
 export const useDebugMode = () => debugMode
+export const useCharacter = () => character
+export const useKeys = () => keysPressed
 
 export { RAPIER }
+
+
+const addWindowEvents = () => {
+  //DOM EVENTS
+  // const onColorChange = (event) => {
+  //     console.log(event.target.value)
+  //     console.log(ground)
+  //     ground.material.toneMapped = false
+  //     ground.material.color.set(event.target.value)
+  //     ground.material.needsUpdate = true
+
+  // }
+
+  // --- ON RESIZE
+  // const onResize = () => {
+  //     this.size.width = window.innerWidth;
+  //     this.size.height = window.innerHeight;
+
+   
+  //     this.camera.aspect = this.size.width / this.size.height;
+  //     this.camera.updateProjectionMatrix();
+
+
+  //     this.renderer.setSize(this.size.width, this.size.height)
+  //     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))	
+  // }
+
+
+  // window.addEventListener('resize', onResize)
+  // onResize();
+
+
+  // CONTROL KEYS
+  document.addEventListener('keydown', (event) => {
+      if (event.shiftKey) {
+          character.characterControls.switchRunToggle()
+      } else {
+          (keysPressed)[event.key.toLowerCase()] = true
+      }
+  }, false);
+  document.addEventListener('keyup', (event) => {
+      (keysPressed)[event.key.toLowerCase()] = false
+  }, false);
+
+
+}

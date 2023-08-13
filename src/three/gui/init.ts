@@ -25,7 +25,7 @@ export const init3DWorld = () => {
 
     addLights();
     addGroundAndSky();
-    addCharacter();
+  
 }
 
 
@@ -95,15 +95,17 @@ const addGroundAndSky = () => {
 
 }
 
-const addCharacter = () => {
+export const addCharacter = () => {
     const scene = useScene();
-    const characterCapsule = new THREE.CapsuleGeometry(1, 4, 3, 20)
+    const characterCapsule = new THREE.CapsuleGeometry(1, 2, 3, 20)
     const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
     const characterMesh = new THREE.Mesh( characterCapsule, characterMat );
     characterMesh.name = 'character'
-    characterMesh.position.y = 3;
+    characterMesh.position.y = 2;
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
-    scene.add( characterMesh );
-    // addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
+    // scene.add( characterMesh );
+    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
+    const character = new Character(characterPhysics)
+    return character;
 }

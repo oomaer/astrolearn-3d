@@ -1,8 +1,10 @@
 import * as THREE from 'three'
 import {
   useCamera,
+  useCharacter,
   useControls,
   useDebugMode,
+  useKeys,
   // useComposer,
   // useControls,
   usePhysics,
@@ -62,12 +64,15 @@ class TickManager extends EventTarget {
     const controls = useControls()
     const stats = useStats()
     const debugMode = useDebugMode();
+    const character = useCharacter()
+    const keysPressed = useKeys();
 
     if (!renderer) {
       throw new Error('Updating Frame Failed : Uninitialized Renderer')
     }
 
     const animate = (timestamp: number, frame: Frame) => {
+
       const now = performance.now()
       this.timestamp = timestamp ?? now
       this.timeDiff = timestamp - this.lastTimestamp
@@ -100,6 +105,10 @@ class TickManager extends EventTarget {
 
         const fn = po.fn
         fn && fn()
+      }
+
+      if(character.characterControls){
+        character.characterControls.update(0.01, keysPressed)
       }
 
       // performance tracker start
