@@ -101,6 +101,7 @@ export const addPhysics = ({
     debugMesh.position.copy(mesh.position)
     debugMesh.quaternion.copy(mesh.quaternion)
     debugMesh.scale.copy(mesh.scale)
+    debugMesh.castShadow = false
     scene.add(debugMesh)
     physicsObject.debugMesh = debugMesh
   }

@@ -6,11 +6,12 @@ import {Character} from '../controllers/character-controller';
 
 export const init3DWorld = () => {
 
-
+    
+    
     const scene = useScene()
     const cube = new THREE.Mesh(
         new THREE.BoxGeometry(3, 3, 3),
-        new THREE.MeshStandardMaterial({color: 'brown'}),
+        new THREE.MeshStandardMaterial({color: 'red'}),
       )
       cube.position.set(0, 10, 5)
       scene.add(cube)
@@ -37,7 +38,7 @@ const addLights = () => {
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
     hemiLight.groundColor.set('white')
     hemiLight.position.set( 0, -40, 0 );
-    // scene.add( hemiLight );
+    scene.add( hemiLight );
 
     const ambient = new THREE.AmbientLight( 'white', 2 );
     scene.add( ambient );
@@ -80,7 +81,7 @@ const addGroundAndSky = () => {
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
     const skyMat = new THREE.MeshToonMaterial({ color: 0x4AB6DF, side: THREE.BackSide} );
-    skyMat.color.setHex( 0x4AB6DF );
+    skyMat.color.setHex( 0x4AB6DF ).convertSRGBToLinear();
 
         // const skyMat = new THREE.ShaderMaterial( {
         //     uniforms: uniforms,
