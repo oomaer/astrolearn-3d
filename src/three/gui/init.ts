@@ -37,12 +37,12 @@ const addLights = () => {
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
     hemiLight.groundColor.set('white')
     hemiLight.position.set( 0, -40, 0 );
-    // this.scene.add( hemiLight );
+    // scene.add( hemiLight );
 
     const ambient = new THREE.AmbientLight( 'white', 2 );
     scene.add( ambient );
 
-    const dirLight = new THREE.DirectionalLight('white', 0);
+    const dirLight = new THREE.DirectionalLight('white', 2);
     dirLight.shadow.camera.far = 10;
     dirLight.shadow.normalBias = 0.05;
     dirLight.position.set( -5, 10, -7 );
@@ -59,6 +59,7 @@ const addLights = () => {
     dirLight.shadow.camera.far = 500;
     dirLight.shadow.bias = - 0.0001;
 
+    scene.add(dirLight)
     const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
     scene.add( dirLightHelper );
 }
@@ -67,7 +68,7 @@ const addLights = () => {
 const addGroundAndSky = () => {
     const scene = useScene();
     const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 2 );
-    const groundMat = new THREE.MeshPhongMaterial({ color:  'green' });
+    const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
     const ground = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
     ground.position.y = -1;
@@ -77,8 +78,8 @@ const addGroundAndSky = () => {
     addPhysics({mesh: ground, rigidBodyType:"fixed", colliderType: 'cuboid'})
 
 
-    const skyGeo = new THREE.SphereGeometry( 300, 320, 400 );
-    const skyMat = new THREE.MeshToonMaterial({ color: 0x4AB6DF, side: THREE.DoubleSide} );
+    const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
+    const skyMat = new THREE.MeshToonMaterial({ color: 0x4AB6DF, side: THREE.BackSide} );
     skyMat.color.setHex( 0x4AB6DF );
 
         // const skyMat = new THREE.ShaderMaterial( {
@@ -101,6 +102,8 @@ const addCharacter = () => {
     const characterMesh = new THREE.Mesh( characterCapsule, characterMat );
     characterMesh.name = 'character'
     characterMesh.position.y = 3;
+    characterMesh.castShadow = true;
+    characterMesh.receiveShadow = true;
     scene.add( characterMesh );
-    addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
+    // addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
 }

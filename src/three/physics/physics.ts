@@ -69,7 +69,6 @@ export const addPhysics = ({
       break
   }
 
-  console.log(colliderDesc)
 
   if (!colliderDesc) {
     console.error('Collider Mesh Error: convex mesh creation failed.')
@@ -102,7 +101,6 @@ export const addPhysics = ({
     debugMesh.position.copy(mesh.position)
     debugMesh.quaternion.copy(mesh.quaternion)
     debugMesh.scale.copy(mesh.scale)
-    console.log(debugMesh)
     scene.add(debugMesh)
     physicsObject.debugMesh = debugMesh
   }
