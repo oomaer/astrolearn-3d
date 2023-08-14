@@ -1,18 +1,16 @@
-import { useDraggleObjects, usePhysics, usePhysicsObjects, useScene } from "../init";
+import {  usePhysics, useScene } from "../init";
 
 import * as THREE from 'three'
-import { addPhysics, type activeCollisionStringType } from "../physics/physics";
 import {Character} from '../controllers/character-controller';
 import { initCentralPark } from "./initCentralPark";
-import * as CANNON from 'cannon-es';
+import { physicsWorld } from "../init"; 
 
 export const init3DWorld = () => {
 
-    
+
     
     const scene = useScene()
-
-
+    const physicsWorld = usePhysics()
 
 
     const cube = new THREE.Mesh(
@@ -21,13 +19,16 @@ export const init3DWorld = () => {
       )
       cube.position.set(0, 10, 5)
       scene.add(cube)
-    addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid', mass: 33})
+      physicsWorld.add.existing(cube as any);
+    // addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid', mass: 33})
     const ball = new THREE.Mesh(
         new THREE.SphereGeometry(1, 30, 30),
         new THREE.MeshStandardMaterial({color: 'blue'}),
       )
     ball.position.set(0, 10, 5)
-    //   scene.add(ball)
+    
+      scene.add(ball)
+      physicsWorld.add.existing(ball as any);
     // addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
 
     addLights();
@@ -75,18 +76,18 @@ const addLights = () => {
 
 const addGroundAndSky = () => {
     const scene = useScene();
-    // const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
-    // const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
-    // const ground = new THREE.Mesh( groundGeo, groundMat );
-    const groundGeo  = new THREE.PlaneGeometry(200, 200);
+    const physicsWorld = usePhysics();
+    const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
     const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
-    const ground = new THREE.Mesh( groundGeo, groundMat );
+    const ground:any = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
     ground.position.y = -1;
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
-    addPhysics({mesh: ground, rigidBodyType:"static", mass: 0})
+    physicsWorld.add.existing(ground as any)
+    ground.body.setCollisionFlags(2)
+    // addPhysics({mesh: ground, rigidBodyType:"static", mass: 0})
 
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
@@ -109,19 +110,17 @@ const addGroundAndSky = () => {
 export const addCharacter = () => {
     const characterGeo = new THREE.SphereGeometry(2)
     const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
-    const characterMesh = new THREE.Mesh( characterGeo, characterMat );
+    const characterMesh:any = new THREE.Mesh( characterGeo, characterMat );
     characterMesh.name = 'character'
     characterMesh.position.y = 2;
     characterMesh.position.x = 15;
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
-    // scene.add( characterMesh );
-    const options: {[key:string]: activeCollisionStringType} = {
-        activeCollisionTypes: 'DYNAMIC_KINEMATIC'
-    }
-    // const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"dynamic", options})
-    // const character = new Character(characterPhysics)
-    // return character;
+
+    physicsWorld.add.existing(characterMesh)
+
+    const character = new Character(characterMesh)
+    return character;
 }
 
 

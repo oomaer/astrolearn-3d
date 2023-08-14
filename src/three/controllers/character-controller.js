@@ -83,8 +83,8 @@ class CharacterControls {
     
     // constants
     fadeDuration = 0
-    runVelocity = 15
-    walkVelocity = 5
+    runVelocity = 5
+    walkVelocity = 2
 
     constructor(model, mixer, animationsMap, camera, orbitControl, currentAction, physicsObject) {
         this.model = model
@@ -111,7 +111,8 @@ class CharacterControls {
 
     update(delta, keysPressed) {
         
-        const mesh = this.physicsObject.mesh;
+        const mesh = this.physicsObject
+
         this.model.position.x = mesh.position.x
         this.model.position.z = mesh.position.z
         this.model.position.y = mesh.position.y - 2
@@ -169,12 +170,9 @@ class CharacterControls {
             const moveX = this.walkDirection.x * -velocity * delta
             let moveZ = this.walkDirection.z * -velocity * delta
     
-            // const position = this.physicsObject.rigidBody.translation();
-            // this.physicsObject.rigidBody.setTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
-            // this.physicsObject.rigidBody.addForce({x: moveZ, y: 0, z: moveX}, true)
-            // characterSphere.position.x += moveX
-            // characterSphere.position.z += moveZ
-
+            this.physicsObject.body.setVelocityX(this.walkDirection.x * -velocity)
+            this.physicsObject.body.setVelocityY(-4)
+            this.physicsObject.body.setVelocityZ(this.walkDirection.z * -velocity)
         
             if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
                 moveZ = 0
@@ -184,11 +182,11 @@ class CharacterControls {
             // console.log(this.physicsObject)
         }
         else{
-            // characterSphere.body.setNextKinematicTranslation(characterSphere.position.x, characterSphere.position.y, characterSphere.position.z)
-            // characterSphere.body.setVelocityX(0)
-            // characterSphere.body.setVelocityY(-10)
-            // characterSphere.body.setVelocityZ(0)
-            this.physicsObject.rigidBody.sleep()
+    
+            this.physicsObject.body.setVelocityX(0)
+            this.physicsObject.body.setVelocityY(0)
+            this.physicsObject.body.setVelocityZ(0)
+           
             
         }
     }

@@ -17,7 +17,14 @@
 // main.addWindowEvents()
 
 import { initEngine } from './three/init';
-initEngine()
+Ammo().then( function ( AmmoLib ) {
+
+  // Ammo = AmmoLib;
+  initEngine();
+
+} );
+
+
 
 </script>
 

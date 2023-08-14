@@ -18,6 +18,7 @@ import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 
 import * as CANNON from "cannon-es"
 
+import { AmmoPhysics } from '@enable3d/ammo-physics'
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -30,9 +31,7 @@ let scene: THREE.Scene,
   gltfLoader: GLTFLoader,
   textureLoader: THREE.TextureLoader,
   generalLoader: GeneralLoader,
-  // RAPIER: typeof Rapier,
-  // physicsWorld: Rapier.World,
-  physicsWorld: CANNON.World,
+  physicsWorld: AmmoPhysics,
   physicsObjects: Array<PhysicsObject>,
   character: any
 
@@ -40,6 +39,8 @@ const draggleObjects: any = []
 let debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
+
+
 
 
 const models:any = {
@@ -57,9 +58,9 @@ export const initEngine = async () => {
   // RAPIER = await InitRapier()
   // physicsWorld = new RAPIER.World(GRAVITY)
 
-  physicsWorld = new CANNON.World({
-    gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
-  })
+
+
+
   physicsObjects = [] // initializing physics objects array
 
 
@@ -77,6 +78,8 @@ export const initEngine = async () => {
   camera.position.set(0, 13, -50)
   // scene.fog = new THREE.Fog('black', 0, 100000);
 
+  physicsWorld = new AmmoPhysics(scene)
+  // physicsWorld.debug.enable()
 
   controls = new OrbitControls( camera, renderer.domElement );
   controls.update();
@@ -203,7 +206,7 @@ export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
 
-// export { RAPIER }
+export { physicsWorld }
 
 
 const addWindowEvents = () => {
