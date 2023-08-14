@@ -169,8 +169,9 @@ class CharacterControls {
             const moveX = this.walkDirection.x * -velocity * delta
             let moveZ = this.walkDirection.z * -velocity * delta
     
-            const position = this.physicsObject.rigidBody.translation();
-            this.physicsObject.rigidBody.setTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
+            // const position = this.physicsObject.rigidBody.translation();
+            // this.physicsObject.rigidBody.setTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
+            // this.physicsObject.rigidBody.addForce({x: moveZ, y: 0, z: moveX}, true)
             // characterSphere.position.x += moveX
             // characterSphere.position.z += moveZ
 
@@ -180,12 +181,15 @@ class CharacterControls {
             }
             this.prevZ = mesh.position.z
             this.updateCameraTarget(moveX, moveZ)
+            // console.log(this.physicsObject)
         }
         else{
             // characterSphere.body.setNextKinematicTranslation(characterSphere.position.x, characterSphere.position.y, characterSphere.position.z)
             // characterSphere.body.setVelocityX(0)
             // characterSphere.body.setVelocityY(-10)
             // characterSphere.body.setVelocityZ(0)
+            this.physicsObject.rigidBody.sleep()
+            
         }
     }
 

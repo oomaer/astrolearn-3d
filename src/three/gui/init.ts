@@ -111,7 +111,7 @@ export const addCharacter = () => {
     const options: {[key:string]: activeCollisionStringType} = {
         activeCollisionTypes: 'DYNAMIC_KINEMATIC'
     }
-    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", options})
+    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"dynamic", options})
     const character = new Character(characterPhysics)
     return character;
 }
