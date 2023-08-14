@@ -54,18 +54,8 @@ let rayCaster:any;
 const renderTickManager = new TickManager()
 
 export const initEngine = async () => {
-  // physics -> Rapier
-  // RAPIER = await InitRapier()
-  // physicsWorld = new RAPIER.World(GRAVITY)
-
-
-
 
   physicsObjects = [] // initializing physics objects array
-
-
-
-  debugMode = true
 
   // rendering -> THREE.js
   renderer = new THREE.WebGLRenderer({
@@ -78,8 +68,8 @@ export const initEngine = async () => {
   camera.position.set(0, 13, -50)
   // scene.fog = new THREE.Fog('black', 0, 100000);
 
-  physicsWorld = new AmmoPhysics(scene)
-  // physicsWorld.debug.enable()
+  physicsWorld = new AmmoPhysics(scene);
+  (physicsWorld as any).debug.enable()
 
   controls = new OrbitControls( camera, renderer.domElement );
   controls.update();

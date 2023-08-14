@@ -33,7 +33,7 @@ export const init3DWorld = () => {
 
     addLights();
     addGroundAndSky();
-    // initCentralPark();
+    initCentralPark();
   
 }
 

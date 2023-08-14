@@ -171,7 +171,7 @@ class CharacterControls {
             let moveZ = this.walkDirection.z * -velocity * delta
     
             this.physicsObject.body.setVelocityX(this.walkDirection.x * -velocity)
-            this.physicsObject.body.setVelocityY(-4)
+            this.physicsObject.body.setVelocityY(0)
             this.physicsObject.body.setVelocityZ(this.walkDirection.z * -velocity)
         
             if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {

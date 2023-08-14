@@ -83,7 +83,7 @@ class TickManager extends EventTarget {
       // physics.step()
       // console.log("here")
       physics.update(timeDiffCapped*3)
-
+      physics.updateDebugger();
 
      
       // for (let i = 0; i < physicsObjects.length; i++) {

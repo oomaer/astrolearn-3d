@@ -1,9 +1,9 @@
 
-import { useDraggleObjects, useGltfLoader, useModels, useScene } from "../init";
+import { useDraggleObjects, useModels, usePhysics, useScene } from "../init";
 
 import * as THREE from 'three'
 import { createBoundingBoxMesh } from "./utils";
-import { addPhysics } from "../physics/physics";
+import { physicsWorld } from "../init";
 
 export const initCentralPark = () => {
 
@@ -17,7 +17,6 @@ const addFence = () => {
     
     const scene = useScene()
     const models = useModels()
-    const draggleObjects = useDraggleObjects()
 
     const fences = [
         {
@@ -83,7 +82,11 @@ const addFence = () => {
         scene.add(fence)
         const mesh = createBoundingBoxMesh({group: fence, position: i.position,  show: false, draggable: true})
         mesh.scale.y = 5
-        // addPhysics({mesh, rigidBodyType:"fixed", mass:9999999999})
+        
+        physicsWorld.add.existing(mesh)
+        mesh.body.setCollisionFlags(2)
+        
+        // (mesh as any).body.setCollisionFlags(2)
     }
 
     const cube = new THREE.Mesh(
@@ -92,5 +95,5 @@ const addFence = () => {
     )
     cube.position.set(0, 0, 0)
     scene.add(cube)
-    // addPhysics({mesh:fence, rigidBodyType:"fixed", colliderType: 'cuboid'})
+    
 }
