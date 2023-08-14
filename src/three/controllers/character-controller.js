@@ -170,7 +170,7 @@ class CharacterControls {
             let moveZ = this.walkDirection.z * -velocity * delta
     
             const position = this.physicsObject.rigidBody.translation();
-            this.physicsObject.rigidBody.setNextKinematicTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
+            this.physicsObject.rigidBody.setTranslation({x: position.x + moveX, y: position.y, z: position.z + moveZ})
             // characterSphere.position.x += moveX
             // characterSphere.position.z += moveZ
 

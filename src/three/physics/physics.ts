@@ -1,4 +1,4 @@
-import Rapier from '@dimforge/rapier3d'
+import Rapier, { ActiveCollisionTypes } from '@dimforge/rapier3d'
 import * as THREE from 'three'
 import { RAPIER, useDebugMode, usePhysics, usePhysicsObjects, useScene } from '../init'
 
@@ -11,15 +11,40 @@ export interface PhysicsObject  {
   debugMesh?: THREE.Mesh
 }
 
+const activeCollisionsObject = {
+  'DYNAMIC_DYNAMIC': 1,
+  'DYNAMIC_KINEMATIC': 12,
+  'DYNAMIC_FIXED': 2,
+  'KINEMATIC_KINEMATIC': 52224,
+  'KINEMATIC_FIXED': 8704,
+  'FIXED_FIXED': 32,
+  'DEFAULT': 15,
+  'ALL': 60943
+}
+
+export type activeCollisionStringType = 'DYNAMIC_DYNAMIC'|
+'DYNAMIC_KINEMATIC'|
+'DYNAMIC_FIXED'|
+'KINEMATIC_KINEMATIC'|
+'KINEMATIC_FIXED'|
+'FIXED_FIXED'|
+'DEFAULT'|
+'ALL'
+export interface PhysicsObjectOptions {
+  mass?: number,
+  activeCollisionTypes?: activeCollisionStringType
+}
+
 export const addPhysics = ({
-  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", colliderSettings
+  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", mass=1, options
 }:{
   mesh: THREE.Mesh,
   rigidBodyType: 'dynamic' | 'kinematicPositionBased' | 'kinematicVelocityBased' | 'fixed',
   autoAnimate?: boolean, // update the mesh's position and quaternion based on the physics world every frame
   postPhysicsFn?: Function,
   colliderType?: string,
-  colliderSettings?: any
+  mass?: number,
+  options?: PhysicsObjectOptions
 }) => {
   const physics = usePhysics()
   const physicsObjects = usePhysicsObjects()
@@ -74,14 +99,17 @@ export const addPhysics = ({
     console.error('Collider Mesh Error: convex mesh creation failed.')
   }
 
-  // colliderDesc.setTranslation(mesh.position.x, mesh.position.y, mesh.position.z)
-  // colliderDesc.setRotation({x: mesh.quaternion.x, y: mesh.quaternion.y, z: mesh.quaternion.z, w: mesh.quaternion.w})
-
+  if(options){
+    if(options.mass) mass = options.mass
+    if(options.activeCollisionTypes) {
+      colliderDesc.setActiveCollisionTypes(activeCollisionsObject[options.activeCollisionTypes])
+    }
+  }
+  colliderDesc.setMass(mass)
   // * Responsible for collision detection
   const collider = physics.createCollider(colliderDesc, rigidBody)
 
   const physicsObject: PhysicsObject = { mesh, collider, rigidBody, fn: postPhysicsFn, autoAnimate }
-
 
   if(debugMode){
     // if(colliderType === 'trimesh') {

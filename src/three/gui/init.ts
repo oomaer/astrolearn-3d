@@ -1,7 +1,7 @@
 import { useDraggleObjects, useScene } from "../init";
 
 import * as THREE from 'three'
-import { addPhysics } from "../physics/physics";
+import { addPhysics, type activeCollisionStringType } from "../physics/physics";
 import {Character} from '../controllers/character-controller';
 import { initCentralPark } from "./initCentralPark";
 
@@ -23,7 +23,7 @@ export const init3DWorld = () => {
       )
       ball.position.set(0, 14, 3)
       scene.add(ball)
-    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball'})
+    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
 
     addLights();
     addGroundAndSky();
@@ -99,16 +99,19 @@ const addGroundAndSky = () => {
 }
 
 export const addCharacter = () => {
-    const characterCapsule = new THREE.CapsuleGeometry(1, 2, 3, 20)
+    const characterGeo = new THREE.SphereGeometry(2)
     const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
-    const characterMesh = new THREE.Mesh( characterCapsule, characterMat );
+    const characterMesh = new THREE.Mesh( characterGeo, characterMat );
     characterMesh.name = 'character'
     characterMesh.position.y = 2;
     characterMesh.position.x = 15;
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
     // scene.add( characterMesh );
-    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", colliderType: 'capsule'})
+    const options: {[key:string]: activeCollisionStringType} = {
+        activeCollisionTypes: 'DYNAMIC_KINEMATIC'
+    }
+    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"kinematicPositionBased", options})
     const character = new Character(characterPhysics)
     return character;
 }

@@ -35,7 +35,7 @@ let scene: THREE.Scene,
   character: any
 
 const draggleObjects: any = []
-const debugMode = false;
+let debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
 
@@ -56,7 +56,7 @@ export const initEngine = async () => {
   physicsWorld = new RAPIER.World(GRAVITY)
   physicsObjects = [] // initializing physics objects array
 
-  // debugMode = true
+  debugMode = true
 
   // rendering -> THREE.js
   renderer = new THREE.WebGLRenderer({

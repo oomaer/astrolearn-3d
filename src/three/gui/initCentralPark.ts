@@ -3,6 +3,7 @@ import { useDraggleObjects, useGltfLoader, useModels, useScene } from "../init";
 
 import * as THREE from 'three'
 import { createBoundingBoxMesh } from "./utils";
+import { addPhysics } from "../physics/physics";
 
 export const initCentralPark = () => {
 
@@ -73,13 +74,16 @@ const addFence = () => {
 
     for(const i of fences) {
         const fence = models['fence'].data.scene.clone();
-        fence.scale.set(2,2,2)
+        const scale = {x: 2, y: 2, z: 2}
+        fence.scale.set(scale.x, scale.y, scale.z)
         fence.position.set(i.position.x, i.position.y, i.position.z)
         if(i.rotation) {
             fence.rotation.set(i.rotation.x, i.rotation.y, i.rotation.z)
         }
         scene.add(fence)
-        createBoundingBoxMesh(fence, i.position)
+        const mesh = createBoundingBoxMesh({group: fence, position: i.position,  show: false, draggable: true})
+        mesh.scale.y = 5
+        addPhysics({mesh, rigidBodyType:"fixed", mass:9999999999})
     }
 
     const cube = new THREE.Mesh(
