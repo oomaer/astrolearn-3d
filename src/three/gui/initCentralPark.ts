@@ -2,21 +2,22 @@
 import { useDraggleObjects, useModels, usePhysics, useScene } from "../init";
 
 import * as THREE from 'three'
-import { createBoundingBoxMesh } from "./utils";
+import { createBoundingMesh } from "./utils";
 import { physicsWorld } from "../init";
+import { addPhysics } from "../physics/physics";
 
 export const initCentralPark = () => {
 
-    addFence()
+    const scene = useScene()
+    const models = useModels()
+    addFence(scene, models)
+    addMysticTree(scene, models)
 
 }
 
 
 
-const addFence = () => {
-    
-    const scene = useScene()
-    const models = useModels()
+const addFence = (scene:THREE.Scene, models:any) => {  
 
     const fences = [
         {
@@ -80,7 +81,7 @@ const addFence = () => {
             fence.rotation.set(i.rotation.x, i.rotation.y, i.rotation.z)
         }
         scene.add(fence)
-        const mesh = createBoundingBoxMesh({group: fence, position: i.position,  show: false, draggable: true})
+        const mesh:any = createBoundingMesh({group: fence, position: i.position,  show: false, draggable: false})
         mesh.scale.y = 5
         
         physicsWorld.add.existing(mesh)
@@ -89,11 +90,29 @@ const addFence = () => {
         // (mesh as any).body.setCollisionFlags(2)
     }
 
-    const cube = new THREE.Mesh(
-        new THREE.BoxGeometry(40, 1, 60),
-        new THREE.MeshStandardMaterial({color: 'yellow'}),
-    )
-    cube.position.set(0, 0, 0)
-    scene.add(cube)
     
+}
+
+
+
+const addMysticTree = (scene: THREE.Scene, models:any) => {
+    const model = models['fountain'].data.scene;
+    // 11,16,17
+    const group = new THREE.Group()
+    console.log(model.traverse)
+    model.traverse((child:any) => {
+        if(child.isMesh){
+            if(child.name === "mesh558070164_7" || child.name === "mesh558070164_6") return;
+            group.add(child.clone())
+        }
+    })
+    group.scale.set(15, 15, 15)
+    group.position.set(0, 2, 0)
+    const mesh:any = createBoundingMesh({group: group, position: group.position, show: false, draggable: false, type: "sphere"})
+    mesh.position.set(mesh.position.x + 1, mesh.position.y, mesh.position.z)
+    addPhysics({
+        mesh: mesh,
+        rigidBodyType: 'kinematic',
+    })
+    scene.add(group)
 }

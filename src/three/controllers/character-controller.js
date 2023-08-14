@@ -92,6 +92,7 @@ class CharacterControls {
         this.animationsMap = animationsMap
         this.currentAction = currentAction
         this.physicsObject = physicsObject 
+        this.thirdPersonCamera = new ThirdPersonCamera(camera, model, orbitControl);
         this.animationsMap.forEach((value, key) => {
             if (key == currentAction) {
                 value.play()
@@ -119,13 +120,30 @@ class CharacterControls {
 
 
         const directionPressed = this.DIRECTIONS.some(direction => keysPressed[this.keyBidings[direction]] == true)
+        
+        let play = '';
+        let action = "";
+        // if (directionPressed && this.toggleRun) {
+        //     play = 'Run'
+        // } else if (directionPressed) {
+        //     play = 'Walk'
+        // } else {
+        //     play = 'Idle'
+        // }
 
-        var play = '';
-        if (directionPressed && this.toggleRun) {
-            play = 'Run'
-        } else if (directionPressed) {
-            play = 'Walk'
-        } else {
+        if(keysPressed['arrowup']){
+            play = this.toggleRun ? 'Run' : 'Walk'
+            action = "forward"
+        }
+        else if(keysPressed['arrowleft']){
+            play = this.toggleRun ? 'Run' : 'Walk'
+            action = "left"
+        }
+        else if(keysPressed['arrowright']){
+            play = this.toggleRun ? 'Run' : 'Walk'
+            action = "right"
+        }
+        else{
             play = 'Idle'
         }
 
@@ -153,9 +171,10 @@ class CharacterControls {
             // diagonal movement angle offset
             var directionOffset = this.directionOffset(keysPressed)
 
+
             // rotate model
             this.rotateQuarternion.setFromAxisAngle(this.rotateAngle, angleYCameraDirection + directionOffset)
-            this.model.quaternion.rotateTowards(this.rotateQuarternion, 0.2)
+            this.model.quaternion.rotateTowards(this.rotateQuarternion, 0.05)
 
             // calculate direction
             this.camera.getWorldDirection(this.walkDirection)
@@ -163,22 +182,26 @@ class CharacterControls {
             this.walkDirection.normalize()
             this.walkDirection.applyAxisAngle(this.rotateAngle, directionOffset)
 
+            
+            if(action == "forward"){
             // run/walk velocity
             const velocity = this.currentAction == 'Run' ? this.runVelocity : this.walkVelocity
 
             // move model & camera
-            const moveX = this.walkDirection.x * -velocity * delta
-            let moveZ = this.walkDirection.z * -velocity * delta
+            // const moveX = this.walkDirection.x * -velocity * delta
+            // let moveZ = this.walkDirection.z * -velocity * delta
     
             this.physicsObject.body.setVelocityX(this.walkDirection.x * -velocity)
             this.physicsObject.body.setVelocityY(0)
             this.physicsObject.body.setVelocityZ(this.walkDirection.z * -velocity)
-        
-            if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
-                moveZ = 0
+            this.physicsObject.body.setAngularVelocity(0, 0, 0)
             }
-            this.prevZ = mesh.position.z
-            this.updateCameraTarget(moveX, moveZ)
+        
+            // if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
+            //     moveZ = 0
+            // }
+            // this.prevZ = mesh.position.z
+            // this.updateCameraTarget(moveX, moveZ, delta)
             // console.log(this.physicsObject)
         }
         else{
@@ -191,16 +214,22 @@ class CharacterControls {
         }
     }
 
-    updateCameraTarget( moveX, moveZ) {
-        // move camera
-        this.camera.position.x += moveX 
-        this.camera.position.z += moveZ 
+    updateCameraTarget( moveX, moveZ, delta) {
+    
+
+        this.thirdPersonCamera.update()
+
+        // this.camera.position.x = this.camera.position.x + moveX
+        // this.camera.position.y = this.model.position.y + 1
+        // this.camera.position.z = this.camera.position.z + moveZ
 
         // update camera target
         this.cameraTarget.x = this.model.position.x
         this.cameraTarget.y = this.model.position.y + 1
         this.cameraTarget.z = this.model.position.z
-        // this.orbitControl.target = this.cameraTarget
+        // this.camera.lookAt(this.cameraTarget)
+        // console.log(this.orbitControl.rotation)
+        this.orbitControl.target = this.cameraTarget
     }
 
     // directionOffset(keysPressed) {
@@ -259,3 +288,59 @@ class CharacterControls {
 
 
 
+
+
+class ThirdPersonCamera {
+    constructor(camera, target, controls) {
+      this.target = target
+      this.controls = controls
+      this.camera = camera  
+      this._currentPosition = new THREE.Vector3();
+      this._currentLookat = new THREE.Vector3();
+        
+      this.camera.lookAt(controls.target);
+    }
+  
+    _CalculateIdealOffset() {
+      const idealOffset = new THREE.Vector3(0, 20, -50);
+      idealOffset.applyQuaternion(this.target.quaternion);
+      idealOffset.add(this.target.position);
+      return idealOffset;
+    }
+  
+    _CalculateIdealLookat() {
+      const idealLookat = new THREE.Vector3(0, 0, 30);
+      idealLookat.applyQuaternion(this.target.quaternion);
+      idealLookat.add(this.target.position);
+      return idealLookat;
+    }
+  
+    update() {
+
+      const idealOffset = this._CalculateIdealOffset();
+      const idealLookat = this._CalculateIdealLookat();
+  
+      // const t = 0.05;
+      // const t = 4.0 * timeElapsed;
+      const timeElapsed = 0.1;
+      const t = 1.0 - Math.pow(0.001, timeElapsed);
+  
+      this._currentPosition.lerp(idealOffset, t);
+      this._currentLookat.lerp(idealLookat, t);
+  
+      this.camera.position.set(this._currentPosition.x, this._currentPosition.y, this._currentPosition.z);
+
+    //   this.camera.rotation.set(this.camera.rotation.x, Math.PI/2, this.camera.rotation.z)
+
+      this.camera.lookAt(this._currentLookat);
+
+      
+
+      this.controls.target.copy(this._currentLookat)
+
+  
+   
+
+    }
+  }
+  

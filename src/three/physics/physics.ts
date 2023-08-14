@@ -1,7 +1,7 @@
 // import Rapier, { ActiveCollisionTypes } from '@dimforge/rapier3d'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
-import { useDebugMode, usePhysics, usePhysicsObjects, useScene } from '../init'
+import { physicsWorld, useDebugMode, usePhysics, usePhysicsObjects, useScene } from '../init'
 
 // export interface PhysicsObject  {
 //   mesh: THREE.Mesh
@@ -150,85 +150,54 @@ export interface PhysicsObjectOptions {
 // }
 
 
-export const addPhysics = ({
-  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", mass=0, options
-}:{
-  mesh: THREE.Mesh,
-  rigidBodyType: 'dynamic' | 'static' | 'kinematic',
-  autoAnimate?: boolean, // update the mesh's position and quaternion based on the physics world every frame
-  postPhysicsFn?: Function,
-  colliderType?: string,
-  mass?: number,
-  options?: PhysicsObjectOptions
-}) => {
+export interface enable3dPhysicsOptions {
+  restitution: number,
+  friction: number,
+  mass: number,
+  damping: number,
+  gravity: number,
+  linearFactor: number,
+  angularFactor: number,
+}
 
-  
-  const world = usePhysics();
-  const physicsObjects = usePhysicsObjects()
-  
+export const addPhysics = ({
+  mesh, rigidBodyType,  options
+}:{
+  mesh: any,
+  rigidBodyType: 'dynamic' | 'fixed' | "kinematic" | "ghost",
+  options?: enable3dPhysicsOptions
+}) => {
 
   const debugMode = useDebugMode();
   const scene = useScene();
 
-  let bodyType: CANNON.BodyType;
+  physicsWorld.add.existing(mesh)
+
   switch(rigidBodyType){
-    case 'dynamic':
-      bodyType = CANNON.Body.DYNAMIC
-      break
-    case 'static':
-      bodyType = CANNON.Body.STATIC
-      break
+    case 'fixed':
+      mesh.body.setCollisionFlags(1);
+      break;    
     case 'kinematic':
-      bodyType = CANNON.Body.KINEMATIC
-      break
+      mesh.body.setCollisionFlags(2);
+      break;  
+    case 'ghost':
+      mesh.body.setCollisionFlags(4);
+      break;      
   }
 
 
+  if(options){
+    if(options.friction) mesh.body.setFriction(options.friction)
+    if(options.restitution) mesh.body.setRestitution(options.restitution)
+    // if(options.mass) mesh.body.setMass(options.mass)
+    if(options.damping) mesh.body.setDamping(options.damping)
+    if(options.gravity) mesh.body.setGravity(options.gravity)
+    if(options.linearFactor) mesh.body.setLinearFactor(options.linearFactor)
+    if(options.angularFactor) mesh.body.setAngularFactor(options.angularFactor)
 
-  let shape:CANNON.Shape;
-  switch (colliderType) {
-    case 'cuboid':
-      {
-        const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters
-        shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
-      }
-      break
-
-    case 'ball':
-      {
-        const { radius } = (mesh.geometry as THREE.SphereGeometry).parameters
-        shape = new CANNON.Sphere(radius)
-      }
-      break
-
-    case 'plane':
-        {
-          // const { radius } = (mesh.geometry as THREE.SphereGeometry).parameters
-          shape = new CANNON.Plane()
-        }
-        break
-
-
-    default:
-      {
-       
-        const vertices = mesh.geometry.attributes.position.array as number[]
-        const indices = mesh.geometry.index?.array as number[]
-        shape = new CANNON.Trimesh(vertices, indices)
-      }
-      break
   }
+ 
 
-  const body = new CANNON.Body({
-    mass: mass,
-    position: new CANNON.Vec3(mesh.position.x, mesh.position.y, mesh.position.z),
-    quaternion: new CANNON.Quaternion(mesh.quaternion.x, mesh.quaternion.y, mesh.quaternion.z, mesh.quaternion.w),
-    type: bodyType,
-    shape: shape
-  })
-
-  const physicsObject: PhysicsObject = { mesh, rigidBody: body, fn: postPhysicsFn, autoAnimate }
-  
   if(debugMode){
     const debugMesh = mesh.clone();
     debugMesh.material = new THREE.MeshBasicMaterial({ color: 'red', wireframe: true })
@@ -237,12 +206,9 @@ export const addPhysics = ({
     debugMesh.scale.copy(mesh.scale)
     debugMesh.castShadow = false
     scene.add(debugMesh)
-    physicsObject.debugMesh = debugMesh
+    // physicsObject.debugMesh = debugMesh
   }
 
-  world.addBody(body)
-  physicsObjects.push(physicsObject)
+  // physicsObjects.push(physicsObject)
 
-
-  return physicsObject
 }

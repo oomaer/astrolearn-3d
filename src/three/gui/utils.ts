@@ -1,11 +1,13 @@
 import * as THREE from 'three'
 import { useDraggleObjects, useScene } from '../init';
-export const createBoundingBoxMesh = ({group, position, show=false, draggable=false}:
+export const createBoundingMesh = ({group, position, show=false, wireframe=true, draggable=false, type="box"}:
     {
         group: THREE.Group,
         position: {x: number, y: number, z: number},
         show?: boolean,
-        draggable?: boolean
+        wireframe?: boolean,
+        draggable?: boolean,
+        type?: "box" | "sphere"
     }): THREE.Mesh => {
 
     const scene = useScene();
@@ -17,20 +19,31 @@ export const createBoundingBoxMesh = ({group, position, show=false, draggable=fa
     const dimensions = new THREE.Vector3();
     boundingBox.getSize(dimensions);
 
-    // Create a box geometry with the calculated dimensions
-    const boxGeometry = new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z, 50, 50);
+    let mesh;
 
-    // Create a material for the box (you can replace this with your desired material)
-    const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: false });
+    if(type==="sphere"){
+        const sphereGeometry = new THREE.SphereGeometry(dimensions.x/2);
+        // Create a material for the box (you can replace this with your desired material)
+        const sphereMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: wireframe });
+        // Create a mesh using the box geometry and material
+        mesh = new THREE.Mesh(sphereGeometry, sphereMaterial);
+    }
+    else{
+        // Create a box geometry with the calculated dimensions
+        const boxGeometry = new THREE.BoxGeometry(dimensions.x, dimensions.y, dimensions.z);
+        // Create a material for the box (you can replace this with your desired material)
+        const boxMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, wireframe: wireframe });
+        // Create a mesh using the box geometry and material
+        mesh = new THREE.Mesh(boxGeometry, boxMaterial);
+    }
 
-    // Create a mesh using the box geometry and material
-    const boxMesh = new THREE.Mesh(boxGeometry, boxMaterial);
-    boxMesh.position.set(position.x, position.y, position.z)
-    if(show) scene.add(boxMesh)
-    if(draggable) draggleObjects.push(boxMesh)
+    mesh.position.set(position.x, position.y, position.z)
+    if(show) scene.add(mesh)
+    if(draggable) draggleObjects.push(mesh)
 
-    return boxMesh
+    return mesh
 
     // Position the box at the center of the loaded model
     // boxMesh.position.copy(boundingBox.getCenter());
 }
+

@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import {Character} from '../controllers/character-controller';
 import { initCentralPark } from "./initCentralPark";
 import { physicsWorld } from "../init"; 
+import { addPhysics } from "../physics/physics";
 
 export const init3DWorld = () => {
 
@@ -78,15 +79,19 @@ const addGroundAndSky = () => {
     const scene = useScene();
     const physicsWorld = usePhysics();
     const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
-    const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
+    const groundMat = new THREE.MeshToonMaterial({ color:  '#a67848' });
+    groundMat.color.setHex(0x019516).convertSRGBToLinear()
     const ground:any = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
     ground.position.y = -1;
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
-    physicsWorld.add.existing(ground as any)
-    ground.body.setCollisionFlags(2)
+    addPhysics({
+      mesh: ground,
+      rigidBodyType: 'kinematic',
+    })
+
     // addPhysics({mesh: ground, rigidBodyType:"static", mass: 0})
 
 
@@ -117,8 +122,16 @@ export const addCharacter = () => {
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
 
-    physicsWorld.add.existing(characterMesh)
-
+    const options = {
+      restitution: 0,
+      friction: 0,
+      mass: 1,
+      damping: 0,
+      gravity: 0,
+      linearFactor: 0,
+      angularFactor: 0,
+    }
+    addPhysics({mesh:characterMesh, rigidBodyType: 'dynamic', options})
     const character = new Character(characterMesh)
     return character;
 }

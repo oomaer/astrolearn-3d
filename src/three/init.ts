@@ -36,7 +36,7 @@ let scene: THREE.Scene,
   character: any
 
 const draggleObjects: any = []
-let debugMode = false;
+const debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
 
@@ -46,6 +46,21 @@ const keysPressed:any = {}
 const models:any = {
   'fence': {
     path: 'models/Fence.glb',
+  },
+  'mysticTree': {
+    path: 'models/trees/MysticTree.glb',
+  },
+  'wishingWell': {
+    path: 'models/WishingWell.glb',
+  },
+  'pond': {
+    path: 'models/Pond.glb',
+  },
+  'fountain': {
+    path: 'models/Fountain.glb',
+  },
+  'oakTree': {
+    path: 'models/trees/OakTree.glb',
   }
 }
 
@@ -73,6 +88,13 @@ export const initEngine = async () => {
 
   controls = new OrbitControls( camera, renderer.domElement );
   controls.update();
+  // Set initial distance from the model
+  // const initialDistance = 10;
+  // controls.distance = initialDistance;
+
+  // Enable damping for smoother movement
+  // controls.enableDamping = true;
+  // controls.dampingFactor = 0.05;
 
 
   renderer.setSize(size.width, size.height)
