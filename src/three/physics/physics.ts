@@ -190,7 +190,7 @@ export const addPhysics = ({
     case 'cuboid':
       {
         const { width, height, depth } = (mesh.geometry as THREE.BoxGeometry).parameters
-        shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2))
+        shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2));
       }
       break
 

@@ -12,27 +12,23 @@ export const init3DWorld = () => {
     
     const scene = useScene()
 
-    const world = usePhysics()
-    const physicsObjects = usePhysicsObjects();
 
 
-// physicsObjects.push({mesh: groundMesh, rigidBody: groundBody})
 
-
-    // const cube = new THREE.Mesh(
-    //     new THREE.BoxGeometry(3, 3, 3),
-    //     new THREE.MeshStandardMaterial({color: 'red'}),
-    //   )
-    //   cube.position.set(0, 10, 5)
-    //   scene.add(cube)
-    // addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid'})
+    const cube = new THREE.Mesh(
+        new THREE.BoxGeometry(3, 3, 3),
+        new THREE.MeshStandardMaterial({color: 'black'}),
+      )
+      cube.position.set(0, 10, 5)
+      scene.add(cube)
+    addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid', mass: 33})
     const ball = new THREE.Mesh(
         new THREE.SphereGeometry(1, 30, 30),
         new THREE.MeshStandardMaterial({color: 'blue'}),
       )
     ball.position.set(0, 10, 5)
-      scene.add(ball)
-    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
+    //   scene.add(ball)
+    // addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
 
     addLights();
     addGroundAndSky();
