@@ -151,7 +151,7 @@ export interface PhysicsObjectOptions {
 
 
 export const addPhysics = ({
-  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", mass=1, options
+  mesh, rigidBodyType, autoAnimate=true, postPhysicsFn, colliderType="trimesh", mass=0, options
 }:{
   mesh: THREE.Mesh,
   rigidBodyType: 'dynamic' | 'static' | 'kinematic',
@@ -201,6 +201,13 @@ export const addPhysics = ({
       }
       break
 
+    case 'plane':
+        {
+          // const { radius } = (mesh.geometry as THREE.SphereGeometry).parameters
+          shape = new CANNON.Plane()
+        }
+        break
+
 
     default:
       {
@@ -221,6 +228,7 @@ export const addPhysics = ({
   })
 
   const physicsObject: PhysicsObject = { mesh, rigidBody: body, fn: postPhysicsFn, autoAnimate }
+  
   if(debugMode){
     const debugMesh = mesh.clone();
     debugMesh.material = new THREE.MeshBasicMaterial({ color: 'red', wireframe: true })

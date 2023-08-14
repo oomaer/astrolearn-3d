@@ -1,15 +1,24 @@
-import { useDraggleObjects, useScene } from "../init";
+import { useDraggleObjects, usePhysics, usePhysicsObjects, useScene } from "../init";
 
 import * as THREE from 'three'
 import { addPhysics, type activeCollisionStringType } from "../physics/physics";
 import {Character} from '../controllers/character-controller';
 import { initCentralPark } from "./initCentralPark";
+import * as CANNON from 'cannon-es';
 
 export const init3DWorld = () => {
 
     
     
     const scene = useScene()
+
+    const world = usePhysics()
+    const physicsObjects = usePhysicsObjects();
+
+
+// physicsObjects.push({mesh: groundMesh, rigidBody: groundBody})
+
+
     // const cube = new THREE.Mesh(
     //     new THREE.BoxGeometry(3, 3, 3),
     //     new THREE.MeshStandardMaterial({color: 'red'}),
@@ -21,13 +30,13 @@ export const init3DWorld = () => {
         new THREE.SphereGeometry(1, 30, 30),
         new THREE.MeshStandardMaterial({color: 'blue'}),
       )
-      ball.position.set(0, 14, 3)
+    ball.position.set(0, 10, 5)
       scene.add(ball)
-    addPhysics({mesh: ball, rigidBodyType: 'dynamic', mass: 66})
+    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
 
     addLights();
     addGroundAndSky();
-    initCentralPark();
+    // initCentralPark();
   
 }
 
@@ -70,7 +79,10 @@ const addLights = () => {
 
 const addGroundAndSky = () => {
     const scene = useScene();
-    const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 2 );
+    // const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
+    // const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
+    // const ground = new THREE.Mesh( groundGeo, groundMat );
+    const groundGeo  = new THREE.PlaneGeometry(200, 200);
     const groundMat = new THREE.MeshToonMaterial({ color:  'green' });
     const ground = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
@@ -78,7 +90,7 @@ const addGroundAndSky = () => {
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
-    // addPhysics({mesh: ground, rigidBodyType:"static", colliderType: 'cuboid'})
+    addPhysics({mesh: ground, rigidBodyType:"static", mass: 0})
 
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );

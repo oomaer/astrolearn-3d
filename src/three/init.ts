@@ -82,8 +82,6 @@ export const initEngine = async () => {
   controls.update();
 
 
-
-
   renderer.setSize(size.width, size.height)
   renderer.physicallyCorrectLights = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
