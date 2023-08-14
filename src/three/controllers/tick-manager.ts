@@ -109,7 +109,7 @@ class TickManager extends EventTarget {
 
       if(character.characterControls){
         character.characterControls.update(0.01, keysPressed)
-        character.characterControls.updateCameraTarget();
+        // character.characterControls.updateCameraTarget();
       }
 
       // performance tracker start

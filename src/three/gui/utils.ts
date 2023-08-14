@@ -1,5 +1,5 @@
 import * as THREE from 'three'
-import { useDraggleObjects, useScene } from '../init';
+import { useDraggleObjects, useScene, useShowBoundingBox } from '../init';
 export const createBoundingMesh = ({group, position, show=false, wireframe=true, draggable=false, type="box"}:
     {
         group: THREE.Group,
@@ -7,7 +7,8 @@ export const createBoundingMesh = ({group, position, show=false, wireframe=true,
         show?: boolean,
         wireframe?: boolean,
         draggable?: boolean,
-        type?: "box" | "sphere"
+        type?: "box" | "sphere",
+        // scale: number
     }): THREE.Mesh => {
 
     const scene = useScene();
@@ -19,7 +20,7 @@ export const createBoundingMesh = ({group, position, show=false, wireframe=true,
     const dimensions = new THREE.Vector3();
     boundingBox.getSize(dimensions);
 
-    let mesh;
+    let mesh:any;
 
     if(type==="sphere"){
         const sphereGeometry = new THREE.SphereGeometry(dimensions.x/2);
@@ -38,6 +39,8 @@ export const createBoundingMesh = ({group, position, show=false, wireframe=true,
     }
 
     mesh.position.set(position.x, position.y, position.z)
+    
+    mesh.model = group
     if(show) scene.add(mesh)
     if(draggable) draggleObjects.push(mesh)
 

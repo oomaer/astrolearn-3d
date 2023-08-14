@@ -122,30 +122,33 @@ class CharacterControls {
         const directionPressed = this.DIRECTIONS.some(direction => keysPressed[this.keyBidings[direction]] == true)
         
         let play = '';
-        let action = "";
-        // if (directionPressed && this.toggleRun) {
-        //     play = 'Run'
-        // } else if (directionPressed) {
-        //     play = 'Walk'
-        // } else {
-        //     play = 'Idle'
-        // }
+        let action = "forward";
 
-        if(keysPressed['arrowup']){
-            play = this.toggleRun ? 'Run' : 'Walk'
-            action = "forward"
-        }
-        else if(keysPressed['arrowleft']){
-            play = this.toggleRun ? 'Run' : 'Walk'
-            action = "left"
-        }
-        else if(keysPressed['arrowright']){
-            play = this.toggleRun ? 'Run' : 'Walk'
-            action = "right"
-        }
-        else{
+        if (directionPressed && this.toggleRun) {
+            play = 'Run'
+        } else if (directionPressed) {
+            play = 'Walk'
+        } else {
             play = 'Idle'
         }
+
+        //use this later
+        // let action = ""
+        // if(keysPressed['arrowup']){
+        //     play = this.toggleRun ? 'Run' : 'Walk'
+        //     action = "forward"
+        // }
+        // else if(keysPressed['arrowleft']){
+        //     play = this.toggleRun ? 'Run' : 'Walk'
+        //     action = "left"
+        // }
+        // else if(keysPressed['arrowright']){
+        //     play = this.toggleRun ? 'Run' : 'Walk'
+        //     action = "right"
+        // }
+        // else{
+        //     play = 'Idle'
+        // }
 
 
         if (this.currentAction != play) {
@@ -188,21 +191,22 @@ class CharacterControls {
             const velocity = this.currentAction == 'Run' ? this.runVelocity : this.walkVelocity
 
             // move model & camera
-            // const moveX = this.walkDirection.x * -velocity * delta
-            // let moveZ = this.walkDirection.z * -velocity * delta
-    
+            let moveX = this.walkDirection.x * -velocity * delta
+            let moveZ = this.walkDirection.z * -velocity * delta
+            
             this.physicsObject.body.setVelocityX(this.walkDirection.x * -velocity)
             this.physicsObject.body.setVelocityY(0)
             this.physicsObject.body.setVelocityZ(this.walkDirection.z * -velocity)
             this.physicsObject.body.setAngularVelocity(0, 0, 0)
-            }
         
-            // if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
-            //     moveZ = 0
-            // }
-            // this.prevZ = mesh.position.z
-            // this.updateCameraTarget(moveX, moveZ, delta)
+        
+            if(Math.round(mesh.position.z * 1000) / 1000 === Math.round(this.prevZ * 1000) / 1000) {
+                moveZ = 0
+            }
+            this.prevZ = mesh.position.z
+            this.updateCameraTarget(moveX, moveZ, delta)
             // console.log(this.physicsObject)
+        }
         }
         else{
     
@@ -217,11 +221,11 @@ class CharacterControls {
     updateCameraTarget( moveX, moveZ, delta) {
     
 
-        this.thirdPersonCamera.update()
+        // this.thirdPersonCamera.update()
 
-        // this.camera.position.x = this.camera.position.x + moveX
+        this.camera.position.x = this.camera.position.x + moveX
         // this.camera.position.y = this.model.position.y + 1
-        // this.camera.position.z = this.camera.position.z + moveZ
+        this.camera.position.z = this.camera.position.z + moveZ
 
         // update camera target
         this.cameraTarget.x = this.model.position.x

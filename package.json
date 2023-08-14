@@ -17,6 +17,7 @@
     "@enable3d/ammo-physics": "^0.25.3",
     "cannon-es": "^0.20.0",
     "pinia": "^2.1.4",
+    "sass": "^1.65.1",
     "three": "^0.144.0",
     "vue": "^3.3.4",
     "vue-router": "^4.2.4"

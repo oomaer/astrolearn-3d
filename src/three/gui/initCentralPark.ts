@@ -11,7 +11,9 @@ export const initCentralPark = () => {
     const scene = useScene()
     const models = useModels()
     addFence(scene, models)
-    addMysticTree(scene, models)
+    // addMysticTree(scene, models)
+    addMarketStalls(scene, models)
+    addSittingArea(scene, models)
 
 }
 
@@ -99,7 +101,6 @@ const addMysticTree = (scene: THREE.Scene, models:any) => {
     const model = models['fountain'].data.scene;
     // 11,16,17
     const group = new THREE.Group()
-    console.log(model.traverse)
     model.traverse((child:any) => {
         if(child.isMesh){
             if(child.name === "mesh558070164_7" || child.name === "mesh558070164_6") return;
@@ -115,4 +116,32 @@ const addMysticTree = (scene: THREE.Scene, models:any) => {
         rigidBodyType: 'kinematic',
     })
     scene.add(group)
+}
+
+
+const addMarketStalls = (scene: THREE.Scene, models:any) => {
+    
+    const model = models['marketStalls'].data.scene;
+    model.scale.set(8, 8, 8)
+    model.position.set(11.5, 0, -22)
+    const mesh:any = createBoundingMesh({group: model, position: model.position, show: false, draggable: false, type: "box"})
+    scene.add(model)
+}
+
+const addSittingArea = (scene: THREE.Scene, models:any) => {
+
+    const bonFire = models['bonFire'].data.scene;
+    bonFire.scale.set(8, 8, 8)
+    bonFire.position.set(0, 0, 0)
+    const mesh:any = createBoundingMesh({group: bonFire, position: bonFire.position, show: true, draggable: true, type: "box"})
+
+    scene.add(bonFire)
+
+    const bench = models['bench'].data.scene;
+    bench.scale.set(7, 7, 7)
+    bench.rotation.y = 0.46
+    bench.position.set(0, 0, 0)
+    const mesh2:any = createBoundingMesh({group: bench, position: bench.position, show: true, draggable: true, type: "box"})
+    scene.add(bench)
+
 }

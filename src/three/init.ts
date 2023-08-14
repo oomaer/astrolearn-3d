@@ -40,7 +40,13 @@ const debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
 
-
+const selectedOptions: any = {
+  rotation: 0,
+  scale: 1,
+  show: 0,
+}
+let selectedObject;
+let showBoundingBox = false;
 
 
 const models:any = {
@@ -61,6 +67,15 @@ const models:any = {
   },
   'oakTree': {
     path: 'models/trees/OakTree.glb',
+  },
+  'bonFire': {
+    path: 'models/Bonfire.glb',
+  },
+  'bench': {
+    path: 'models/Bench.glb'
+  },
+  'marketStalls': {
+    path: 'models/MarketStalls.glb'
   }
 }
 
@@ -84,7 +99,7 @@ export const initEngine = async () => {
   // scene.fog = new THREE.Fog('black', 0, 100000);
 
   physicsWorld = new AmmoPhysics(scene);
-  (physicsWorld as any).debug.enable()
+  // (physicsWorld as any).debug.enable()
 
   controls = new OrbitControls( camera, renderer.domElement );
   controls.update();
@@ -146,9 +161,20 @@ export const initEngine = async () => {
 
 const addDragControls = () => {
   const dragControls = new DragControls( draggleObjects, camera, renderer.domElement );
-  dragControls.addEventListener( 'dragstart', function () { controls.enabled = false; } );
+  dragControls.addEventListener( 'dragstart', function (e) {
+    document.getElementById("rotation").value = e.object.model.rotation.y;
+    document.getElementById("scale").value = e.object.model.scale.x;
+    document.getElementById("position").innerHTML = 
+    e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
+    selectedObject = e.object;
+    controls.enabled = false; 
+  } );
   dragControls.addEventListener( 'drag', onDragEvent );
-  dragControls.addEventListener( 'dragend', function (e) { controls.enabled = true; console.log(e.object.position) } );
+  dragControls.addEventListener( 'dragend', function (e) { 
+    controls.enabled = true; 
+    console.log(e.object.position);  
+    e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
+  });
  
 
   const mouse = new THREE.Vector2();
@@ -217,6 +243,7 @@ export const usePhysicsObjects = () => physicsObjects
 export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
+export const useShowBoundingBox = () => showBoundingBox
 
 export { physicsWorld }
 
@@ -281,11 +308,40 @@ const addWindowEvents = () => {
     
     if (intersects.length > 0)
       console.log(intersects[0].point);
-};
+  };
 
   
   // window.addEventListener( 'click', getClicked3DPoint );
 
+
+  const show = document.getElementById('show-wireframe');
+  const rotation = document.getElementById('rotation');
+  const scale = document.getElementById('scale');
+
+  rotation?.addEventListener('input', (event) => {
+    if(selectedObject){
+      selectedObject.rotation.y = event.target.value;
+      selectedObject.model.rotation.y = event.target.value;
+    }
+  })
+  scale?.addEventListener('input', (event) => {
+    if(selectedObject){
+      // selectedObject.scale.set(event.target.value, event.target.value, event.target.value)
+      selectedObject.model.scale.set(event.target.value, event.target.value, event.target.value)
+    }
+  })
+
+  show?.addEventListener("change", (event) => {
+    showBoundingBox = event.target.checked
+    if(selectedObject){
+      if(showBoundingBox){
+        scene.add(selectedObject)
+      }
+      else{
+        scene.remove(selectedObject)
+      }
+    }
+  })
 
 }
 
