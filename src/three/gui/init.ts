@@ -10,20 +10,20 @@ export const init3DWorld = () => {
     
     
     const scene = useScene()
-    const cube = new THREE.Mesh(
-        new THREE.BoxGeometry(3, 3, 3),
-        new THREE.MeshStandardMaterial({color: 'red'}),
-      )
-      cube.position.set(0, 10, 5)
-      scene.add(cube)
-    addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid'})
+    // const cube = new THREE.Mesh(
+    //     new THREE.BoxGeometry(3, 3, 3),
+    //     new THREE.MeshStandardMaterial({color: 'red'}),
+    //   )
+    //   cube.position.set(0, 10, 5)
+    //   scene.add(cube)
+    // addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid'})
     const ball = new THREE.Mesh(
         new THREE.SphereGeometry(1, 30, 30),
-        new THREE.MeshStandardMaterial({color: 'brown'}),
+        new THREE.MeshStandardMaterial({color: 'blue'}),
       )
       ball.position.set(0, 14, 3)
       scene.add(ball)
-    addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
+    addPhysics({mesh: ball, rigidBodyType: 'dynamic', mass: 66})
 
     addLights();
     addGroundAndSky();
@@ -78,7 +78,7 @@ const addGroundAndSky = () => {
     ground.rotation.x = - Math.PI / 2;
     ground.receiveShadow = true;
     scene.add( ground );
-    addPhysics({mesh: ground, rigidBodyType:"fixed", colliderType: 'cuboid'})
+    // addPhysics({mesh: ground, rigidBodyType:"static", colliderType: 'cuboid'})
 
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
@@ -111,9 +111,9 @@ export const addCharacter = () => {
     const options: {[key:string]: activeCollisionStringType} = {
         activeCollisionTypes: 'DYNAMIC_KINEMATIC'
     }
-    const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"dynamic", options})
-    const character = new Character(characterPhysics)
-    return character;
+    // const characterPhysics = addPhysics({mesh: characterMesh, rigidBodyType:"dynamic", options})
+    // const character = new Character(characterPhysics)
+    // return character;
 }
 
 

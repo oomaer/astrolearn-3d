@@ -275,6 +275,11 @@
     "@babel/helper-validator-identifier" "^7.22.5"
     "to-fast-properties" "^2.0.0"
 
+"@dimforge/rapier3d@*":
+  "integrity" "sha512-B+AKkPmtJxED3goMTGU8v0ju8hUAUQGLgghzCos4G4OeN9X+mJ5lfN2xtNA0n8tJRJk2YfsMk9BOj/6AN89Acg=="
+  "resolved" "https://registry.npmjs.org/@dimforge/rapier3d/-/rapier3d-0.11.2.tgz"
+  "version" "0.11.2"
+
 "@enable3d/ammo-physics@^0.25.3":
   "integrity" "sha512-MQvbGnfAa5e2zkAEkepkMxD6ZjmUfJRklu3X0hxgE4Z/s5VZUacw+1VAFG4iNL2DfqqgoDbvnE5uaXFc+ZgAcw=="
   "resolved" "https://registry.npmjs.org/@enable3d/ammo-physics/-/ammo-physics-0.25.3.tgz"
@@ -1041,6 +1046,11 @@
   "integrity" "sha512-0QHgqR+Jv4bxHMp8kZ1Kn8CH55OikjKJ6JmKkZYP1F3D7w+lnFXF70nG5eNfsZS89jadi5Ywy5UCSKLAglIRkg=="
   "resolved" "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001519.tgz"
   "version" "1.0.30001519"
+
+"cannon-es@^0.20.0":
+  "integrity" "sha512-eZhWTZIkFOnMAJOgfXJa9+b3kVlvG+FX4mdkpePev/w/rP5V8NRquGyEozcjPfEoXUlb+p7d9SUcmDSn14prOA=="
+  "resolved" "https://registry.npmjs.org/cannon-es/-/cannon-es-0.20.0.tgz"
+  "version" "0.20.0"
 
 "chai@^4.3.7":
   "integrity" "sha512-HLnAzZ2iupm25PlN0xFreAlBA5zaBSv3og0DdeGA4Ar6h6rJ3A0rolRUKJhSF2V10GZKDgWF/VmAEsNWjCRB+A=="

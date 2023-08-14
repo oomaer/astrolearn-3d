@@ -80,36 +80,35 @@ class TickManager extends EventTarget {
       const timeDiffCapped = Math.min(Math.max(this.timeDiff, 0), 100)
 
       // physics
-      physics.step()
+      // physics.step()
+      physics.fixedStep()
 
 
+     
       for (let i = 0; i < physicsObjects.length; i++) {
         const po = physicsObjects[i]
         const autoAnimate = po.autoAnimate
-
+        const body = po.rigidBody
         if (autoAnimate) {
           const mesh = po.mesh
-          const collider = po.collider
-          mesh.position.copy(collider.translation() as THREE.Vector3)
-          mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)
-        
+      
+          mesh.position.copy({x: body.position.x, y: body.position.y, z: body.position.z} as THREE.Vector3)
+          mesh.quaternion.copy({x: body.quaternion.x, y: body.quaternion.y, z: body.quaternion.z, w: body.quaternion.w} as THREE.Quaternion)
         }
 
         if(debugMode) {
           const mesh = po.debugMesh as THREE.Mesh
-          
-          const collider = po.collider
-          mesh.position.copy(collider.translation() as THREE.Vector3)
-          mesh.quaternion.copy(collider.rotation() as THREE.Quaternion)
+          mesh.position.copy({x: body.position.x, y: body.position.y, z: body.position.z} as THREE.Vector3)
+          mesh.quaternion.copy({x: body.quaternion.x, y: body.quaternion.y, z: body.quaternion.z, w: body.quaternion.w} as THREE.Quaternion)
         }
 
         const fn = po.fn
         fn && fn()
       }
 
-      if(character.characterControls){
-        character.characterControls.update(0.01, keysPressed)
-      }
+      // if(character.characterControls){
+      //   character.characterControls.update(0.01, keysPressed)
+      // }
 
       // performance tracker start
       this.fps = 1000 / this.timeDiff

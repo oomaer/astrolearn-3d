@@ -83,7 +83,7 @@ const addFence = () => {
         scene.add(fence)
         const mesh = createBoundingBoxMesh({group: fence, position: i.position,  show: false, draggable: true})
         mesh.scale.y = 5
-        addPhysics({mesh, rigidBodyType:"fixed", mass:9999999999})
+        // addPhysics({mesh, rigidBodyType:"fixed", mass:9999999999})
     }
 
     const cube = new THREE.Mesh(

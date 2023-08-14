@@ -6,16 +6,17 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import TickManager from './controllers/tick-manager'
 
 // wasm
-import Rapier from '@dimforge/rapier3d'
+// import Rapier from '@dimforge/rapier3d'
 
 import GeneralLoader from './loaders/general-loader'
-import InitRapier from './physics/RAPIER'
+// import InitRapier from './physics/RAPIER'
 import { type PhysicsObject } from './physics/physics'
-import { GRAVITY } from './physics/utils/constants'
+// import { GRAVITY } from './physics/utils/constants'
 import { addCharacter, init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 
+import * as CANNON from "cannon-es"
 
 
 let scene: THREE.Scene,
@@ -29,8 +30,9 @@ let scene: THREE.Scene,
   gltfLoader: GLTFLoader,
   textureLoader: THREE.TextureLoader,
   generalLoader: GeneralLoader,
-  RAPIER: typeof Rapier,
-  physicsWorld: Rapier.World,
+  // RAPIER: typeof Rapier,
+  // physicsWorld: Rapier.World,
+  physicsWorld: CANNON.World,
   physicsObjects: Array<PhysicsObject>,
   character: any
 
@@ -52,9 +54,15 @@ const renderTickManager = new TickManager()
 
 export const initEngine = async () => {
   // physics -> Rapier
-  RAPIER = await InitRapier()
-  physicsWorld = new RAPIER.World(GRAVITY)
+  // RAPIER = await InitRapier()
+  // physicsWorld = new RAPIER.World(GRAVITY)
+
+  physicsWorld = new CANNON.World({
+    gravity: new CANNON.Vec3(0, -9.82, 0), // m/s²
+  })
   physicsObjects = [] // initializing physics objects array
+
+
 
   debugMode = true
 
@@ -197,7 +205,7 @@ export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
 
-export { RAPIER }
+// export { RAPIER }
 
 
 const addWindowEvents = () => {
