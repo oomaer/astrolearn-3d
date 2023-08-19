@@ -1,5 +1,6 @@
 
-import { useDraggleObjects, useModels, usePhysics, useScene } from "../init";
+import { useDraggleObjects, usePhysics, useScene } from "../init";
+import { useModels } from "./loadModels";
 
 import * as THREE from 'three'
 import { createBoundingMesh } from "./utils";
@@ -14,6 +15,8 @@ export const initCentralPark = () => {
     // addMysticTree(scene, models)
     addMarketStalls(scene, models)
     addSittingArea(scene, models)
+    addLampPosts(scene, models)
+    addPineTress(scene, models)
 
 }
 
@@ -132,16 +135,58 @@ const addSittingArea = (scene: THREE.Scene, models:any) => {
 
     const bonFire = models['bonFire'].data.scene;
     bonFire.scale.set(8, 8, 8)
-    bonFire.position.set(0, 0, 0)
-    const mesh:any = createBoundingMesh({group: bonFire, position: bonFire.position, show: true, draggable: true, type: "box"})
-
+    bonFire.position.set(12, 0, 19)
+    const mesh:any = createBoundingMesh({group: bonFire, position: bonFire.position, show: false, draggable: false, type: "box"})
     scene.add(bonFire)
 
     const bench = models['bench'].data.scene;
     bench.scale.set(7, 7, 7)
     bench.rotation.y = 0.46
-    bench.position.set(0, 0, 0)
-    const mesh2:any = createBoundingMesh({group: bench, position: bench.position, show: true, draggable: true, type: "box"})
+    bench.position.set(13, 0, 21)
+    const mesh2:any = createBoundingMesh({group: bench, position: bench.position, show: false, draggable: false, type: "box"})
     scene.add(bench)
+
+}
+
+
+const addLampPosts = (scene: THREE.Scene, models:any) => {
+
+    const posts = [
+        {
+            position: {x: 9.20, y: 3.89, z: 23.80},
+        },
+        {
+            position: {x: 13.65, y: 3.89, z: -19.80},
+        }
+    ]
+
+    for(const i of posts) {
+        const lampPost = models['lampPost'].data.scene.clone();
+        lampPost.scale.set(0.8, 0.8, 0.8)
+        lampPost.position.set(i.position.x, i.position.y, i.position.z)
+        const mesh:any = createBoundingMesh({group: lampPost, position: lampPost.position, show: false, draggable: false, type: "box"})
+        scene.add(lampPost)
+    }
+
+}
+
+const addPineTress = (scene: THREE.Scene, models:any) => {
+
+    const items = [
+        {
+            position: {x: 0, y: 3.89, z: 0},
+        },
+        {
+            position: {x: 0, y: 0, z: 0},
+        }
+    ]
+
+    for(const i of items) {
+        const item = models['pineTree'].data.scene.clone();
+        item.scale.set(1.5, 1.5, 1.5)
+        item.position.set(i.position.x, i.position.y, i.position.z)
+        const mesh:any = createBoundingMesh({group: item, position: item.position, show: true, draggable: true, type: "box"})
+        scene.add(item)
+    }
 
 }

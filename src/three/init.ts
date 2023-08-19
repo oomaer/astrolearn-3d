@@ -19,6 +19,7 @@ import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 import * as CANNON from "cannon-es"
 
 import { AmmoPhysics } from '@enable3d/ammo-physics'
+import { loadAllModels } from './gui/loadModels'
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -48,36 +49,6 @@ const selectedOptions: any = {
 let selectedObject;
 let showBoundingBox = false;
 
-
-const models:any = {
-  'fence': {
-    path: 'models/Fence.glb',
-  },
-  'mysticTree': {
-    path: 'models/trees/MysticTree.glb',
-  },
-  'wishingWell': {
-    path: 'models/WishingWell.glb',
-  },
-  'pond': {
-    path: 'models/Pond.glb',
-  },
-  'fountain': {
-    path: 'models/Fountain.glb',
-  },
-  'oakTree': {
-    path: 'models/trees/OakTree.glb',
-  },
-  'bonFire': {
-    path: 'models/Bonfire.glb',
-  },
-  'bench': {
-    path: 'models/Bench.glb'
-  },
-  'marketStalls': {
-    path: 'models/MarketStalls.glb'
-  }
-}
 
 
 let rayCaster:any;
@@ -164,8 +135,7 @@ const addDragControls = () => {
   dragControls.addEventListener( 'dragstart', function (e) {
     document.getElementById("rotation").value = e.object.model.rotation.y;
     document.getElementById("scale").value = e.object.model.scale.x;
-    document.getElementById("position").innerHTML = 
-    e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
+    document.getElementById("position").innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
     selectedObject = e.object;
     controls.enabled = false; 
   } );
@@ -218,7 +188,6 @@ export const useStats = () => stats
 
 export const useRenderTarget = () => renderTarget
 
-export const useModels = () => models
 
 export const useDraggleObjects = () => draggleObjects
 
@@ -342,26 +311,6 @@ const addWindowEvents = () => {
       }
     }
   })
-
-}
-
-const loadAllModels = async () => {
-
-  const modelPromises = []
-
-  for(const model of Object.keys(models)){
-      const modelPath = models[model].path
-      const modelPromise = new Promise((resolve, reject) => {
-          gltfLoader.load(modelPath, (gltf) => {
-              models[model].data = gltf
-              resolve(gltf)
-          })
-      })
-      modelPromises.push(modelPromise)
-  }
-
-  await Promise.all(modelPromises)
-
 
 }
 
