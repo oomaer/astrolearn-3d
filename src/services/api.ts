@@ -12,10 +12,10 @@ export const GET_MODELS = async () => {
     }
 }
 
-export const UPDATE_ATTRIBUTES = async (name:string, attributes:any) => {
+export const UPDATE_INSTANCES = async (name:string, instances:any) => {
     try{
         const response = await axios.post(apiurl+'/update/'+name, {
-            attributes
+            instances
         })
         return response.data
     }

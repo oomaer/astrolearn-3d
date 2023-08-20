@@ -1,5 +1,5 @@
 
-import { useDraggleObjects, usePhysics, useScene } from "../init";
+import { useScene } from "../init";
 import { useModels } from "./loadModels";
 
 import * as THREE from 'three'
@@ -92,9 +92,9 @@ const addFence = (scene:THREE.Scene, models:any) => {
     // ]
     // console.log(JSON.stringify(fences))
 
-    for(let i = 0; i < models['fence1'].attributes.length; i++) {
+    for(let i = 0; i < models['fence1'].instances.length; i++) {
         const fence = models['fence1'].data.scene.clone();
-        const attributes = models['fence1'].attributes[i]
+        const attributes = models['fence1'].instances[i]
         const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
         const mesh:any = createBoundingMesh({name: models['fence1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
         if(attributes.rotation) {

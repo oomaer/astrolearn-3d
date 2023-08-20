@@ -37,7 +37,7 @@ let scene: THREE.Scene,
   physicsObjects: Array<PhysicsObject>,
   character: any
 
-const draggleObjects: any = []
+const draggableObjects: any = []
 const debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
@@ -115,7 +115,7 @@ export const initEngine = async () => {
 
   textureLoader= new THREE.TextureLoader()
 
-  await loadAllModels()
+  const models = await loadAllModels()
 
   init3DWorld();
   character = addCharacter();
@@ -123,13 +123,18 @@ export const initEngine = async () => {
 
   addDragControls()
   renderTickManager.startLoop()
+
+  return {
+    models, scene, draggableObjects
+  }
+
 }
 
 
 
 const addDragControls = () => {
   const models = useModels();
-  const dragControls = new DragControls( draggleObjects, camera, renderer.domElement );
+  const dragControls = new DragControls( draggableObjects, camera, renderer.domElement );
   dragControls.addEventListener( 'dragstart', function (e) {
     if(selectedObject) selectedObject.visible = false; //hide previous selected object
     e.object.visible = true; //show new selected object
@@ -137,6 +142,7 @@ const addDragControls = () => {
     //update dom input fields
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
     (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
+    
     (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
     selectedObject = e.object;
@@ -148,7 +154,8 @@ const addDragControls = () => {
     controls.enabled = true;  
     e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
     // (document.getElementById("position") as HTMLElement).innerHTML = e.object.position.x.toFixed(2) + ", " + e.object.position.y.toFixed(2) + ", " + e.object.position.z.toFixed(2);
-    models[e.object.name].attributes[e.object.index].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
+    // console.log(models[e.object.name].instances, e.object.index);
+    models[e.object.name].instances[e.object.index].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
   });
  
 
@@ -190,8 +197,7 @@ export const useStats = () => stats
 
 export const useRenderTarget = () => renderTarget
 
-
-export const useDraggleObjects = () => draggleObjects
+export const useDraggableObjects = () => draggableObjects
 
 // export const addPass = (pass: Pass) => {
 //   composer.addPass(pass)
@@ -215,6 +221,7 @@ export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
 export const useSelectedObject = () => selectedObject
+export const setSelectedObject = (obj:any) => selectedObject = obj
 
 export { physicsWorld }
 

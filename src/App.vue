@@ -16,17 +16,37 @@
 
 // main.addWindowEvents()
 
+
+import { onMounted, ref } from 'vue';
 import { initEngine } from './three/init';
-Ammo().then( function ( AmmoLib ) {
-
-  // Ammo = AmmoLib;
-  initEngine();
+import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
 
+const modelsArray = ref<string[]>([])
 
-} );
+
+onMounted(async () => {
+  
+  Ammo().then( async function ( AmmoLib ) {
+    const three = await initEngine();
+    modelsArray.value = Object.keys(three.models)
+  } );
 
 
+})
+
+
+const addModel = (modelName: string) => {
+ 
+  const attributes = {
+    position: {x: 0, y: 0, z: 0},
+    rotation: {x: 0, y: 0, z: 0},
+    scale: {x: 2, y: 2, z: 2},
+  }
+
+  addModelToSceneWithBoundingMesh(modelName, attributes)
+
+}
 
 </script>
 
@@ -53,6 +73,13 @@ Ammo().then( function ( AmmoLib ) {
     </div>   
     <div class="input-container"> 
       <button id="save-btn">Save</button>
+    </div>
+
+    <div class="absolute top-0 left-0 z-[2] bg-black">
+      <div class="flex flex-col">
+        <button v-for="model in modelsArray" :key="model" @click="addModel(model)">{{model}}</button>
+
+      </div>
     </div>
   </div>
 </template>

@@ -1,6 +1,7 @@
 import * as THREE from 'three'
-import { useDraggleObjects, useScene } from '../init';
-export const createBoundingMesh = ({group, name, show=false, wireframe=false, draggable=false, type="box", attributes, instanceIndex}:
+import { useDraggableObjects, useScene } from '../init';
+import { useModels } from './loadModels';
+export const createBoundingMesh = ({group, name, show=false, wireframe=true, draggable=false, type="box", attributes, instanceIndex}:
     {
         name: string,
         group: THREE.Group,
@@ -18,7 +19,7 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=false, dr
     }): THREE.Mesh => {
 
     const scene = useScene();
-    const draggleObjects = useDraggleObjects();
+    const draggableObjects = useDraggableObjects();
     // Get the bounding box of the loaded model group
     const boundingBox = new THREE.Box3().setFromObject(group);
     // console.log(boundingBox)
@@ -52,12 +53,11 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=false, dr
     mesh.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
 
     mesh.model = group
-    // if(show) scene.add(mesh)
-    mesh.visible = false
+    show ? mesh.visible = true: mesh.visible = false
     mesh.name = name
     mesh.index = instanceIndex
     scene.add(mesh)
-    if(draggable) draggleObjects.push(mesh)
+    if(draggable) draggableObjects.push(mesh)
 
     return mesh
 
@@ -65,3 +65,22 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=false, dr
     // boxMesh.position.copy(boundingBox.getCenter());
 }
 
+export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any) => {
+    const models = useModels();
+    const scene = useScene();
+
+    models[modelName].instances = [...models[modelName].instances, attributes]
+    const model = models[modelName].data.scene.clone();
+    createBoundingMesh({
+      name: models['fence1'].name, 
+      group: model, 
+      show: false, 
+      draggable: true, 
+      attributes, 
+      instanceIndex: models[modelName].instances.length - 1
+    })
+    model.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+    model.scale.set(attributes.scale.x, attributes.scale.y, attributes.scale.z)
+    model.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+    scene.add(model)
+}

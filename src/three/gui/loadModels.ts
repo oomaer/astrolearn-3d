@@ -81,6 +81,7 @@ export const loadAllModels = async () => {
   
     await Promise.all(modelPromises)
   
+    return models
   
 }
 
