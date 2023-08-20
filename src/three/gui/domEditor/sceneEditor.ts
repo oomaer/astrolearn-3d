@@ -1,5 +1,6 @@
 import { useSelectedObject } from "@/three/init";
 import { useModels } from "../loadModels";
+import { UPDATE_ATTRIBUTES } from "@/services/api";
 
 export const initEditor = () => {
 
@@ -15,7 +16,8 @@ export const initEditor = () => {
         if(selectedObject){
             selectedObject.rotation.y = event.target.value;
             selectedObject.model.rotation.y = event.target.value;
-            console.log(selectedObject)
+            models[selectedObject.name].attributes[selectedObject.index].rotation.y = event.target.value;
+            console.log(models[selectedObject.name].attributes[selectedObject.index])
         }
     })
     scale?.addEventListener('input', (event:any) => {
@@ -23,6 +25,7 @@ export const initEditor = () => {
         if(selectedObject){
             selectedObject.scale.set(event.target.value, event.target.value, event.target.value)
             selectedObject.model.scale.set(event.target.value, event.target.value, event.target.value)
+            models[selectedObject.name].attributes[selectedObject.index].scale = {x: event.target.value, y: event.target.value, z: event.target.value};
         }
     })
 
@@ -31,6 +34,14 @@ export const initEditor = () => {
         const showBoundingBox = event.target.checked
         if(selectedObject){
             selectedObject.visible = showBoundingBox
+        }
+    })
+
+    savebtn?.addEventListener("click", async () => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject){
+            const saved = await UPDATE_ATTRIBUTES(selectedObject.name, models[selectedObject.name].attributes)
+            console.log(saved)
         }
     })
 

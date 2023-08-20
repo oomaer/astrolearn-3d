@@ -19,8 +19,8 @@ import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 import * as CANNON from "cannon-es"
 
 import { AmmoPhysics } from '@enable3d/ammo-physics'
-import { loadAllModels } from './gui/loadModels'
-import { initEditor } from './gui/domEditor/editor'
+import { loadAllModels, useModels } from './gui/loadModels'
+import { initEditor } from './gui/domEditor/sceneEditor'
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -128,6 +128,7 @@ export const initEngine = async () => {
 
 
 const addDragControls = () => {
+  const models = useModels();
   const dragControls = new DragControls( draggleObjects, camera, renderer.domElement );
   dragControls.addEventListener( 'dragstart', function (e) {
     if(selectedObject) selectedObject.visible = false; //hide previous selected object
@@ -146,6 +147,8 @@ const addDragControls = () => {
   dragControls.addEventListener( 'dragend', function (e) { 
     controls.enabled = true;  
     e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
+    // (document.getElementById("position") as HTMLElement).innerHTML = e.object.position.x.toFixed(2) + ", " + e.object.position.y.toFixed(2) + ", " + e.object.position.z.toFixed(2);
+    models[e.object.name].attributes[e.object.index].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
   });
  
 
@@ -169,7 +172,6 @@ const addDragControls = () => {
       e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
     }
 
-    
   }
 
 }
@@ -212,7 +214,6 @@ export const usePhysicsObjects = () => physicsObjects
 export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
-export const useShowBoundingBox = () => showBoundingBox
 export const useSelectedObject = () => selectedObject
 
 export { physicsWorld }
