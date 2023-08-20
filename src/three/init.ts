@@ -16,8 +16,6 @@ import { addCharacter, init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 
-import * as CANNON from "cannon-es"
-
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 import { loadAllModels, useModels } from './gui/loadModels'
 import { initEditor } from './gui/domEditor/sceneEditor'
@@ -142,7 +140,7 @@ const addDragControls = () => {
     //update dom input fields
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
     (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
-    
+
     (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
     selectedObject = e.object;

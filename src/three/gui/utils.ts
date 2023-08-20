@@ -72,7 +72,7 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
     models[modelName].instances = [...models[modelName].instances, attributes]
     const model = models[modelName].data.scene.clone();
     createBoundingMesh({
-      name: models['fence1'].name, 
+      name: modelName, 
       group: model, 
       show: false, 
       draggable: true, 

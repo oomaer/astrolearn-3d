@@ -40,6 +40,7 @@ export const initEditor = () => {
     savebtn?.addEventListener("click", async () => {
         const selectedObject = useSelectedObject();
         if(selectedObject){
+            console.log(selectedObject)
             const saved = await UPDATE_INSTANCES(selectedObject.name, models[selectedObject.name].instances)
             console.log(saved)
         }
