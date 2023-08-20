@@ -23,3 +23,15 @@ export const UPDATE_INSTANCES = async (name:string, instances:any) => {
         console.log(err)
     }
 }
+
+export const UPDATE_ALL = async (models:any) => {
+    try{
+        const response = await axios.post(apiurl+'/updateall', {
+           
+        })
+        return response.data
+    }
+    catch(err){
+        console.log(err)
+    }
+}

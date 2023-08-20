@@ -18,7 +18,7 @@ import {DragControls} from 'three/examples/jsm/controls/DragControls.js'
 
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 import { loadAllModels, useModels } from './gui/loadModels'
-import { initEditor } from './gui/domEditor/sceneEditor'
+import { getSelectedInstanceIndex, initEditor } from './gui/domEditor/sceneEditor'
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -143,6 +143,7 @@ const addDragControls = () => {
 
     (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
+
     selectedObject = e.object;
     //disable orbit controls
     controls.enabled = false; 
@@ -151,9 +152,8 @@ const addDragControls = () => {
   dragControls.addEventListener( 'dragend', function (e) { 
     controls.enabled = true;  
     e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
-    // (document.getElementById("position") as HTMLElement).innerHTML = e.object.position.x.toFixed(2) + ", " + e.object.position.y.toFixed(2) + ", " + e.object.position.z.toFixed(2);
-    // console.log(models[e.object.name].instances, e.object.index);
-    models[e.object.name].instances[e.object.index].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
+    const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+    models[e.object.name].instances[selectedInstaceindex].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
   });
  
 

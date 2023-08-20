@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { useDraggableObjects, useScene } from '../init';
 import { useModels } from './loadModels';
-export const createBoundingMesh = ({group, name, show=false, wireframe=true, draggable=false, type="box", attributes, instanceIndex}:
+export const createBoundingMesh = ({group, name, show=false, wireframe=true, draggable=false, type="box", attributes}:
     {
         name: string,
         group: THREE.Group,
@@ -10,11 +10,11 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=true, dra
         draggable?: boolean,
         attributes: {
             position: {x: number, y: number, z: number},
-            scale?: {x: number, y: number, z: number}
-            rotation?: {x: number, y: number, z: number}
+            scale?: {x: number, y: number, z: number},
+            rotation?: {x: number, y: number, z: number},
+            _id: string 
         }
         type?: "box" | "sphere",
-        instanceIndex: number //will be used to edit attributes specific instance of the model
         // scale: number
     }): THREE.Mesh => {
 
@@ -55,7 +55,7 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=true, dra
     mesh.model = group
     show ? mesh.visible = true: mesh.visible = false
     mesh.name = name
-    mesh.index = instanceIndex
+    mesh._id = attributes._id
     scene.add(mesh)
     if(draggable) draggableObjects.push(mesh)
 
@@ -76,8 +76,7 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
       group: model, 
       show: false, 
       draggable: true, 
-      attributes, 
-      instanceIndex: models[modelName].instances.length - 1
+      attributes
     })
     model.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
     model.scale.set(attributes.scale.x, attributes.scale.y, attributes.scale.z)
@@ -93,7 +92,7 @@ export const displayModelWithBoundingMesh = (modelName:string, models: any, scen
         const attributes = models[modelName].instances[i]
 
         const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
-        const mesh:any = createBoundingMesh({name: models['pineTree1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
+        const mesh:any = createBoundingMesh({name: models[modelName].name, group: fence, show: false, draggable: true, attributes})
         if(attributes.rotation) {
             fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
         }

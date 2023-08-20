@@ -100,7 +100,7 @@ const addFence = (scene:THREE.Scene, models:any) => {
         const fence = models['fence1'].data.scene.clone();
         const attributes = models['fence1'].instances[i]
         const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
-        const mesh:any = createBoundingMesh({name: models['fence1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
+        const mesh:any = createBoundingMesh({name: models['fence1'].name, group: fence, show: false, draggable: true, attributes})
         if(attributes.rotation) {
             fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
         }
