@@ -50,7 +50,10 @@ Ammo().then( function ( AmmoLib ) {
     <div class="input-container"> 
       <p>Position</p>
       <p id = position></p>
-    </div>    
+    </div>   
+    <div class="input-container"> 
+      <button id="save-btn">Save</button>
+    </div>
   </div>
 </template>
 

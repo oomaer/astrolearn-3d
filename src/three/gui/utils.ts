@@ -1,13 +1,19 @@
 import * as THREE from 'three'
-import { useDraggleObjects, useScene, useShowBoundingBox } from '../init';
-export const createBoundingMesh = ({group, position, show=false, wireframe=true, draggable=false, type="box"}:
+import { useDraggleObjects, useScene } from '../init';
+export const createBoundingMesh = ({group, name, show=false, wireframe=false, draggable=false, type="box", attributes, instanceIndex}:
     {
+        name: string,
         group: THREE.Group,
-        position: {x: number, y: number, z: number},
         show?: boolean,
         wireframe?: boolean,
         draggable?: boolean,
+        attributes: {
+            position: {x: number, y: number, z: number},
+            scale?: {x: number, y: number, z: number}
+            rotation?: {x: number, y: number, z: number}
+        }
         type?: "box" | "sphere",
+        instanceIndex: number //will be used to edit attributes specific instance of the model
         // scale: number
     }): THREE.Mesh => {
 
@@ -38,10 +44,19 @@ export const createBoundingMesh = ({group, position, show=false, wireframe=true,
         mesh = new THREE.Mesh(boxGeometry, boxMaterial);
     }
 
-    mesh.position.set(position.x, position.y, position.z)
-    
+    mesh.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+    if(attributes.scale)
+    mesh.scale.set(attributes.scale.x, attributes.scale.y, attributes.scale.z)
+
+    if(attributes.rotation)
+    mesh.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+
     mesh.model = group
-    if(show) scene.add(mesh)
+    // if(show) scene.add(mesh)
+    mesh.visible = false
+    mesh.name = name
+    mesh.index = instanceIndex
+    scene.add(mesh)
     if(draggable) draggleObjects.push(mesh)
 
     return mesh

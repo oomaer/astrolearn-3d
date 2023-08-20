@@ -20,6 +20,7 @@ import * as CANNON from "cannon-es"
 
 import { AmmoPhysics } from '@enable3d/ammo-physics'
 import { loadAllModels } from './gui/loadModels'
+import { initEditor } from './gui/domEditor/editor'
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
@@ -41,13 +42,8 @@ const debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
 
-const selectedOptions: any = {
-  rotation: 0,
-  scale: 1,
-  show: 0,
-}
-let selectedObject;
-let showBoundingBox = false;
+
+let selectedObject:any;
 
 
 
@@ -55,6 +51,7 @@ let rayCaster:any;
 const renderTickManager = new TickManager()
 
 export const initEngine = async () => {
+
 
   physicsObjects = [] // initializing physics objects array
 
@@ -133,16 +130,21 @@ export const initEngine = async () => {
 const addDragControls = () => {
   const dragControls = new DragControls( draggleObjects, camera, renderer.domElement );
   dragControls.addEventListener( 'dragstart', function (e) {
-    document.getElementById("rotation").value = e.object.model.rotation.y;
-    document.getElementById("scale").value = e.object.model.scale.x;
-    document.getElementById("position").innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
+    if(selectedObject) selectedObject.visible = false; //hide previous selected object
+    e.object.visible = true; //show new selected object
+
+    //update dom input fields
+    (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
+    (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
+    (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
+    (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
     selectedObject = e.object;
+    //disable orbit controls
     controls.enabled = false; 
   } );
   dragControls.addEventListener( 'drag', onDragEvent );
   dragControls.addEventListener( 'dragend', function (e) { 
-    controls.enabled = true; 
-    console.log(e.object.position);  
+    controls.enabled = true;  
     e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
   });
  
@@ -165,10 +167,8 @@ const addDragControls = () => {
     
     if (intersects.length > 0){
       e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
-      
-    // console.log(intersects[0].point);
     }
-    // rayCaster.ray.intersectPlane(plane, intersects);
+
     
   }
 
@@ -213,6 +213,7 @@ export const useDebugMode = () => debugMode
 export const useCharacter = () => character
 export const useKeys = () => keysPressed
 export const useShowBoundingBox = () => showBoundingBox
+export const useSelectedObject = () => selectedObject
 
 export { physicsWorld }
 
@@ -283,34 +284,11 @@ const addWindowEvents = () => {
   // window.addEventListener( 'click', getClicked3DPoint );
 
 
-  const show = document.getElementById('show-wireframe');
-  const rotation = document.getElementById('rotation');
-  const scale = document.getElementById('scale');
 
-  rotation?.addEventListener('input', (event) => {
-    if(selectedObject){
-      selectedObject.rotation.y = event.target.value;
-      selectedObject.model.rotation.y = event.target.value;
-    }
-  })
-  scale?.addEventListener('input', (event) => {
-    if(selectedObject){
-      // selectedObject.scale.set(event.target.value, event.target.value, event.target.value)
-      selectedObject.model.scale.set(event.target.value, event.target.value, event.target.value)
-    }
-  })
 
-  show?.addEventListener("change", (event) => {
-    showBoundingBox = event.target.checked
-    if(selectedObject){
-      if(showBoundingBox){
-        scene.add(selectedObject)
-      }
-      else{
-        scene.remove(selectedObject)
-      }
-    }
-  })
+  //DOM EDIT EVENTS 
+  initEditor()
+  
 
 }
 

@@ -1,48 +1,53 @@
+import { GET_MODELS } from "@/services/api"
 import { useGltfLoader } from "../init"
 import * as THREE from "three"
 
-const models:any = {
-    'fence': {
-      path: 'models/Fence.glb',
-    },
-    'mysticTree': {
-      path: 'models/trees/MysticTree.glb',
-    },
-    'wishingWell': {
-      path: 'models/WishingWell.glb',
-    },
-    'pond': {
-      path: 'models/Pond.glb',
-    },
-    'fountain': {
-      path: 'models/Fountain.glb',
-    },
-    'bonFire': {
-      path: 'models/Bonfire.glb',
-    },
-    'bench': {
-      path: 'models/Bench.glb'
-    },
-    'marketStalls': {
-      path: 'models/MarketStalls.glb'
-    },
-    'lampPost':{
-      path: 'models/LampPost.glb'
-    },
-    'oakTree': {
-      path: 'models/trees/Oak_Tree.gltf',
-    },
-    'pineTree': {
-      path: 'models/trees/PineTree.gltf'
-    },
-    'poplarTree': {
-      path: 'models/trees/Poplar_Tree.gltf'
-    }
+// const models:any = {
+//     'fence': {
+//       path: 'models/Fence.glb',
+//     },
+//     'mysticTree': {
+//       path: 'models/trees/MysticTree.glb',
+//     },
+//     'wishingWell': {
+//       path: 'models/WishingWell.glb',
+//     },
+//     'pond': {
+//       path: 'models/Pond.glb',
+//     },
+//     'fountain': {
+//       path: 'models/Fountain.glb',
+//     },
+//     'bonFire': {
+//       path: 'models/Bonfire.glb',
+//     },
+//     'bench': {
+//       path: 'models/Bench.glb'
+//     },
+//     'marketStalls': {
+//       path: 'models/MarketStalls.glb'
+//     },
+//     'lampPost':{
+//       path: 'models/LampPost.glb'
+//     },
+//     'oakTree': {
+//       path: 'models/trees/Oak_Tree.gltf',
+//     },
+//     'pineTree': {
+//       path: 'models/trees/PineTree.gltf'
+//     },
+//     'poplarTree': {
+//       path: 'models/trees/Poplar_Tree.gltf'
+//     }
   
-  }
+// }
 
+
+let models:any;
 
 export const loadAllModels = async () => {
+
+    models = await GET_MODELS();
 
     const gltfLoader = useGltfLoader()
     const modelPromises = []
@@ -79,4 +84,7 @@ export const loadAllModels = async () => {
   
 }
 
+
 export const useModels = () => models
+
+
