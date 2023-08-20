@@ -77,7 +77,6 @@ const addLights = () => {
 
 const addGroundAndSky = () => {
     const scene = useScene();
-    const physicsWorld = usePhysics();
     const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
     const groundMat = new THREE.MeshToonMaterial({ color:  '#a67848' });
     groundMat.color.setHex(0x019516).convertSRGBToLinear()
@@ -92,7 +91,6 @@ const addGroundAndSky = () => {
       rigidBodyType: 'kinematic',
     })
 
-    // addPhysics({mesh: ground, rigidBodyType:"static", mass: 0})
 
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );

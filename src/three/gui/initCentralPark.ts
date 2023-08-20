@@ -3,7 +3,7 @@ import { useScene } from "../init";
 import { useModels } from "./loadModels";
 
 import * as THREE from 'three'
-import { createBoundingMesh } from "./utils";
+import { createBoundingMesh, displayModelWithBoundingMesh } from "./utils";
 import { physicsWorld } from "../init";
 import { addPhysics } from "../physics/physics";
 
@@ -11,8 +11,11 @@ export const initCentralPark = () => {
 
     const scene = useScene()
     const models = useModels()
-    addFence(scene, models)
-    addPineTress(scene, models)
+    
+    displayModelWithBoundingMesh('fence1', models, scene)
+    // addPineTress(scene, models)
+    displayModelWithBoundingMesh('pineTree1', models, scene)
+
     // addMysticTree(scene, models)
     // addMarketStalls(scene, models)
     // addSittingArea(scene, models)
@@ -189,24 +192,24 @@ const addFence = (scene:THREE.Scene, models:any) => {
 
 const addPineTress = (scene: THREE.Scene, models:any) => {
 
-    for(let i = 0; i < models['pineTree1'].instances.length; i++) {
-        const fence = models['pineTree1'].data.scene.clone();
-        const attributes = models['pineTree1'].instances[i]
+    // for(let i = 0; i < models['pineTree1'].instances.length; i++) {
+    //     const fence = models['pineTree1'].data.scene.clone();
+    //     const attributes = models['pineTree1'].instances[i]
 
-        const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
-        const mesh:any = createBoundingMesh({name: models['pineTree1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
-        if(attributes.rotation) {
-            fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
-        }
-        if(attributes.scale){
-            fence.scale.set(scale.x, scale.y, scale.z)
-        }
-        fence.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
-        scene.add(fence)
-        // mesh.scale.y = 5
-        // physicsWorld.add.existing(mesh)
-        // mesh.body.setCollisionFlags(2)
-        // (mesh as any).body.setCollisionFlags(2)
-    }
+    //     const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
+    //     const mesh:any = createBoundingMesh({name: models['pineTree1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
+    //     if(attributes.rotation) {
+    //         fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+    //     }
+    //     if(attributes.scale){
+    //         fence.scale.set(scale.x, scale.y, scale.z)
+    //     }
+    //     fence.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+    //     scene.add(fence)
+    //     // mesh.scale.y = 5
+    //     // physicsWorld.add.existing(mesh)
+    //     // mesh.body.setCollisionFlags(2)
+    //     // (mesh as any).body.setCollisionFlags(2)
+    // }
 
 }

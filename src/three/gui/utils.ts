@@ -84,3 +84,27 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
     model.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
     scene.add(model)
 }
+
+
+export const displayModelWithBoundingMesh = (modelName:string, models: any, scene:THREE.Scene) => {
+
+    for(let i = 0; i < models[modelName].instances.length; i++) {
+        const fence = models[modelName].data.scene.clone();
+        const attributes = models[modelName].instances[i]
+
+        const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
+        const mesh:any = createBoundingMesh({name: models['pineTree1'].name, group: fence, show: false, draggable: true, attributes, instanceIndex: i})
+        if(attributes.rotation) {
+            fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+        }
+        if(attributes.scale){
+            fence.scale.set(scale.x, scale.y, scale.z)
+        }
+        fence.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+        scene.add(fence)
+        // mesh.scale.y = 5
+        // physicsWorld.add.existing(mesh)
+        // mesh.body.setCollisionFlags(2)
+        // (mesh as any).body.setCollisionFlags(2)
+    }
+}

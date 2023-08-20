@@ -1,4 +1,4 @@
-import { useSelectedObject } from "@/three/init";
+import { useScene, useSelectedObject } from "@/three/init";
 import { useModels } from "../loadModels";
 import { UPDATE_INSTANCES } from "@/services/api";
 
@@ -40,9 +40,20 @@ export const initEditor = () => {
     savebtn?.addEventListener("click", async () => {
         const selectedObject = useSelectedObject();
         if(selectedObject){
-            console.log(selectedObject)
             const saved = await UPDATE_INSTANCES(selectedObject.name, models[selectedObject.name].instances)
             console.log(saved)
+        }
+    })
+
+    document.addEventListener('keydown', (event) => {
+        if(event.key === "Delete"){
+            const selectedObject = useSelectedObject();
+            const scene = useScene();
+            if(selectedObject){
+                models[selectedObject.name].instances.splice(selectedObject.index, 1)
+                scene.remove(selectedObject.model)
+                scene.remove(selectedObject)
+            }
         }
     })
 
