@@ -78,8 +78,8 @@ const addLights = () => {
 const addGroundAndSky = () => {
     const scene = useScene();
     const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
-    const groundMat = new THREE.MeshToonMaterial({ color:  '#a67848' });
-    groundMat.color.setHex(0x019516).convertSRGBToLinear()
+    const groundMat = new THREE.MeshToonMaterial({ color:  0x379c41 });
+    groundMat.color.setHex(0x379c41).convertSRGBToLinear()
     const ground:any = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
     ground.position.y = -1;

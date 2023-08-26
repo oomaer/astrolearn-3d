@@ -1,5 +1,5 @@
 import { GET_MODELS } from "@/services/api"
-import { useGltfLoader } from "../init"
+import { useGltfLoader, useScene } from "../init"
 import * as THREE from "three"
 
 // const models:any = {
@@ -52,8 +52,13 @@ export const loadAllModels = async () => {
     const gltfLoader = useGltfLoader()
     const modelPromises = []
   
-    for(const model of Object.keys(models)){
+    for(const model of Object.keys(models)){        
         const modelPath = models[model].path
+        const type = models[model].type
+        if(type === "threemesh"){
+          generateThreeMesh(models, model)
+          continue;
+        }
         const modelPromise = new Promise((resolve, reject) => {
             gltfLoader.load(modelPath, (gltf) => {
               if(model === 'pineTree1'){
@@ -85,6 +90,22 @@ export const loadAllModels = async () => {
   
 }
 
+
+const generateThreeMesh = (models:any, model:string) => {
+  if(models[model].subtype === "plane"){
+console.log("here")
+    const mesh = new THREE.Mesh(
+      new THREE.PlaneGeometry(1, 1),
+      new THREE.MeshStandardMaterial({color: 'black', side: THREE.DoubleSide})
+    )
+
+    mesh.position.set(0, 3, 0)
+    
+
+    models[model].data = {scene: mesh}
+
+  }
+}
 
 export const useModels = () => models
 

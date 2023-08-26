@@ -82,7 +82,7 @@ export const initEngine = async () => {
   renderer.physicallyCorrectLights = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
   // renderer.toneMapping = THREE.ReinhardToneMapping;
-  // renderer.toneMappingExposure = 5;
+  // renderer.toneMappingExposure = 1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
