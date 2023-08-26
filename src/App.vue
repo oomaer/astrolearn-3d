@@ -63,13 +63,15 @@ const addModel = (modelName: string) => {
     </div>    
     <div class="input-container"> 
       <p>Rotation</p>
-      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotation" />
-      <p id="rotation-value">0</p>
+      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationX" class="small"/>
+      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationY" class="small"/>
+      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationZ" class="small"/>
     </div>  
     <div class="input-container"> 
       <p>Scale</p>
-      <input type="number" id="scale" />
-      <p id="scale-value">0</p>
+      <input type="number" step="0.4" id="scaleX" class="small"/>
+      <input type="number" step="0.4" id="scaleY" class="small"/>
+      <input type="number" step="0.4" id="scaleZ" class="small"/>
     </div>  
     <div class="input-container"> 
       <p>Position</p>

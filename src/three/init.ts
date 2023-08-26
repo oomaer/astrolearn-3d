@@ -140,8 +140,13 @@ const addDragControls = () => {
     //update dom input fields
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
     (document.getElementById("draggable") as HTMLInputElement).checked = e.object.isDraggable;
-    (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
-    (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
+    (document.getElementById("rotationX") as HTMLInputElement).value = e.object.model.rotation.x; 
+    (document.getElementById("rotationY") as HTMLInputElement).value = e.object.model.rotation.y ;
+    (document.getElementById("rotationZ") as HTMLInputElement).value = e.object.model.rotation.z; 
+    (document.getElementById("scaleX") as HTMLInputElement).value = e.object.model.scale.x;
+    (document.getElementById("scaleY") as HTMLInputElement).value = e.object.model.scale.y;
+    (document.getElementById("scaleZ") as HTMLInputElement).value = e.object.model.scale.z;
+    // (document.getElementById("scaleAll") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("positionX") as HTMLInputElement).value = position.x.toFixed(2).toString();
     (document.getElementById("positionY") as HTMLInputElement).value = position.y.toFixed(2).toString();
     (document.getElementById("positionZ") as HTMLInputElement).value = position.z.toFixed(2).toString();

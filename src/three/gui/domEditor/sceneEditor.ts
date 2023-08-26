@@ -7,35 +7,62 @@ export const initEditor = () => {
     const models = useModels();
 
     const show = document.getElementById('show-wireframe');
-    const rotation = document.getElementById('rotation');
-    const scale = document.getElementById('scale');
     const draggable = document.getElementById('draggable');
     const savebtn = document.getElementById('save-btn');
 
     const positionX = document.getElementById('positionX');
     const positionY = document.getElementById('positionY');
     const positionZ = document.getElementById('positionZ');
+
+    const scaleX = document.getElementById('scaleX');
+    const scaleY = document.getElementById('scaleY');
+    const scaleZ = document.getElementById('scaleZ');
+
+    const rotationX = document.getElementById('rotationX');
+    const rotationY = document.getElementById('rotationY');
+    const rotationZ = document.getElementById('rotationZ');
+
+    rotationX?.addEventListener('input', (event:any) => {
+        changeRotation(event.target.value, 'x')
+    })
+    rotationY?.addEventListener('input', (event:any) => {
+        changeRotation(event.target.value, 'y')
+    })
+    rotationZ?.addEventListener('input', (event:any) => {
+        changeRotation(event.target.value, 'z')
+    })
+
+    positionX?.addEventListener('input', (event:any) => {
+        changePosition(event.target.value, 'x')
+    })
+    positionY?.addEventListener('input', (event:any) => {
+        changePosition(event.target.value, 'y')
+    })
+    positionZ?.addEventListener('input', (event:any) => {
+        changePosition(event.target.value, 'z')
+    })
+
+    scaleX?.addEventListener('input', (event:any) => {
+        changeScale(event.target.value, 'x')
+    })
+    scaleY?.addEventListener('input', (event:any) => {
+        changeScale(event.target.value, 'y')
+    })
+    scaleZ?.addEventListener('input', (event:any) => {
+        changeScale(event.target.value, 'z')
+    })
     
 
-    rotation?.addEventListener('input', (event:any) => {
-        const selectedObject = useSelectedObject();
-        if(selectedObject){
-            selectedObject.rotation.y = event.target.value;
-            selectedObject.model.rotation.y = event.target.value;
-            // find index of selected instance in models with the help of _id
-            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-            models[selectedObject.name].instances[selectedInstaceindex].rotation = {x: 0, y: event.target.value, z: 0};
-        }
-    })
-    scale?.addEventListener('input', (event:any) => {
-        const selectedObject = useSelectedObject();
-        if(selectedObject){
-            selectedObject.scale.set(event.target.value, event.target.value, event.target.value)
-            selectedObject.model.scale.set(event.target.value, event.target.value, event.target.value)
-            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-            models[selectedObject.name].instances[selectedInstaceindex].scale = {x: event.target.value, y: event.target.value, z: event.target.value};
-        }
-    })
+
+    // scale?.addEventListener('input', (event:any) => {
+    //     const selectedObject = useSelectedObject();
+    //     if(selectedObject){
+    //         selectedObject.scale.set(event.target.value, event.target.value, event.target.value)
+    //         selectedObject.model.scale.set(event.target.value, event.target.value, event.target.value)
+    //         const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+    //         models[selectedObject.name].instances[selectedInstaceindex].scale = {x: event.target.value, y: event.target.value, z: event.target.value};
+    //     }
+    // })
 
     show?.addEventListener("change", (event:any) => {
         const selectedObject = useSelectedObject();
@@ -53,35 +80,48 @@ export const initEditor = () => {
         }
     })
 
-    positionX?.addEventListener("input", (event:any) => {
-        const selectedObject = useSelectedObject();
-        if(selectedObject){
-            selectedObject.position.x = event.target.value
-            selectedObject.model.position.x = event.target.value
-            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-            models[selectedObject.name].instances[selectedInstaceindex].position.x = event.target.value;
-        }
-    })
 
-    positionY?.addEventListener("input", (event:any) => {
+    const changeRotation = (value:string, axis:string) => {
         const selectedObject = useSelectedObject();
         if(selectedObject){
-            selectedObject.position.y = event.target.value
-            selectedObject.model.position.y = event.target.value
+            selectedObject.rotation[axis] = value;
+            selectedObject.model.rotation[axis] = value;
+            // find index of selected instance in models with the help of _id
             const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-            models[selectedObject.name].instances[selectedInstaceindex].position.y = event.target.value;
+            models[selectedObject.name].instances[selectedInstaceindex].rotation[axis] = value;
         }
-    })
+    }
 
-    positionZ?.addEventListener("input", (event:any) => {
+    const changePosition = (value:string, axis:string) => {
         const selectedObject = useSelectedObject();
         if(selectedObject){
-            selectedObject.position.z = event.target.value
-            selectedObject.model.position.z = event.target.value
+            selectedObject.position[axis] = value
+            selectedObject.model.position[axis] = value
             const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-            models[selectedObject.name].instances[selectedInstaceindex].position.z = event.target.value;
+            models[selectedObject.name].instances[selectedInstaceindex].position[axis] = value;
         }
-    })
+    }
+
+    const changeScale = (value:string, axis:string) => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject){
+            selectedObject.scale[axis] = value
+            selectedObject.model.scale[axis] = value
+            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+            models[selectedObject.name].instances[selectedInstaceindex].scale[axis] = value
+        }
+    }
+
+    // positionX?.addEventListener("input", (event:any) => {
+    //     const selectedObject = useSelectedObject();
+    //     if(selectedObject){
+    //         selectedObject.position.x = event.target.value
+    //         selectedObject.model.position.x = event.target.value
+    //         const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+    //         models[selectedObject.name].instances[selectedInstaceindex].position.x = event.target.value;
+    //     }
+    // })
+
 
     savebtn?.addEventListener("click", async () => {
         // const selectedObject = useSelectedObject();
