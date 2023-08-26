@@ -134,16 +134,19 @@ const addDragControls = () => {
   const models = useModels();
   const dragControls = new DragControls( draggableObjects, camera, renderer.domElement );
   dragControls.addEventListener( 'dragstart', function (e) {
+    const position: THREE.Vector3 = e.object.model.position
     if(selectedObject) selectedObject.visible = false; //hide previous selected object
     e.object.visible = true; //show new selected object
-    
     //update dom input fields
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
     (document.getElementById("draggable") as HTMLInputElement).checked = e.object.isDraggable;
     (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
     (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
-    (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
+    (document.getElementById("positionX") as HTMLInputElement).value = position.x.toFixed(2).toString();
+    (document.getElementById("positionY") as HTMLInputElement).value = position.y.toFixed(2).toString();
+    (document.getElementById("positionZ") as HTMLInputElement).value = position.z.toFixed(2).toString();
 
+  
     selectedObject = e.object;
     //disable orbit controls
     controls.enabled = false; 
@@ -171,11 +174,8 @@ const addDragControls = () => {
   function onDragEvent(e:any) {
     if(e.object.isDraggable){
       rayCaster.setFromCamera(mouse, camera);
-    
       const ground = scene.getObjectByName('ground')
-      
       const intersects = rayCaster.intersectObject(ground, true);
-      
       if (intersects.length > 0){
         e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
       }

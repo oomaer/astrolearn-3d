@@ -73,7 +73,9 @@ const addModel = (modelName: string) => {
     </div>  
     <div class="input-container"> 
       <p>Position</p>
-      <p id = position></p>
+      <input id = "positionX" step="0.2" type="number" class="small"/>
+      <input id = "positionY" step="0.2" type="number" class="small"/>
+      <input id = "positionZ" step="0.2" type="number" class="small"/>
     </div>   
     <div class="input-container"> 
       <button id="save-btn">Save</button>
@@ -82,7 +84,6 @@ const addModel = (modelName: string) => {
     <div class="absolute top-0 left-0 z-[2] bg-black">
       <div class="flex flex-col">
         <button v-for="model in modelsArray" :key="model" @click="addModel(model)">{{model}}</button>
-
       </div>
     </div>
   </div>
@@ -107,6 +108,16 @@ const addModel = (modelName: string) => {
     .input-container{
       display: flex;
     }
+  }
+
+  .flex{
+    display: flex
+  }
+  .flex-col{
+    flex-direction: column
+  }
+  .small{
+    width: 50px;
   }
   
 </style>

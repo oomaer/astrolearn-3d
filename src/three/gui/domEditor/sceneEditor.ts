@@ -11,6 +11,10 @@ export const initEditor = () => {
     const scale = document.getElementById('scale');
     const draggable = document.getElementById('draggable');
     const savebtn = document.getElementById('save-btn');
+
+    const positionX = document.getElementById('positionX');
+    const positionY = document.getElementById('positionY');
+    const positionZ = document.getElementById('positionZ');
     
 
     rotation?.addEventListener('input', (event:any) => {
@@ -46,6 +50,36 @@ export const initEditor = () => {
         const draggable = event.target.checked
         if(selectedObject){
             selectedObject.isDraggable = draggable
+        }
+    })
+
+    positionX?.addEventListener("input", (event:any) => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject){
+            selectedObject.position.x = event.target.value
+            selectedObject.model.position.x = event.target.value
+            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+            models[selectedObject.name].instances[selectedInstaceindex].position.x = event.target.value;
+        }
+    })
+
+    positionY?.addEventListener("input", (event:any) => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject){
+            selectedObject.position.y = event.target.value
+            selectedObject.model.position.y = event.target.value
+            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+            models[selectedObject.name].instances[selectedInstaceindex].position.y = event.target.value;
+        }
+    })
+
+    positionZ?.addEventListener("input", (event:any) => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject){
+            selectedObject.position.z = event.target.value
+            selectedObject.model.position.z = event.target.value
+            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+            models[selectedObject.name].instances[selectedInstaceindex].position.z = event.target.value;
         }
     })
 
