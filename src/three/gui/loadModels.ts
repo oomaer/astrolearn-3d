@@ -56,7 +56,7 @@ export const loadAllModels = async () => {
         const modelPath = models[model].path
         const modelPromise = new Promise((resolve, reject) => {
             gltfLoader.load(modelPath, (gltf) => {
-              if(model === 'pineTree'){
+              if(model === 'pineTree1'){
                 gltf.scene.traverse((child:any) => {
                   if(child.isMesh){
                     if(child.name==="Cylinder034_1"){

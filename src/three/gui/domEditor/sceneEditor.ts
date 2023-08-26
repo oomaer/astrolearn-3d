@@ -9,7 +9,9 @@ export const initEditor = () => {
     const show = document.getElementById('show-wireframe');
     const rotation = document.getElementById('rotation');
     const scale = document.getElementById('scale');
+    const draggable = document.getElementById('draggable');
     const savebtn = document.getElementById('save-btn');
+    
 
     rotation?.addEventListener('input', (event:any) => {
         const selectedObject = useSelectedObject();
@@ -36,6 +38,14 @@ export const initEditor = () => {
         const showBoundingBox = event.target.checked
         if(selectedObject){
             selectedObject.visible = showBoundingBox
+        }
+    })
+
+    draggable?.addEventListener("change", (event:any) => {
+        const selectedObject = useSelectedObject();
+        const draggable = event.target.checked
+        if(selectedObject){
+            selectedObject.isDraggable = draggable
         }
     })
 

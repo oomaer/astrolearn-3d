@@ -55,7 +55,11 @@ const addModel = (modelName: string) => {
   <div class="settings">
     <div class="input-container"> 
       <p>Show</p>
-      <input type="checkbox" id="show-wireframe" name="show-wireframe" value="show-wireframe" />
+      <input type="checkbox" id="show-wireframe" name="show-wireframe"  />
+    </div>  
+    <div class="input-container"> 
+      <p>Draggable</p>
+      <input type="checkbox" id="draggable" name="draggable" />
     </div>    
     <div class="input-container"> 
       <p>Rotation</p>

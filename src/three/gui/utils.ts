@@ -54,6 +54,7 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=true, dra
 
     mesh.model = group
     show ? mesh.visible = true: mesh.visible = false
+    mesh.isDraggable = false
     mesh.name = name
     mesh._id = attributes._id
     scene.add(mesh)

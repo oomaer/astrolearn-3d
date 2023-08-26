@@ -136,11 +136,11 @@ const addDragControls = () => {
   dragControls.addEventListener( 'dragstart', function (e) {
     if(selectedObject) selectedObject.visible = false; //hide previous selected object
     e.object.visible = true; //show new selected object
-
+    
     //update dom input fields
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
+    (document.getElementById("draggable") as HTMLInputElement).checked = e.object.isDraggable;
     (document.getElementById("rotation") as HTMLInputElement).value = e.object.model.rotation.y; 
-
     (document.getElementById("scale") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("position") as HTMLElement).innerHTML = e.object.model.position.x.toFixed(2) + ", " + e.object.model.position.y.toFixed(2) + ", " + e.object.model.position.z.toFixed(2);
 
@@ -151,9 +151,11 @@ const addDragControls = () => {
   dragControls.addEventListener( 'drag', onDragEvent );
   dragControls.addEventListener( 'dragend', function (e) { 
     controls.enabled = true;  
-    e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
-    const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
-    models[e.object.name].instances[selectedInstaceindex].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
+    if(e.object.isDraggable){
+      e.object.model.position.set(e.object.position.x, e.object.position.y, e.object.position.z)
+      const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+      models[e.object.name].instances[selectedInstaceindex].position = {x: e.object.position.x, y: e.object.position.y, z: e.object.position.z}
+    }
   });
  
 
@@ -167,16 +169,20 @@ const addDragControls = () => {
   window.addEventListener( 'mousemove', onMouseMove, false );
 
   function onDragEvent(e:any) {
-    rayCaster.setFromCamera(mouse, camera);
-   
-    const ground = scene.getObjectByName('ground')
+    if(e.object.isDraggable){
+      rayCaster.setFromCamera(mouse, camera);
     
-    const intersects = rayCaster.intersectObject(ground, true);
-    
-    if (intersects.length > 0){
-      e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
+      const ground = scene.getObjectByName('ground')
+      
+      const intersects = rayCaster.intersectObject(ground, true);
+      
+      if (intersects.length > 0){
+        e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
+      }
     }
-
+    else{
+      e.object.position.set(e.object.model.position.x, 0, e.object.model.position.z);
+    }
   }
 
 }
