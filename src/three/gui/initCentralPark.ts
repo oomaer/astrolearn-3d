@@ -18,7 +18,7 @@ export const initCentralPark = () => {
     displayModelWithBoundingMesh('lampPost1', models, scene)
     displayModelWithBoundingMesh('bonFire', models, scene)
     displayModelWithBoundingMesh('bench1', models, scene)
-
+    displayModelWithBoundingMesh('ThreePlane1', models, scene)
 
     // addMysticTree(scene, models)
     // addMarketStalls(scene, models)

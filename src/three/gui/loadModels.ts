@@ -93,7 +93,7 @@ export const loadAllModels = async () => {
 
 const generateThreeMesh = (models:any, model:string) => {
   if(models[model].subtype === "plane"){
-console.log("here")
+  
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
       new THREE.MeshStandardMaterial({color: 'black', side: THREE.DoubleSide})

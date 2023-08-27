@@ -80,6 +80,10 @@ const addModel = (modelName: string) => {
       <input id = "positionZ" step="0.2" type="number" class="small"/>
     </div>   
     <div class="input-container"> 
+      <p>Color</p>
+      <input id = "color"  type="color"/>
+    </div>   
+    <div class="input-container"> 
       <button id="save-btn">Save</button>
     </div>
 

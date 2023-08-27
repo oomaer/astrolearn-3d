@@ -89,19 +89,24 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
 export const displayModelWithBoundingMesh = (modelName:string, models: any, scene:THREE.Scene) => {
 
     for(let i = 0; i < models[modelName].instances.length; i++) {
-        const fence = models[modelName].data.scene.clone();
+        const modelmesh = models[modelName].data.scene.clone();
         const attributes = models[modelName].instances[i]
-
         const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
-        const mesh:any = createBoundingMesh({name: models[modelName].name, group: fence, show: false, draggable: true, attributes})
+        const mesh:any = createBoundingMesh({name: models[modelName].name, group: modelmesh, show: false, draggable: true, attributes})
         if(attributes.rotation) {
-            fence.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+            modelmesh.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
         }
         if(attributes.scale){
-            fence.scale.set(scale.x, scale.y, scale.z)
+            modelmesh.scale.set(scale.x, scale.y, scale.z)
         }
-        fence.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
-        scene.add(fence)
+        modelmesh.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+
+        if(models[modelName].type === "threemesh"){
+            modelmesh.material = new THREE.MeshStandardMaterial({color: new THREE.Color(models[modelName].instances[i].color).convertLinearToSRGB(), side: THREE.DoubleSide})
+        }
+        mesh.type = models[modelName].type
+        mesh.color = models[modelName].instances[i].color
+        scene.add(modelmesh)
         // mesh.scale.y = 5
         // physicsWorld.add.existing(mesh)
         // mesh.body.setCollisionFlags(2)

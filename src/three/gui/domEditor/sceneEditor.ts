@@ -1,6 +1,7 @@
 import { useDraggableObjects, useScene, useSelectedObject } from "@/three/init";
 import { useModels } from "../loadModels";
-import { UPDATE_ALL, UPDATE_INSTANCES } from "@/services/api";
+import {  UPDATE_INSTANCES } from "@/services/api";
+import * as THREE from "three"
 
 export const initEditor = () => {
 
@@ -21,6 +22,8 @@ export const initEditor = () => {
     const rotationX = document.getElementById('rotationX');
     const rotationY = document.getElementById('rotationY');
     const rotationZ = document.getElementById('rotationZ');
+
+    const color = document.getElementById('color');
 
     rotationX?.addEventListener('input', (event:any) => {
         changeRotation(event.target.value, 'x')
@@ -53,6 +56,15 @@ export const initEditor = () => {
     })
     
 
+    color?.addEventListener('input', (event:any) => {
+        const selectedObject = useSelectedObject();
+        if(selectedObject && selectedObject.type === "threemesh"){
+            // selectedObject.material.color.set(new THREE.Color(event.target.value).convertLinearToSRGB())
+            selectedObject.model.material.color.set(new THREE.Color(event.target.value).convertSRGBToLinear())
+            const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
+            models[selectedObject.name].instances[selectedInstaceindex].color = event.target.value;
+        }
+    })
 
     // scale?.addEventListener('input', (event:any) => {
     //     const selectedObject = useSelectedObject();

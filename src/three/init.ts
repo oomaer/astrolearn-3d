@@ -150,7 +150,9 @@ const addDragControls = () => {
     (document.getElementById("positionX") as HTMLInputElement).value = position.x.toFixed(2).toString();
     (document.getElementById("positionY") as HTMLInputElement).value = position.y.toFixed(2).toString();
     (document.getElementById("positionZ") as HTMLInputElement).value = position.z.toFixed(2).toString();
-
+    if(e.object.type === "threemesh"){
+      (document.getElementById("color") as HTMLInputElement).value = e.object.color;
+    }
   
     selectedObject = e.object;
     //disable orbit controls
@@ -182,11 +184,11 @@ const addDragControls = () => {
       const ground = scene.getObjectByName('ground')
       const intersects = rayCaster.intersectObject(ground, true);
       if (intersects.length > 0){
-        e.object.position.set(intersects[0].point.x, 0, intersects[0].point.z);
+        e.object.position.set(intersects[0].point.x, e.object.model.position.y, intersects[0].point.z);
       }
     }
     else{
-      e.object.position.set(e.object.model.position.x, 0, e.object.model.position.z);
+      e.object.position.set(e.object.model.position.x, e.object.model.position.z, e.object.model.position.z);
     }
   }
 
