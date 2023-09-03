@@ -24,6 +24,7 @@ export const initEditor = () => {
     const rotationZ = document.getElementById('rotationZ');
 
     const color = document.getElementById('color');
+    const remove = document.getElementById('remove');
 
     rotationX?.addEventListener('input', (event:any) => {
         changeRotation(event.target.value, 'x')
@@ -59,11 +60,18 @@ export const initEditor = () => {
     color?.addEventListener('input', (event:any) => {
         const selectedObject = useSelectedObject();
         if(selectedObject && selectedObject.type === "threemesh"){
-            // selectedObject.material.color.set(new THREE.Color(event.target.value).convertLinearToSRGB())
-            selectedObject.model.material.color.set(new THREE.Color(event.target.value).convertSRGBToLinear())
+            selectedObject.model.material = new THREE.MeshToonMaterial({color:new THREE.Color(event.target.value).convertSRGBToLinear(), side: THREE.DoubleSide})
             const selectedInstaceindex = getSelectedInstanceIndex(models, selectedObject)
             models[selectedObject.name].instances[selectedInstaceindex].color = event.target.value;
         }
+    })
+
+
+    remove?.addEventListener('click', () => {
+        const selectedObject = useSelectedObject();
+        const draggableObjects = useDraggableObjects();
+        const index = draggableObjects.indexOf(selectedObject)
+        draggableObjects.splice(index, 1)
     })
 
     // scale?.addEventListener('input', (event:any) => {
@@ -141,7 +149,6 @@ export const initEditor = () => {
         //     const saved = await UPDATE_INSTANCES(selectedObject.name, models[selectedObject.name].instances)
         //     console.log(models)
         // }
-        console.log(models)
         for(const i of Object.keys(models)){
             const saved = await UPDATE_INSTANCES(i, models[i].instances)
             console.log(saved)

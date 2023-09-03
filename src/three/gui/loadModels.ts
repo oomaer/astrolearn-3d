@@ -61,19 +61,52 @@ export const loadAllModels = async () => {
         }
         const modelPromise = new Promise((resolve, reject) => {
             gltfLoader.load(modelPath, (gltf) => {
-              if(model === 'pineTree1'){
+              if(model === 'pineTree1' || model === "CPRoundTree" || model === "CPPoplarTree" || model === "CPOakTree"){
                 gltf.scene.traverse((child:any) => {
                   if(child.isMesh){
                     if(child.name==="Cylinder034_1"){
-                      child.material = new THREE.MeshToonMaterial({color: '#1f5643'})
-                      child.material.color.setHex(0x1f5643).convertSRGBToLinear()
+                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      // child.material.color.setHex(0x39A200).convertSRGBToLinear()
                     }
                     else if(child.name==="Cylinder034"){
-                      child.material = new THREE.MeshToonMaterial({color: '#915734'})
-                      child.material.color.setHex(0x915734).convertSRGBToLinear()
+                      child.material = new THREE.MeshStandardMaterial({color: '#915734'})
+                      // child.material.color.setHex(0x915734).convertSRGBToLinear()
+                    }
+                    if(child.name === "Icosphere003"){ 
+                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      // child.material.color.setHex(0xD62C08).convertSRGBToLinear()
+                    }
+                    if(child.name === "PoplarLeaves1"){ 
+                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      // child.material.color.setHex(0x2A7800).convertSRGBToLinear()
+                    }
+                    if(child.name === "PoplarLeaves2"){ 
+                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      // child.material.color.setHex(0x2A7800).convertSRGBToLinear()
+                    }
+                    if(child.name === "PoplarRoot"){ 
+                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      // child.material.color.setHex(0x562700).convertSRGBToLinear()
+                    }
+                    console.log(child.material.name)
+                    if(child.material.name === 'OakTree_Trunk'){
+                      child.material = new THREE.MeshStandardMaterial({color: '#815137'})
+                    }
+                    if(child.material.name === 'OakTree_Leaves'){
+                      child.material = new THREE.MeshStandardMaterial({color: new THREE.Color(0xCD1212).convertSRGBToLinear()})
                     }
                     child.castShadow = true;
                     child.receiveShadow = true;
+                  }
+                })
+              }
+              else if(model === "roadPiece"){
+                gltf.scene.traverse((child:any) => {
+                  if(child.isMesh){
+                    if(child.name === "mesh1357725606_1"){
+                      child.material = new THREE.MeshBasicMaterial({color: 0x817D28})
+                      child.position.y = child.position.y + 0.01
+                    }
                   }
                 })
               }
@@ -96,14 +129,38 @@ const generateThreeMesh = (models:any, model:string) => {
   
     const mesh = new THREE.Mesh(
       new THREE.PlaneGeometry(1, 1),
-      new THREE.MeshStandardMaterial({color: 'black', side: THREE.DoubleSide})
     )
+    if(model === "ThreePathPlane"){
+      const texture = new THREE.TextureLoader().load('textures/stonepath.jpg', )
+      texture.wrapS = THREE.RepeatWrapping
+      texture.wrapT = THREE.RepeatWrapping
+      texture.repeat.set( 1, 10 );
+      mesh.material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
+      models[model].isTextured = true
+    }
+
+    // if(model === "ThreeGrassTexturePlane"){
+    //   const texture = new THREE.TextureLoader().load('textures/grass1.png', )
+    //   texture.wrapS = THREE.RepeatWrapping
+    //   texture.wrapT = THREE.RepeatWrapping
+    //   texture.repeat.set( 10, 10 );
+    //   mesh.material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
+    //   models[model].isTextured = true
+    // }
 
     mesh.position.set(0, 3, 0)
     
 
     models[model].data = {scene: mesh}
 
+  }
+  if(models[model].subtype === "box"){
+    const mesh = new THREE.Mesh(
+      new THREE.BoxGeometry(1, 1, 1),
+      new THREE.MeshToonMaterial({color: 'black', side: THREE.DoubleSide})
+    )
+    mesh.position.set(0, 3, 0)
+    models[model].data = {scene: mesh}
   }
 }
 

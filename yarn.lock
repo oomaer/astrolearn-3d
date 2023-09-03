@@ -3387,6 +3387,11 @@
     "vite-node" "0.33.0"
     "why-is-node-running" "^2.2.2"
 
+"vue-accessible-color-picker@^4.1.4":
+  "integrity" "sha512-uq5wPWiR+VeuaZGxWRKuZSKpf2WH1EHa0Oas+rsEdgw35zZ/zotpw5LvyMiqbAagpiHxCp0AzqwDkMJ7dSbGQA=="
+  "resolved" "https://registry.npmjs.org/vue-accessible-color-picker/-/vue-accessible-color-picker-4.1.4.tgz"
+  "version" "4.1.4"
+
 "vue-component-type-helpers@1.8.4":
   "integrity" "sha512-6bnLkn8O0JJyiFSIF0EfCogzeqNXpnjJ0vW/SZzNHfe6sPx30lTtTXlE5TFs2qhJlAtDFybStVNpL73cPe3OMQ=="
   "resolved" "https://registry.npmjs.org/vue-component-type-helpers/-/vue-component-type-helpers-1.8.4.tgz"
@@ -3434,7 +3439,7 @@
     "@vue/typescript" "1.8.8"
     "semver" "^7.3.8"
 
-"vue@^2.6.14 || ^3.3.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.1", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.3.4", "vue@3.3.4":
+"vue@^2.6.14 || ^3.3.0", "vue@^3.0.0", "vue@^3.0.0-0 || ^2.6.0", "vue@^3.0.1", "vue@^3.2.0", "vue@^3.2.25", "vue@^3.2.x", "vue@^3.3.4", "vue@3.3.4":
   "integrity" "sha512-VTyEYn3yvIeY1Py0WaYGZsXnz3y5UnGi62GjVEqvEGPl6nxbOrCXbVOTQWBEJUqAyTUk2uJ5JLVnYJ6ZzGbrSw=="
   "resolved" "https://registry.npmjs.org/vue/-/vue-3.3.4.tgz"
   "version" "3.3.4"

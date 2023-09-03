@@ -3,7 +3,7 @@ import { useScene } from "../init";
 import { useModels } from "./loadModels";
 
 import * as THREE from 'three'
-import { createBoundingMesh, displayModelWithBoundingMesh } from "./utils";
+import { createBoundingMesh, displayModelWithBoundingMesh, displayModelWithoutBoundingMesh } from "./utils";
 import { physicsWorld } from "../init";
 import { addPhysics } from "../physics/physics";
 
@@ -12,14 +12,36 @@ export const initCentralPark = () => {
     const scene = useScene()
     const models = useModels()
     
-    displayModelWithBoundingMesh('fence1', models, scene)
+    displayModelWithoutBoundingMesh('fence1', models, scene)
     // addPineTress(scene, models)
-    displayModelWithBoundingMesh('pineTree1', models, scene)
-    displayModelWithBoundingMesh('lampPost1', models, scene)
-    displayModelWithBoundingMesh('bonFire', models, scene)
-    displayModelWithBoundingMesh('bench1', models, scene)
-    displayModelWithBoundingMesh('ThreePlane1', models, scene)
+    displayModelWithoutBoundingMesh('pineTree1', models, scene)
+    displayModelWithoutBoundingMesh('lampPost1', models, scene)
+    displayModelWithoutBoundingMesh('bonFire', models, scene)
+    displayModelWithoutBoundingMesh('bench1', models, scene)
 
+    displayModelWithBoundingMesh('CPOakTree', models, scene)
+    // displayModelWithoutBoundingMesh('CPTownCenter', models, scene)
+    displayModelWithoutBoundingMesh('TownHouse1', models, scene)
+    displayModelWithoutBoundingMesh('SmallFarm1', models, scene)
+
+
+    displayModelWithoutBoundingMesh('desk1', models, scene)
+    displayModelWithoutBoundingMesh('Box', models, scene)
+
+    displayModelWithoutBoundingMesh('ThreePathPlane', models, scene)
+    displayModelWithoutBoundingMesh('ThreeGrassTexturePlane', models, scene)
+
+   
+    displayModelWithBoundingMesh('StoneFence', models, scene)
+
+
+    displayModelWithoutBoundingMesh('house1', models, scene)
+    displayModelWithoutBoundingMesh('house2', models, scene)
+    displayModelWithoutBoundingMesh('House3', models, scene)
+
+    // displayModelWithBoundingMesh('Road', models, scene)
+    // displayModelWithBoundingMesh('roadPiece', models, scene)
+    displayModelWithBoundingMesh('roadStraight', models, scene)
     // addMysticTree(scene, models)
     // addMarketStalls(scene, models)
     // addSittingArea(scene, models)

@@ -5,6 +5,7 @@ import {Character} from '../controllers/character-controller';
 import { initCentralPark } from "./initCentralPark";
 import { physicsWorld } from "../init"; 
 import { addPhysics } from "../physics/physics";
+import { useModels } from "./loadModels";
 
 export const init3DWorld = () => {
 
@@ -16,7 +17,8 @@ export const init3DWorld = () => {
 
     const cube = new THREE.Mesh(
         new THREE.BoxGeometry(3, 3, 3),
-        new THREE.MeshStandardMaterial({color: 'black'}),
+        new THREE.MeshBasicMaterial({
+          map: new THREE.TextureLoader().load('textures/stonepath.jpg')})
       )
       cube.position.set(0, 10, 5)
       scene.add(cube)
@@ -35,6 +37,9 @@ export const init3DWorld = () => {
     addLights();
     addGroundAndSky();
     initCentralPark();
+    addBorders()
+
+
   
 }
 
@@ -61,7 +66,7 @@ const addLights = () => {
     dirLight.castShadow = true;
     dirLight.shadow.mapSize.width = 4048;
     dirLight.shadow.mapSize.height = 4048;
-    const d = 50;
+    const d = 100;
     dirLight.shadow.camera.left = - d;
     dirLight.shadow.camera.right = d;
     dirLight.shadow.camera.top = d;
@@ -77,9 +82,10 @@ const addLights = () => {
 
 const addGroundAndSky = () => {
     const scene = useScene();
-    const groundGeo = new THREE.BoxGeometry( 150, 150, 2, 200 );
-    const groundMat = new THREE.MeshToonMaterial({ color:  0x379c41 });
-    groundMat.color.setHex(0x379c41).convertSRGBToLinear()
+    const groundGeo = new THREE.BoxGeometry( 200, 200, 2, 200 );
+    // const groundGeo = new THREE.CylinderGeometry( 150, 150, 2, 200)
+    const groundMat = new THREE.MeshToonMaterial();
+    groundMat.color.setHex(0x04ca04).convertSRGBToLinear()
     const ground:any = new THREE.Mesh( groundGeo, groundMat );
     ground.name = 'ground'
     ground.position.y = -1;
@@ -94,8 +100,8 @@ const addGroundAndSky = () => {
 
 
     const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
-    const skyMat = new THREE.MeshToonMaterial({ color: 0x4AB6DF, side: THREE.BackSide} );
-    skyMat.color.setHex( 0x4AB6DF ).convertSRGBToLinear();
+    const skyMat = new THREE.MeshToonMaterial({ color: 0x02c6f6, side: THREE.BackSide} );
+    skyMat.color.setHex( 0x02c6f6 ).convertSRGBToLinear();
 
         // const skyMat = new THREE.ShaderMaterial( {
         //     uniforms: uniforms,
@@ -110,6 +116,60 @@ const addGroundAndSky = () => {
 
 }
 
+
+
+const addBorders = () => {
+    
+    const scene = useScene();
+    const models = useModels();
+    
+    
+    const treeMesh = models['pineTree1'].data.scene.clone();
+    const rocks = [
+      {
+        scale: 100,
+        position: {x: 0, y: 0, z: 0},
+        scene: models['bigRock1'].data.scene.clone(),
+      },
+      { 
+        scale: 10,
+        position: {x: 0, y: 10, z: 0},
+        scene: models['bigRock2'].data.scene.clone(),
+      }, 
+      {
+        scale: 10, 
+        position: {x: 0, y: 0, z: 0},
+        scene:models['bigRock4'].data.scene.clone()
+      }
+    ]
+    // const rock1Mesh = models['rock1'].data.scene.clone();
+    // const rock2Mesh = models['rock2'].data.scene.clone();
+    // const rock3Mesh = models['rock3'].data.scene.clone();
+
+    // for(let i = 0; i < 360; i+= 10){
+    //     const m = treeMesh.clone(); 
+    //     m.scale.x = m.scale.y = m.scale.z = Math.random() * 1 + 2
+    //     const x = 100 * Math.cos(i * Math.PI/180) + 0
+    //     const z = 100 * Math.sin(i * Math.PI/180) + 0
+    //     m.position.set(x, 0, z);
+    //     m.castShadow = true
+    //     scene.add(m)
+    // }
+
+    for(let i = 0; i < 360; i+=9){
+      const mountain = rocks[Math.floor(Math.random() * rocks.length)].scene.clone()
+      const x = 90 * Math.cos(i * Math.PI/180) + 0
+      const z = 90 * Math.sin(i * Math.PI/180) + 0
+      mountain.position.x = x
+      mountain.position.z = z
+      mountain.rotation.y = Math.random() * Math.PI * 2
+      mountain.scale.x = mountain.scale.y = mountain.scale.z = 8 + Math.random() * 3 
+      scene.add(mountain)
+  }
+    
+    
+}
+
 export const addCharacter = () => {
     const characterGeo = new THREE.SphereGeometry(2)
     const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
@@ -117,6 +177,7 @@ export const addCharacter = () => {
     characterMesh.name = 'character'
     characterMesh.position.y = 2;
     characterMesh.position.x = 15;
+    characterMesh.position.z = 45;
     characterMesh.castShadow = true;
     characterMesh.receiveShadow = true;
 

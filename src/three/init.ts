@@ -50,6 +50,11 @@ const renderTickManager = new TickManager()
 
 export const initEngine = async () => {
 
+    // r150
+THREE.ColorManagement.enabled = true;
+
+// r139-r149
+THREE.ColorManagement.legacyMode = false;
 
   physicsObjects = [] // initializing physics objects array
 
@@ -81,8 +86,9 @@ export const initEngine = async () => {
   renderer.setSize(size.width, size.height)
   renderer.physicallyCorrectLights = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
-  // renderer.toneMapping = THREE.ReinhardToneMapping;
-  // renderer.toneMappingExposure = 1;
+  // renderer.toneMapping = THREE.LinearToneMapping;
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  // renderer.toneMappingExposure = 1.3;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -141,7 +147,7 @@ const addDragControls = () => {
     (document.getElementById("show-wireframe") as HTMLInputElement).checked = true;
     (document.getElementById("draggable") as HTMLInputElement).checked = e.object.isDraggable;
     (document.getElementById("rotationX") as HTMLInputElement).value = e.object.model.rotation.x; 
-    (document.getElementById("rotationY") as HTMLInputElement).value = e.object.model.rotation.y ;
+    (document.getElementById("rotationY") as HTMLInputElement).value = e.object.model.rotation.y;
     (document.getElementById("rotationZ") as HTMLInputElement).value = e.object.model.rotation.z; 
     (document.getElementById("scaleX") as HTMLInputElement).value = e.object.model.scale.x;
     (document.getElementById("scaleY") as HTMLInputElement).value = e.object.model.scale.y;

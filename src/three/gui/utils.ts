@@ -1,7 +1,7 @@
 import * as THREE from 'three'
-import { useDraggableObjects, useScene } from '../init';
+import { useDraggableObjects, usePhysics, useScene } from '../init';
 import { useModels } from './loadModels';
-export const createBoundingMesh = ({group, name, show=false, wireframe=true, draggable=false, type="box", attributes}:
+export const createBoundingMesh = ({group, name, show=false, wireframe=true, draggable=false, type="box", attributes, meshType}:
     {
         name: string,
         group: THREE.Group,
@@ -12,9 +12,11 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=true, dra
             position: {x: number, y: number, z: number},
             scale?: {x: number, y: number, z: number},
             rotation?: {x: number, y: number, z: number},
-            _id: string 
+            _id: string ,
+            color?:string
         }
         type?: "box" | "sphere",
+        meshType?: "threemesh" | "gltf"
         // scale: number
     }): THREE.Mesh => {
 
@@ -60,6 +62,8 @@ export const createBoundingMesh = ({group, name, show=false, wireframe=true, dra
     scene.add(mesh)
     if(draggable) draggableObjects.push(mesh)
 
+    mesh.type = meshType
+    mesh.color = attributes.color
     return mesh
 
     // Position the box at the center of the loaded model
@@ -71,14 +75,18 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
     const scene = useScene();
 
     models[modelName].instances = [...models[modelName].instances, attributes]
+    
     const model = models[modelName].data.scene.clone();
     createBoundingMesh({
       name: modelName, 
       group: model, 
       show: false, 
       draggable: true, 
-      attributes
+      attributes,
+      meshType: models[modelName].type
     })
+    // displayModelWithBoundingMesh(modelName, models, scene)
+    
     model.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
     model.scale.set(attributes.scale.x, attributes.scale.y, attributes.scale.z)
     model.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
@@ -87,6 +95,8 @@ export const addModelToSceneWithBoundingMesh = (modelName:string, attributes:any
 
 
 export const displayModelWithBoundingMesh = (modelName:string, models: any, scene:THREE.Scene) => {
+
+    const physicsWorld = usePhysics();
 
     for(let i = 0; i < models[modelName].instances.length; i++) {
         const modelmesh = models[modelName].data.scene.clone();
@@ -102,10 +112,45 @@ export const displayModelWithBoundingMesh = (modelName:string, models: any, scen
         modelmesh.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
 
         if(models[modelName].type === "threemesh"){
-            modelmesh.material = new THREE.MeshStandardMaterial({color: new THREE.Color(models[modelName].instances[i].color).convertLinearToSRGB(), side: THREE.DoubleSide})
+            if(models[modelName].isTextured !== true)
+            modelmesh.material = new THREE.MeshToonMaterial({color: new THREE.Color(models[modelName].instances[i].color).convertSRGBToLinear(), side: THREE.DoubleSide})
         }
         mesh.type = models[modelName].type
-        mesh.color = models[modelName].instances[i].color
+        
+        scene.add(modelmesh)
+        // mesh.scale.y = 5
+        // physicsWorldd.add.existing(mesh)
+        // mesh.body.setCollisionFlags(2)
+        // (mesh as any).body.setCollisionFlags(2)
+    }
+}
+
+
+export const displayModelWithoutBoundingMesh = (modelName:string, models: any, scene:THREE.Scene) => {
+
+    for(let i = 0; i < models[modelName].instances.length; i++) {
+        const modelmesh = models[modelName].data.scene.clone();
+        const attributes = models[modelName].instances[i]
+        const scale = attributes.scale ? attributes.scale : {x: 1, y: 1, z: 1}
+        // const mesh:any = createBoundingMesh({name: models[modelName].name, group: modelmesh, show: false, draggable: true, attributes})
+        if(attributes.rotation) {
+            modelmesh.rotation.set(attributes.rotation.x, attributes.rotation.y, attributes.rotation.z)
+        }
+        if(attributes.scale){
+            modelmesh.scale.set(scale.x, scale.y, scale.z)
+        }
+        modelmesh.position.set(attributes.position.x, attributes.position.y, attributes.position.z)
+
+        if(models[modelName].type === "threemesh"){
+            // let color = new THREE.Color(models[modelName].instances[i].color).convertSRGBToLinear()
+            if(models[modelName].isTextured !== true){
+                modelmesh.material = new THREE.MeshToonMaterial({color: new THREE.Color(models[modelName].instances[i].color).convertSRGBToLinear(), side: THREE.DoubleSide})
+            }
+            
+            
+        }
+        // mesh.type = models[modelName].type
+        
         scene.add(modelmesh)
         // mesh.scale.y = 5
         // physicsWorld.add.existing(mesh)

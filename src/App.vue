@@ -21,7 +21,6 @@ import { onMounted, ref } from 'vue';
 import { initEngine } from './three/init';
 import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
-
 const modelsArray = ref<string[]>([])
 
 
@@ -38,10 +37,37 @@ onMounted(async () => {
 
 const addModel = (modelName: string) => {
  
-  const attributes = {
-    position: {x: 0, y: 5, z: 0},
+  let attributes = {
+    position: {x: 0, y: 4, z: 0},
     rotation: {x: 0, y: 0, z: 0},
-    scale: {x: 4, y: 4, z: 4},
+    scale: {x: 0.8, y: 0.8, z: 0.8}, 
+    color: '#000000',
+  }
+  if(modelName === "lampPost1"){
+    attributes.scale = {x: 0.8, y: 0.8, z: 0.8}
+    attributes.position = {x: 0, y: 4, z: 0}
+  }
+  else if(modelName === "rock1"){
+    attributes.scale = {x: 100, y: 100, z: 100}
+    attributes.position = {x: 0, y: 0, z: 0}
+  }
+  else if(modelName === "WalkingTrack"){
+    attributes.color = '#b3b3b3'
+    attributes.rotation= {x: 1.57, y: 0, z: 0}
+  }
+  else if(modelName === "CPRoundTree"){
+    attributes.scale = {x: 1.2, y: 1.2, z: 1.2}
+    attributes.position = {x: 0, y: 0, z: 0}
+  }
+  else{
+    attributes = {
+      position: {x: 0, y: 0, z: 0},
+      rotation: {x: 0, y: 0, z: 0},
+      // scale: {x: 6, y: 6, z: 6}, //big tree
+      // scale: {x: 1.2, 1.2, 1.2} // round tree
+      scale: {x: 3, y: 3, z: 3}, // pine
+      color: '#000000',
+    }
   }
 
   addModelToSceneWithBoundingMesh(modelName, attributes)
@@ -85,6 +111,9 @@ const addModel = (modelName: string) => {
     </div>   
     <div class="input-container"> 
       <button id="save-btn">Save</button>
+    </div>
+    <div class="input-container"> 
+      <button id="remove">Remove</button>
     </div>
 
     <div class="absolute top-0 left-0 z-[2] bg-black">
