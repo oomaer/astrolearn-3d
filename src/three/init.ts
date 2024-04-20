@@ -35,6 +35,8 @@ let scene: THREE.Scene,
   physicsObjects: Array<PhysicsObject>,
   character: any
 
+
+  const animatingModels: any = []
 const draggableObjects: any = []
 const debugMode = false;
 const size = {width: window.innerWidth, height: window.innerHeight}
@@ -87,8 +89,9 @@ THREE.ColorManagement.legacyMode = false;
   renderer.physicallyCorrectLights = true;
   renderer.outputEncoding = THREE.sRGBEncoding;
   // renderer.toneMapping = THREE.LinearToneMapping;
+  // renderer.toneMapping = THREE.ReinhardToneMapping
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  // renderer.toneMappingExposure = 1.3;
+  renderer.toneMappingExposure = 1.2;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
@@ -239,6 +242,7 @@ export const useCharacter = () => character
 export const useKeys = () => keysPressed
 export const useSelectedObject = () => selectedObject
 export const setSelectedObject = (obj:any) => selectedObject = obj
+export const useAnimatingModels = () => animatingModels
 
 export { physicsWorld }
 

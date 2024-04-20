@@ -1,5 +1,6 @@
 import * as THREE from 'three'
 import {
+  useAnimatingModels,
   useCamera,
   useCharacter,
   useControls,
@@ -66,6 +67,7 @@ class TickManager extends EventTarget {
     const debugMode = useDebugMode();
     const character = useCharacter()
     const keysPressed = useKeys();
+    const animatingModels = useAnimatingModels();
 
     if (!renderer) {
       throw new Error('Updating Frame Failed : Uninitialized Renderer')
@@ -111,6 +113,13 @@ class TickManager extends EventTarget {
         character.characterControls.update(0.01, keysPressed)
         // character.characterControls.updateCameraTarget();
       }
+
+      animatingModels.forEach((model:any) => {
+        if(model.type === "spring"){
+          model.mesh.position.set(model.mesh.position.x, model.mesh.position.y + 0.01, model.mesh.position.z);
+          // console.log(model.mesh.position.y)
+        }
+      })
 
       // performance tracker start
       this.fps = 1000 / this.timeDiff

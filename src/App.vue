@@ -23,12 +23,13 @@ import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
 const modelsArray = ref<string[]>([])
 
+const modeslToShow = ["desk1", "DeskWalls"]
 
 onMounted(async () => {
   
   Ammo().then( async function ( AmmoLib ) {
     const three = await initEngine();
-    modelsArray.value = Object.keys(three.models)
+    modelsArray.value = Object.keys(three.models).filter(model => modeslToShow.includes(model))
   } );
 
 
@@ -56,8 +57,20 @@ const addModel = (modelName: string) => {
     attributes.rotation= {x: 1.57, y: 0, z: 0}
   }
   else if(modelName === "CPRoundTree"){
-    attributes.scale = {x: 1.2, y: 1.2, z: 1.2}
-    attributes.position = {x: 0, y: 0, z: 0}
+    attributes.scale = {x: 1, y: 1, z: 1}
+    attributes.position = {x: 0, y: 0, z: 50}
+  }
+  else if(modelName === "PoplarTree"){
+    attributes.scale = {x: 1.7, y: 1.7, z: 1.7}
+    attributes.position = {x: 0, y: 0, z: 40}
+  }
+  else if(modelName === "pineTree1"){
+    attributes.scale = {x: 1.8, y: 1.8, z: 1.8}
+    attributes.position = {x: 0, y: 0, z: 40}
+  }
+  else if(modelName === "PFlowers"){
+    attributes.scale = {x: 0.8, y: 0.8, z: 0.8}
+    attributes.position = {x: 0, y: 0.8, z: 40}
   }
   else{
     attributes = {

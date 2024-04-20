@@ -51,13 +51,13 @@ const addLights = () => {
     const hemiLight = new THREE.HemisphereLight( 'white', 'white', 1 );
     hemiLight.color.setHSL( 0.6, 1, 0.6 );
     hemiLight.groundColor.set('white')
-    hemiLight.position.set( 0, -40, 0 );
+    hemiLight.position.set( 0, 10, 0 );
     scene.add( hemiLight );
 
-    const ambient = new THREE.AmbientLight( 'white', 2 );
+    const ambient = new THREE.AmbientLight( 'white', 1.2);
     scene.add( ambient );
 
-    const dirLight = new THREE.DirectionalLight('white', 2);
+    const dirLight = new THREE.DirectionalLight('white', 1.5);
     dirLight.shadow.camera.far = 10;
     dirLight.shadow.normalBias = 0.05;
     dirLight.position.set( -5, 10, -7 );

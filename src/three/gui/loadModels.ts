@@ -1,5 +1,5 @@
 import { GET_MODELS } from "@/services/api"
-import { useGltfLoader, useScene } from "../init"
+import { useAnimatingModels, useGltfLoader, useScene } from "../init"
 import * as THREE from "three"
 
 // const models:any = {
@@ -47,6 +47,7 @@ let models:any;
 
 export const loadAllModels = async () => {
 
+    const animatingModels = useAnimatingModels();
     models = await GET_MODELS();
 
     const gltfLoader = useGltfLoader()
@@ -61,39 +62,40 @@ export const loadAllModels = async () => {
         }
         const modelPromise = new Promise((resolve, reject) => {
             gltfLoader.load(modelPath, (gltf) => {
-              if(model === 'pineTree1' || model === "CPRoundTree" || model === "CPPoplarTree" || model === "CPOakTree"){
+              if(model === 'pineTree1' || model === "CPRoundTree" || model === "PoplarTree" || model === "CPOakTree"){
+                
                 gltf.scene.traverse((child:any) => {
                   if(child.isMesh){
-                    if(child.name==="Cylinder034_1"){
-                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
-                      // child.material.color.setHex(0x39A200).convertSRGBToLinear()
+                    if(child.name==="Cylinder034_1"){      
+                      //pine leaves
+                      child.material = new THREE.MeshStandardMaterial({color: new THREE.Color('#01776A')})
+                      // child.material.color.setHex(0x27a799).convertSRGBToLinear()
                     }
                     else if(child.name==="Cylinder034"){
                       child.material = new THREE.MeshStandardMaterial({color: '#915734'})
                       // child.material.color.setHex(0x915734).convertSRGBToLinear()
                     }
                     if(child.name === "Icosphere003"){ 
-                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
+                      //round tree leaves
+                      child.material = new THREE.MeshStandardMaterial({color: '#B57200'})
+                      // animatingModels.push({
+                      //   mesh: child,
+                      //   type: "spring"
+                      // })
                       // child.material.color.setHex(0xD62C08).convertSRGBToLinear()
                     }
-                    if(child.name === "PoplarLeaves1"){ 
-                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
-                      // child.material.color.setHex(0x2A7800).convertSRGBToLinear()
-                    }
-                    if(child.name === "PoplarLeaves2"){ 
-                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
-                      // child.material.color.setHex(0x2A7800).convertSRGBToLinear()
-                    }
-                    if(child.name === "PoplarRoot"){ 
-                      child.material = new THREE.MeshStandardMaterial({color: '#1f5643'})
-                      // child.material.color.setHex(0x562700).convertSRGBToLinear()
-                    }
-                    console.log(child.material.name)
                     if(child.material.name === 'OakTree_Trunk'){
                       child.material = new THREE.MeshStandardMaterial({color: '#815137'})
                     }
                     if(child.material.name === 'OakTree_Leaves'){
                       child.material = new THREE.MeshStandardMaterial({color: new THREE.Color(0xCD1212).convertSRGBToLinear()})
+                    }
+                    console.log(child.material.name)
+                    if(child.name === 'PoplarLeaves1'){
+                      child.material = new THREE.MeshStandardMaterial({color: new THREE.Color('#0AC600')})
+                    }
+                    if(child.name === 'PoplarLeaves2'){
+                      child.material = new THREE.MeshStandardMaterial({color: new THREE.Color('#0AC600').convertSRGBToLinear()})
                     }
                     child.castShadow = true;
                     child.receiveShadow = true;

@@ -15,24 +15,28 @@ export const initCentralPark = () => {
     displayModelWithoutBoundingMesh('fence1', models, scene)
     // addPineTress(scene, models)
     displayModelWithoutBoundingMesh('pineTree1', models, scene)
+    displayModelWithoutBoundingMesh('PoplarTree', models, scene)
+    displayModelWithoutBoundingMesh('CPRoundTree', models, scene)
+    displayModelWithoutBoundingMesh('CPOakTree', models, scene)
+    displayModelWithoutBoundingMesh('bigTree', models, scene)
+    
+    displayModelWithoutBoundingMesh('PFlowers', models, scene)
+
     displayModelWithoutBoundingMesh('lampPost1', models, scene)
     displayModelWithoutBoundingMesh('bonFire', models, scene)
-    displayModelWithoutBoundingMesh('bench1', models, scene)
+    displayModelWithBoundingMesh('bench1', models, scene)
 
-    displayModelWithBoundingMesh('CPOakTree', models, scene)
     // displayModelWithoutBoundingMesh('CPTownCenter', models, scene)
     displayModelWithoutBoundingMesh('TownHouse1', models, scene)
     displayModelWithoutBoundingMesh('SmallFarm1', models, scene)
 
 
-    displayModelWithoutBoundingMesh('desk1', models, scene)
-    displayModelWithoutBoundingMesh('Box', models, scene)
 
     displayModelWithoutBoundingMesh('ThreePathPlane', models, scene)
     displayModelWithoutBoundingMesh('ThreeGrassTexturePlane', models, scene)
 
    
-    displayModelWithBoundingMesh('StoneFence', models, scene)
+    displayModelWithoutBoundingMesh('StoneFence', models, scene)
 
 
     displayModelWithoutBoundingMesh('house1', models, scene)
@@ -41,7 +45,20 @@ export const initCentralPark = () => {
 
     // displayModelWithBoundingMesh('Road', models, scene)
     // displayModelWithBoundingMesh('roadPiece', models, scene)
-    displayModelWithBoundingMesh('roadStraight', models, scene)
+    displayModelWithoutBoundingMesh('roadStraight', models, scene)
+    displayModelWithoutBoundingMesh('roadBend', models, scene)
+
+    // displayModelWithBoundingMesh('Box', models, scene)
+
+    displayModelWithBoundingMesh('desk1', models, scene)
+    displayModelWithBoundingMesh('DeskWalls', models, scene)
+    
+    displayModelWithoutBoundingMesh('Blacksmith', models, scene)
+    displayModelWithoutBoundingMesh('SmallTable', models, scene)
+    displayModelWithoutBoundingMesh('LogandAxe', models, scene)
+
+    displayModelWithBoundingMesh('ThreeGroundPlane', models, scene)
+
     // addMysticTree(scene, models)
     // addMarketStalls(scene, models)
     // addSittingArea(scene, models)
