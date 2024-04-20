@@ -91,7 +91,7 @@ THREE.ColorManagement.legacyMode = false;
   // renderer.toneMapping = THREE.LinearToneMapping;
   // renderer.toneMapping = THREE.ReinhardToneMapping
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.2;
+  renderer.toneMappingExposure = 1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 

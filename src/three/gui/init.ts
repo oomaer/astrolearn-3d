@@ -8,8 +8,6 @@ import { addPhysics } from "../physics/physics";
 import { useModels } from "./loadModels";
 
 export const init3DWorld = () => {
-
-
     
     const scene = useScene()
     const physicsWorld = usePhysics()
@@ -164,6 +162,11 @@ const addBorders = () => {
       mountain.position.z = z
       mountain.rotation.y = Math.random() * Math.PI * 2
       mountain.scale.x = mountain.scale.y = mountain.scale.z = 8 + Math.random() * 3 
+      mountain.traverse((child:any) => {
+        if(child.isMesh){
+          child.material = new THREE.MeshLambertMaterial({color: '#7D7D7D'})
+        }
+      })
       scene.add(mountain)
   }
     
@@ -178,9 +181,8 @@ export const addCharacter = () => {
     characterMesh.position.y = 2;
     characterMesh.position.x = 15;
     characterMesh.position.z = 45;
-    characterMesh.castShadow = true;
-    characterMesh.receiveShadow = true;
-
+    characterMesh.castShadow = false;
+    characterMesh.receiveShadow = false;
     const options = {
       restitution: 0,
       friction: 0,
