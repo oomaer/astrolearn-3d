@@ -140,28 +140,34 @@ const generateThreeMesh = (models:any, model:string) => {
       mesh.material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
       models[model].isTextured = true
     }
-
-    // if(model === "ThreeGrassTexturePlane"){
-    //   const texture = new THREE.TextureLoader().load('textures/grass1.png', )
-    //   texture.wrapS = THREE.RepeatWrapping
-    //   texture.wrapT = THREE.RepeatWrapping
-    //   texture.repeat.set( 10, 10 );
-    //   mesh.material = new THREE.MeshBasicMaterial({map: texture, side: THREE.DoubleSide})
-    //   models[model].isTextured = true
-    // }
-
     mesh.position.set(0, 3, 0)
-    
-
     models[model].data = {scene: mesh}
-
   }
+
   if(models[model].subtype === "box"){
     const mesh = new THREE.Mesh(
       new THREE.BoxGeometry(1, 1, 1),
-      new THREE.MeshToonMaterial({color: 'black', side: THREE.DoubleSide})
+      new THREE.MeshBasicMaterial({color: 'black', side: THREE.DoubleSide,
+      map: 
+      new THREE.TextureLoader().load('textures/grass.png')
+      })
     )
     mesh.position.set(0, 3, 0)
+
+    if(model === "ThreeBannerCube"){
+      const loader = new THREE.CubeTextureLoader()
+      const textureCube = loader.load( [
+        'textures/banner/px.png', 'textures/banner/nx.png',
+        'textures/banner/py.png', 'textures/banner/ny.png',
+        'textures/banner/pz.png', 'textures/banner/nz.png'
+      ]);
+      const material = new THREE.MeshBasicMaterial({ color: 0xffffff, map: 
+        new THREE.TextureLoader().load('textures/grass.png')
+       });
+      mesh.material = material
+      console.log(mesh)
+    }
+
     models[model].data = {scene: mesh}
   }
 }

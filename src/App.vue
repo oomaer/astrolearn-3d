@@ -23,7 +23,7 @@ import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
 const modelsArray = ref<string[]>([])
 
-const modeslToShow = ["desk1", "DeskWalls"]
+const modeslToShow = ["ThreeBannerCube"]
 
 onMounted(async () => {
   

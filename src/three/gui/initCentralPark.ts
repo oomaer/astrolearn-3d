@@ -59,6 +59,7 @@ export const initCentralPark = () => {
 
     displayModelWithBoundingMesh('ThreeGroundPlane', models, scene)
 
+    displayModelWithBoundingMesh('ThreeBannerCube', models, scene)
     // addMysticTree(scene, models)
     // addMarketStalls(scene, models)
     // addSittingArea(scene, models)
