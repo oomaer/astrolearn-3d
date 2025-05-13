@@ -25,67 +25,11 @@ const modelsArray = ref<string[]>([])
 
 const modeslToShow = ["ThreeBannerCube"]
 
-onMounted(async () => {
-  
-  Ammo().then( async function ( AmmoLib ) {
-    const three = await initEngine();
-    modelsArray.value = Object.keys(three.models).filter(model => modeslToShow.includes(model))
-  } );
-
-
+onMounted(() => {
+    initEngine();
 })
 
 
-const addModel = (modelName: string) => {
- 
-  let attributes = {
-    position: {x: 0, y: 4, z: 0},
-    rotation: {x: 0, y: 0, z: 0},
-    scale: {x: 0.8, y: 0.8, z: 0.8}, 
-    color: '#000000',
-  }
-  if(modelName === "lampPost1"){
-    attributes.scale = {x: 0.8, y: 0.8, z: 0.8}
-    attributes.position = {x: 0, y: 4, z: 0}
-  }
-  else if(modelName === "rock1"){
-    attributes.scale = {x: 100, y: 100, z: 100}
-    attributes.position = {x: 0, y: 0, z: 0}
-  }
-  else if(modelName === "WalkingTrack"){
-    attributes.color = '#b3b3b3'
-    attributes.rotation= {x: 1.57, y: 0, z: 0}
-  }
-  else if(modelName === "CPRoundTree"){
-    attributes.scale = {x: 1, y: 1, z: 1}
-    attributes.position = {x: 0, y: 0, z: 50}
-  }
-  else if(modelName === "PoplarTree"){
-    attributes.scale = {x: 1.7, y: 1.7, z: 1.7}
-    attributes.position = {x: 0, y: 0, z: 40}
-  }
-  else if(modelName === "pineTree1"){
-    attributes.scale = {x: 1.8, y: 1.8, z: 1.8}
-    attributes.position = {x: 0, y: 0, z: 40}
-  }
-  else if(modelName === "PFlowers"){
-    attributes.scale = {x: 0.8, y: 0.8, z: 0.8}
-    attributes.position = {x: 0, y: 0.8, z: 40}
-  }
-  else{
-    attributes = {
-      position: {x: 0, y: 0, z: 0},
-      rotation: {x: 0, y: 0, z: 0},
-      // scale: {x: 6, y: 6, z: 6}, //big tree
-      // scale: {x: 1.2, 1.2, 1.2} // round tree
-      scale: {x: 3, y: 3, z: 3}, // pine
-      color: '#000000',
-    }
-  }
-
-  addModelToSceneWithBoundingMesh(modelName, attributes)
-
-}
 
 </script>
 
@@ -130,9 +74,7 @@ const addModel = (modelName: string) => {
     </div>
 
     <div class="absolute top-0 left-0 z-[2] bg-black">
-      <div class="flex flex-col">
-        <button v-for="model in modelsArray" :key="model" @click="addModel(model)">{{model}}</button>
-      </div>
+  
     </div>
   </div>
 </template>

@@ -1,17 +1,12 @@
-import {  usePhysics, useScene } from "../init";
+import {  useScene } from "../init";
 
 import * as THREE from 'three'
-import {Character} from '../controllers/character-controller';
-import { initCentralPark } from "./initCentralPark";
-import { physicsWorld } from "../init"; 
-import { addPhysics } from "../physics/physics";
-import { useModels } from "./loadModels";
+
+let stars: THREE.Points
 
 export const init3DWorld = () => {
     
     const scene = useScene()
-    const physicsWorld = usePhysics()
-
 
     const cube = new THREE.Mesh(
         new THREE.BoxGeometry(3, 3, 3),
@@ -20,8 +15,7 @@ export const init3DWorld = () => {
       )
       cube.position.set(0, 10, 5)
       scene.add(cube)
-      physicsWorld.add.existing(cube as any);
-    // addPhysics({mesh: cube, rigidBodyType: 'dynamic', colliderType: 'cuboid', mass: 33})
+
     const ball = new THREE.Mesh(
         new THREE.SphereGeometry(1, 30, 30),
         new THREE.MeshStandardMaterial({color: 'blue'}),
@@ -29,14 +23,10 @@ export const init3DWorld = () => {
     ball.position.set(0, 10, 5)
     
       scene.add(ball)
-      physicsWorld.add.existing(ball as any);
-    // addPhysics({mesh: ball, rigidBodyType: 'dynamic', colliderType: 'ball', mass: 66})
+
 
     addLights();
-    addGroundAndSky();
-    initCentralPark();
-    addBorders()
-
+    addSpace();
 
   
 }
@@ -78,123 +68,52 @@ const addLights = () => {
 }
 
 
-const addGroundAndSky = () => {
-    const scene = useScene();
-    const groundGeo = new THREE.BoxGeometry( 200, 200, 2, 200 );
-    // const groundGeo = new THREE.CylinderGeometry( 150, 150, 2, 200)
-    const groundMat = new THREE.MeshToonMaterial();
-    groundMat.color.setHex(0x04ca04).convertSRGBToLinear()
-    const ground:any = new THREE.Mesh( groundGeo, groundMat );
-    ground.name = 'ground'
-    ground.position.y = -1;
-    ground.rotation.x = - Math.PI / 2;
-    ground.receiveShadow = true;
-    scene.add( ground );
-    addPhysics({
-      mesh: ground,
-      rigidBodyType: 'kinematic',
-    })
+const addSpace = () => {
+    //create space / galaxy like thing
+    const scene = useScene()
+    // const spaceGeometry = new THREE.SphereGeometry(100, 100, 100);
+    // const spaceMaterial = new THREE.MeshBasicMaterial({
+    //     map: new THREE.TextureLoader().load('textures/space2.jpg'),
+    //     side: THREE.DoubleSide,
+    //     transparent: true,
+    //     opacity: 0.5
+    // });
+    // const space = new THREE.Mesh(spaceGeometry, spaceMaterial);
+    // space.position.set(0, 0, 0);
+    // space.rotation.x = Math.PI / 2;
+    // space.rotation.y = Math.PI / 2;
+    // space.rotation.z = Math.PI / 2;
+    // space.scale.set(1, 1, 1);
+    // scene.add(space);
 
-
-
-    const skyGeo = new THREE.SphereGeometry( 400, 320, 400 );
-    const skyMat = new THREE.MeshToonMaterial({ color: 0x02c6f6, side: THREE.BackSide} );
-    skyMat.color.setHex( 0x02c6f6 ).convertSRGBToLinear();
-
-        // const skyMat = new THREE.ShaderMaterial( {
-        //     uniforms: uniforms,
-        //     vertexShader: vertexShader,
-        //     fragmentShader: fragmentShader,
-        //     side: THREE.BackSide
-        // } );
-
-
-    const sky = new THREE.Mesh( skyGeo, skyMat );
-    scene.add( sky );
-
-}
-
-
-
-const addBorders = () => {
-    
-    const scene = useScene();
-    const models = useModels();
-    
-    
-    const treeMesh = models['pineTree1'].data.scene.clone();
-    const rocks = [
-      {
-        scale: 100,
-        position: {x: 0, y: 0, z: 0},
-        scene: models['bigRock1'].data.scene.clone(),
-      },
-      { 
-        scale: 10,
-        position: {x: 0, y: 10, z: 0},
-        scene: models['bigRock2'].data.scene.clone(),
-      }, 
-      {
-        scale: 10, 
-        position: {x: 0, y: 0, z: 0},
-        scene:models['bigRock4'].data.scene.clone()
-      }
-    ]
-    // const rock1Mesh = models['rock1'].data.scene.clone();
-    // const rock2Mesh = models['rock2'].data.scene.clone();
-    // const rock3Mesh = models['rock3'].data.scene.clone();
-
-    // for(let i = 0; i < 360; i+= 10){
-    //     const m = treeMesh.clone(); 
-    //     m.scale.x = m.scale.y = m.scale.z = Math.random() * 1 + 2
-    //     const x = 100 * Math.cos(i * Math.PI/180) + 0
-    //     const z = 100 * Math.sin(i * Math.PI/180) + 0
-    //     m.position.set(x, 0, z);
-    //     m.castShadow = true
-    //     scene.add(m)
-    // }
-
-    for(let i = 0; i < 360; i+=9){
-      const mountain = rocks[Math.floor(Math.random() * rocks.length)].scene.clone()
-      const x = 90 * Math.cos(i * Math.PI/180) + 0
-      const z = 90 * Math.sin(i * Math.PI/180) + 0
-      mountain.position.x = x
-      mountain.position.z = z
-      mountain.rotation.y = Math.random() * Math.PI * 2
-      mountain.scale.x = mountain.scale.y = mountain.scale.z = 8 + Math.random() * 3 
-      mountain.traverse((child:any) => {
-        if(child.isMesh){
-          child.material = new THREE.MeshLambertMaterial({color: '#7D7D7D'})
-        }
-      })
-      scene.add(mountain)
-  }
-    
-    
-}
-
-export const addCharacter = () => {
-    const characterGeo = new THREE.SphereGeometry(2)
-    const characterMat = new THREE.MeshPhongMaterial({ color:  'blue' });
-    const characterMesh:any = new THREE.Mesh( characterGeo, characterMat );
-    characterMesh.name = 'character'
-    characterMesh.position.y = 2;
-    characterMesh.position.x = 15;
-    characterMesh.position.z = 45;
-    characterMesh.castShadow = false;
-    characterMesh.receiveShadow = false;
-    const options = {
-      restitution: 0,
-      friction: 0,
-      mass: 1,
-      damping: 0,
-      gravity: 0,
-      linearFactor: 0,
-      angularFactor: 0,
+    // render 5000 stars, with octahedron geometry
+    const starGeometry = new THREE.OctahedronGeometry(0.1, 0);
+    const starMaterial = new THREE.MeshBasicMaterial({
+        color: 'white',
+        transparent: true,
+        opacity: 0.5
+    });
+    const starMesh = new THREE.InstancedMesh(starGeometry, starMaterial, 5000);
+    const dummy = new THREE.Object3D();
+    for (let i = 0; i < 5000; i++) {
+        const x = Math.random() * 1000 - 500;
+        const y = Math.random() * 1000 - 500;
+        const z = Math.random() * 1000 - 500;
+        dummy.position.set(x, y, z);
+        dummy.updateMatrix();
+        starMesh.setMatrixAt(i, dummy.matrix);
     }
-    addPhysics({mesh:characterMesh, rigidBodyType: 'dynamic', options})
-    const character = new Character(characterMesh)
-    return character;
+    starMesh.instanceMatrix.needsUpdate = true;
+    starMesh.rotation.x = Math.PI / 2;
+    starMesh.rotation.y = Math.PI / 2;
+    starMesh.rotation.z = Math.PI / 2;
+    starMesh.scale.set(1, 1, 1);
+    scene.add(starMesh);
+
+   
+   
+    
 }
 
 
+export const useStars = () => stars
