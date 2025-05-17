@@ -10,24 +10,20 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import GeneralLoader from './loaders/general-loader'
 
 // import { GRAVITY } from './physics/utils/constants'
-import { init3DWorld, useStars } from './gui/init'
+import { animateStars, init3DWorld } from './gui/init'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
 
 let scene: THREE.Scene,
   camera: THREE.PerspectiveCamera,
   renderer: THREE.WebGLRenderer,
-  renderTarget: THREE.WebGLRenderTarget,
   controls: any,
   stats: Stats,
-  renderWidth: number,
-  renderHeight: number,
   gltfLoader: GLTFLoader,
   textureLoader: THREE.TextureLoader,
   generalLoader: GeneralLoader
 
-  const animatingModels: any = []
-const debugMode = false;
+const animatingModels: any = []
 const size = {width: window.innerWidth, height: window.innerHeight}
 const keysPressed:any = {}
 
@@ -44,7 +40,7 @@ export const initEngine = async () => {
 // r139-r149
 // THREE.ColorManagement.legacyMode = false;
 
- 
+
 
   // rendering -> THREE.js
   renderer = new THREE.WebGLRenderer({
@@ -54,7 +50,7 @@ export const initEngine = async () => {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(30, size.width / size.height, 0.1, 2000);
-  camera.position.set(0, 13, -50)
+  camera.position.set(0, 0, -1)
   // scene.fog = new THREE.Fog('black', 0, 100000);
 
 
@@ -117,11 +113,12 @@ export const initEngine = async () => {
 
 
 const startRenderLoop = () => {
-  const stars = useStars();
+  
   const renderLoop = () => {
+    // console.log(stars)
     stats.update()
     controls.update()
-
+    animateStars()
     renderer.render(scene, camera)
     requestAnimationFrame(renderLoop)
   }
@@ -131,8 +128,6 @@ const startRenderLoop = () => {
 
 export const useRenderer = () => renderer
 
-export const useRenderSize = () => ({ width: renderWidth, height: renderHeight })
-
 export const useScene = () => scene
 
 export const useCamera = () => camera
@@ -140,9 +135,6 @@ export const useCamera = () => camera
 export const useControls = () => controls
 
 export const useStats = () => stats
-
-export const useRenderTarget = () => renderTarget
-
 
 
 
