@@ -2,6 +2,7 @@ import {  useScene } from "../init";
 
 import * as THREE from 'three'
 import { spaceSphereFramentShader, spaceSphereVertexShader } from "../shaders/shaders";
+import {  drawConstellation } from "./constellations";
 
 let stars = new THREE.Group;
 
@@ -11,6 +12,7 @@ export const init3DWorld = () => {
     drawGalaxy();
     addStars();
     addStarPoints();
+    drawConstellation('cancer');
 }
 
 

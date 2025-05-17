@@ -50,7 +50,7 @@ export const initEngine = async () => {
 
   scene = new THREE.Scene();
   camera = new THREE.PerspectiveCamera(30, size.width / size.height, 0.1, 2000);
-  camera.position.set(0, 0, -1)
+  camera.position.set(0, 0, -10)
   // scene.fog = new THREE.Fog('black', 0, 100000);
 
 
