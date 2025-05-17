@@ -55,19 +55,34 @@ const constellationInfo = {
 </script>
 
 <template>
-    <div id="app" class="w-screen h-screen overflow-hidden bg-gradient-to-b from-[#4AB6DF] to-[#1E2A78]">
+    <div id="app" class="w-screen h-screen canvas-container">
+      <div class="canvas"></div>
+      
+      <!-- Title -->
+      <h1 style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); z-index: 1;">
+        Cancer Constellation
+      </h1>
+
       <!-- Info Button -->
       <button 
           @click="toggleInfo"
-          class="fixed bottom-5 right-5 w-12 h-12 rounded-full bg-white/90 shadow-lg hover:scale-110 transition-transform duration-200 z-50 flex items-center justify-center"
+          class="fixed z-[1] top-[2rem] right-[2rem] px-6 py-2 rounded-full bg-white/90 shadow-lg 
+                 hover:scale-110 transition-all duration-300 ease-in-out
+                 animate-bounce hover:animate-none
+                 group flex items-center justify-center
+                 font-semibold text-gray-800 hover:text-blue-600
+                 hover:bg-white hover:shadow-xl"
       >
-          <span class="text-2xl">ℹ️</span>
+          <span class="relative">
+              INFO
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+          </span>
       </button>
 
       <!-- Info Panel -->
       <div 
           v-if="showInfo" 
-          class="fixed right-5 bottom-20 w-[350px] max-h-[80vh] bg-black/85 backdrop-blur-md text-white p-5 rounded-lg overflow-y-auto z-50 shadow-xl"
+          class="fixed top-[5px] right-[5px] w-[500px] max-w-[90vw] max-h-[80vh] bg-black/85 backdrop-blur-md text-white p-5 rounded-lg overflow-y-auto z-50 shadow-xl"
       >
           <!-- Close Button -->
           <button 
