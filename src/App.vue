@@ -19,7 +19,6 @@
 
 import { onMounted, ref } from 'vue';
 import { initEngine } from './three/init';
-import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
 const modelsArray = ref<string[]>([])
 
