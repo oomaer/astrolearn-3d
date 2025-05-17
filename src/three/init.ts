@@ -91,7 +91,7 @@ export const initEngine = async () => {
 
 
   stats = Stats()
-  document.body.appendChild(stats.dom)
+  // document.body.appendChild(stats.dom)
 
   // config
   generalLoader = new GeneralLoader()
