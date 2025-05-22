@@ -1,82 +1,125 @@
-
 <script setup lang="ts">
-
-
-// import ThreeMain from './three/ThreeMain';
-// let main = new ThreeMain()
-
-// import('@dimforge/rapier3d').then(RAPIER => {
-// main.init(RAPIER)
-// main.startRenderer()
-// main.renderContent()
-// main.addWindowEvents();
-// });
-
-// main.loadModels()
-
-// main.addWindowEvents()
 
 
 import { onMounted, ref } from 'vue';
 import { initEngine } from './three/init';
-import {addModelToSceneWithBoundingMesh} from './three/gui/utils';
 
-const modelsArray = ref<string[]>([])
+const showInfo = ref(false)
 
-const modeslToShow = ["ThreeBannerCube"]
 
 onMounted(() => {
     initEngine();
 })
 
+const toggleInfo = () => {
+    showInfo.value = !showInfo.value
+}
 
+const constellationInfo = {
+    name: "Cancer (The Crab)",
+    description: "Cancer is one of the twelve constellations of the zodiac. Its name is Latin for crab and it is commonly represented as one. Cancer is a medium-size constellation with an ancient history.",
+    stars: [
+        {
+            name: "Altarf (β Cancri)",
+            description: "The brightest star in Cancer, an orange giant located about 290 light-years away.",
+            magnitude: 3.5,
+            distance: "290 light years"
+        },
+        {
+            name: "Acubens (α Cancri)",
+            description: "Also known as Alpha Cancri, it's a multiple star system about 174 light-years away.",
+            magnitude: 4.3,
+            distance: "174 light years"
+        },
+        {
+            name: "Asellus Borealis (γ Cancri)",
+            description: "The northern donkey, a white-hued star about 158 light-years from Earth.",
+            magnitude: 4.7,
+            distance: "158 light years"
+        },
+        {
+            name: "Asellus Australis (δ Cancri)",
+            description: "The southern donkey, an orange giant star about 131 light-years away.",
+            magnitude: 3.9,
+            distance: "131 light years"
+        },
+        {
+            name: "Tegmine (ζ Cancri)",
+            description: "A multiple star system located approximately 83 light-years away.",
+            magnitude: 4.7,
+            distance: "83 light years"
+        }
+    ]
+}
 
 </script>
 
 <template>
-  <div class="canvas"></div>
-  <div class="settings">
-    <div class="input-container"> 
-      <p>Show</p>
-      <input type="checkbox" id="show-wireframe" name="show-wireframe"  />
-    </div>  
-    <div class="input-container"> 
-      <p>Draggable</p>
-      <input type="checkbox" id="draggable" name="draggable" />
-    </div>    
-    <div class="input-container"> 
-      <p>Rotation</p>
-      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationX" class="small"/>
-      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationY" class="small"/>
-      <input type="number" step="0.2" min="-3.14" max="3.14" id="rotationZ" class="small"/>
-    </div>  
-    <div class="input-container"> 
-      <p>Scale</p>
-      <input type="number" step="0.4" id="scaleX" class="small"/>
-      <input type="number" step="0.4" id="scaleY" class="small"/>
-      <input type="number" step="0.4" id="scaleZ" class="small"/>
-    </div>  
-    <div class="input-container"> 
-      <p>Position</p>
-      <input id = "positionX" step="0.2" type="number" class="small"/>
-      <input id = "positionY" step="0.2" type="number" class="small"/>
-      <input id = "positionZ" step="0.2" type="number" class="small"/>
-    </div>   
-    <div class="input-container"> 
-      <p>Color</p>
-      <input id = "color"  type="color"/>
-    </div>   
-    <div class="input-container"> 
-      <button id="save-btn">Save</button>
-    </div>
-    <div class="input-container"> 
-      <button id="remove">Remove</button>
-    </div>
+    <div id="app" class="w-screen h-screen canvas-container">
+      <div class="canvas"></div>
+      
+      <!-- Title -->
+      <h1 style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); color: white; font-size: 24px; font-weight: bold; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); z-index: 1;">
+        Cancer Constellation
+      </h1>
 
-    <div class="absolute top-0 left-0 z-[2] bg-black">
-  
+      <!-- Info Button -->
+      <button 
+          @click="toggleInfo"
+          class="fixed z-[1] top-[2rem] right-[2rem] px-6 py-2 rounded-full bg-white/90 shadow-lg 
+                 hover:scale-110 transition-all duration-300 ease-in-out
+                 animate-bounce hover:animate-none
+                 group flex items-center justify-center
+                 font-semibold text-gray-800 hover:text-blue-600
+                 hover:bg-white hover:shadow-xl"
+      >
+          <span class="relative">
+              INFO
+              <span class="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-600 group-hover:w-full transition-all duration-300"></span>
+          </span>
+      </button>
+
+      <!-- Info Panel -->
+      <div 
+          v-if="showInfo" 
+          class="fixed top-[5px] right-[5px] w-[500px] max-w-[90vw] max-h-[80vh] bg-black/85 backdrop-blur-md text-white p-5 rounded-lg overflow-y-auto z-50 shadow-xl"
+      >
+          <!-- Close Button -->
+          <button 
+              @click="toggleInfo"
+              class="absolute top-2 right-2 text-white/80 hover:text-white text-2xl w-8 h-8 flex items-center justify-center"
+          >
+              ×
+          </button>
+
+          <!-- Content -->
+          <div class="space-y-4">
+              <h2 class="text-2xl font-bold text-white">{{ constellationInfo.name }}</h2>
+              <p class="text-gray-300 leading-relaxed">{{ constellationInfo.description }}</p>
+              
+              <h3 class="text-xl font-semibold text-gray-200 mt-6">Notable Stars</h3>
+              
+              <div class="space-y-4">
+                  <div 
+                      v-for="star in constellationInfo.stars" 
+                      :key="star.name"
+                      class="bg-white/10 p-4 rounded-lg space-y-2"
+                  >
+                      <h4 class="text-lg font-medium text-white">{{ star.name }}</h4>
+                      <p class="text-gray-300 text-sm leading-relaxed">{{ star.description }}</p>
+                      <div class="flex gap-3 mt-2">
+                          <span class="bg-white/10 px-3 py-1 rounded text-sm text-gray-300">
+                              Magnitude: {{ star.magnitude }}
+                          </span>
+                          <span class="bg-white/10 px-3 py-1 rounded text-sm text-gray-300">
+                              Distance: {{ star.distance }}
+                          </span>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
     </div>
-  </div>
 </template>
 
 <style lang="scss">

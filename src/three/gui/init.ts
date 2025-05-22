@@ -1,119 +1,139 @@
 import {  useScene } from "../init";
 
 import * as THREE from 'three'
+import { spaceSphereFramentShader, spaceSphereVertexShader } from "../shaders/shaders";
+import {  drawConstellation } from "./constellations";
+import { createSolarSystem, renderPlanet } from "./planets";
 
-let stars: THREE.Points
+let stars = new THREE.Group;
 
 export const init3DWorld = () => {
     
     const scene = useScene()
-
-    const cube = new THREE.Mesh(
-        new THREE.BoxGeometry(3, 3, 3),
-        new THREE.MeshBasicMaterial({
-          map: new THREE.TextureLoader().load('textures/stonepath.jpg')})
-      )
-      cube.position.set(0, 10, 5)
-      scene.add(cube)
-
-    const ball = new THREE.Mesh(
-        new THREE.SphereGeometry(1, 30, 30),
-        new THREE.MeshStandardMaterial({color: 'blue'}),
-      )
-    ball.position.set(0, 10, 5)
-    
-      scene.add(ball)
-
-
-    addLights();
-    addSpace();
-
-  
+    drawGalaxy();
+    addStars();
+    addStarPoints();
+    // drawConstellation('cancer');
+    // drawConstellation('bigDipper')
+    // renderPlanet('mercury')
+    createSolarSystem()
 }
 
 
-const addLights = () => {
-    const scene = useScene()
+const addStarPoints = () => {
+    const scene = useScene();
 
-    // --- LIGHTS
-    const hemiLight = new THREE.HemisphereLight( 'white', 'white', 1 );
-    hemiLight.color.setHSL( 0.6, 1, 0.6 );
-    hemiLight.groundColor.set('white')
-    hemiLight.position.set( 0, 10, 0 );
-    scene.add( hemiLight );
+    const innerRadius = 40; // Minimum distance from the center (0, 0, 0)
+    const outerRadius = 50; // Maximum distance from the center
+    const starCount = 5000; // Number of stars
 
-    const ambient = new THREE.AmbientLight( 'white', 1.2);
-    scene.add( ambient );
-
-    const dirLight = new THREE.DirectionalLight('white', 1.5);
-    dirLight.shadow.camera.far = 10;
-    dirLight.shadow.normalBias = 0.05;
-    dirLight.position.set( -5, 10, -7 );
-    dirLight.position.multiplyScalar( 30 );
-
-    dirLight.castShadow = true;
-    dirLight.shadow.mapSize.width = 4048;
-    dirLight.shadow.mapSize.height = 4048;
-    const d = 100;
-    dirLight.shadow.camera.left = - d;
-    dirLight.shadow.camera.right = d;
-    dirLight.shadow.camera.top = d;
-    dirLight.shadow.camera.bottom = - d;
-    dirLight.shadow.camera.far = 500;
-    dirLight.shadow.bias = - 0.0001;
-
-    scene.add(dirLight)
-    const dirLightHelper = new THREE.DirectionalLightHelper( dirLight, 10 );
-    scene.add( dirLightHelper );
-}
-
-
-const addSpace = () => {
-    //create space / galaxy like thing
-    const scene = useScene()
-    // const spaceGeometry = new THREE.SphereGeometry(100, 100, 100);
-    // const spaceMaterial = new THREE.MeshBasicMaterial({
-    //     map: new THREE.TextureLoader().load('textures/space2.jpg'),
-    //     side: THREE.DoubleSide,
-    //     transparent: true,
-    //     opacity: 0.5
-    // });
-    // const space = new THREE.Mesh(spaceGeometry, spaceMaterial);
-    // space.position.set(0, 0, 0);
-    // space.rotation.x = Math.PI / 2;
-    // space.rotation.y = Math.PI / 2;
-    // space.rotation.z = Math.PI / 2;
-    // space.scale.set(1, 1, 1);
-    // scene.add(space);
-
-    // render 5000 stars, with octahedron geometry
-    const starGeometry = new THREE.OctahedronGeometry(0.1, 0);
-    const starMaterial = new THREE.MeshBasicMaterial({
+    // Create a buffer geometry for the points
+    const starPointGeometry = new THREE.BufferGeometry();
+    const starPointMaterial = new THREE.PointsMaterial({
         color: 'white',
+        size: 0.1,
         transparent: true,
         opacity: 0.5
     });
-    const starMesh = new THREE.InstancedMesh(starGeometry, starMaterial, 5000);
-    const dummy = new THREE.Object3D();
-    for (let i = 0; i < 5000; i++) {
-        const x = Math.random() * 1000 - 500;
-        const y = Math.random() * 1000 - 500;
-        const z = Math.random() * 1000 - 500;
-        dummy.position.set(x, y, z);
-        dummy.updateMatrix();
-        starMesh.setMatrixAt(i, dummy.matrix);
-    }
-    starMesh.instanceMatrix.needsUpdate = true;
-    starMesh.rotation.x = Math.PI / 2;
-    starMesh.rotation.y = Math.PI / 2;
-    starMesh.rotation.z = Math.PI / 2;
-    starMesh.scale.set(1, 1, 1);
-    scene.add(starMesh);
 
-   
-   
+    // Create an array to store the star positions
+    const starVertices = new Float32Array(starCount * 3);
+
+    for (let i = 0; i < starCount; i++) {
+        // Generate random spherical coordinates
+        const radius = Math.cbrt(Math.random() * (Math.pow(outerRadius, 3) - Math.pow(innerRadius, 3)) + Math.pow(innerRadius, 3)); // Cubic root distribution
+        const theta = Math.random() * Math.PI * 2; // Random angle around the Y-axis
+        const phi = Math.random() * Math.PI; // Random angle from the positive Y-axis
+
+        // Convert spherical coordinates to Cartesian coordinates
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+
+        // Set the star position in the vertices array
+        starVertices.set([x, y, z], i * 3);
+    }
+
+    // Add the vertices to the geometry
+    starPointGeometry.setAttribute('position', new THREE.BufferAttribute(starVertices, 3));
+
+    // Create the points object
+    const pointStars = new THREE.Points(starPointGeometry, starPointMaterial);
+
+    // Add the points to the scene
+    scene.add(pointStars);
+};
+
+const addStars = () => {
+
+    const scene = useScene()
+    const innerRadius = 40; // Minimum distance from the center (0, 0, 0)
+    const outerRadius = 50; // Maximum distance from the center
+    const starCount = 300; // Number of stars
     
+    for (let i = 0; i < starCount; i++) {
+        // Generate random spherical coordinates
+        const radius = Math.cbrt(Math.random() * (Math.pow(outerRadius, 3) - Math.pow(innerRadius, 3)) + Math.pow(innerRadius, 3)); // Cubic root distribution
+        const theta = Math.random() * Math.PI * 2; // Random angle around the Y-axis
+        const phi = Math.random() * Math.PI; // Random angle from the positive Y-axis
+
+        // Convert spherical coordinates to Cartesian coordinates
+        const x = radius * Math.sin(phi) * Math.cos(theta);
+        const y = radius * Math.sin(phi) * Math.sin(theta);
+        const z = radius * Math.cos(phi);
+
+        // Create the star geometry and material
+        const starGeometry = new THREE.OctahedronGeometry(0.07, 0);
+        const starMaterial = new THREE.MeshBasicMaterial({
+            color: 'white',
+            transparent: true,
+            opacity: 0.5
+        });
+        const starMesh = new THREE.Mesh(starGeometry, starMaterial);
+
+        // Set the star's position
+        starMesh.position.set(x, y, z);
+
+        // Add the star to the group
+        stars.add(starMesh);
+    }
+    // Add the group to the scene
+    scene.add(stars);
+
 }
 
+const drawGalaxy = () => {
+    const scene = useScene();
 
-export const useStars = () => stars
+    // Create a sphere geometry
+    const galaxyGeometry = new THREE.SphereGeometry(60, 64, 64); // Large sphere for the galaxy
+
+    // Create a custom shader material for the gradient
+    const material = new THREE.ShaderMaterial({
+        uniforms: {
+          time: { value: 0 }
+        },
+        vertexShader: spaceSphereVertexShader,
+        fragmentShader: spaceSphereFramentShader,
+        side: THREE.BackSide
+      });
+    
+    // Create the sphere mesh
+    const galaxySphere = new THREE.Mesh(galaxyGeometry, material);
+
+    // Add the sphere to the scene
+    scene.add(galaxySphere);
+};
+
+const blinkSpeeds = Array.from({ length: 20 }, () => Math.random() * 2 + 0.5); // Generate 20 random values between 0.5 and 2.5
+
+export const animateStars = () => {
+    for (let i = 0; i < stars.children.length; i++) {
+        const star = stars.children[i] as THREE.Mesh;
+        const blinkSpeed = blinkSpeeds[i % blinkSpeeds.length]; // Cycle through the blink speeds
+        const scale = Math.abs(Math.sin(Date.now() * 0.0005 * blinkSpeed)); // Scale based on time
+        // star.scale.set(scale, scale, scale); // Apply the scale to the star
+        star.material.opacity = scale * 0.7; // Adjust opacity based on scale
+    }
+}
+

@@ -1,5 +1,0 @@
-paths:
-  - packages
-paths-ignore:
-  - '**/ammo.js'
-  - '**/ammo.wasm.js'
