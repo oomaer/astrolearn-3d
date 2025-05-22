@@ -21,6 +21,29 @@ const constellationData = {
             ['Asellus Australis', 'Altarf'],
             ['Asellus Australis', 'Acubens']
         ]
+    },
+    bigDipper: {
+        name: 'Big Dipper',
+        offset: { x: 2, y: 1, z: 0 },
+        scale: 0.8,
+        stars: [
+            {name: 'Dubhe', x: 0, y: 0, z: -3, magnitude: 1.8, color: 0xFFD700},
+            {name: 'Merak', x: 0, y: -1, z: -3, magnitude: 2.4, color: 0xFFFFFF},
+            {name: 'Phecda', x: 1.2, y: -1.2, z: -3, magnitude: 2.4, color: 0xFFFFFF},
+            {name: 'Megrez', x: 1.2, y: 0, z: -3, magnitude: 3.3, color: 0xFFFFFF},
+            {name: 'Alioth', x: 2.3, y: 0.3, z: -3, magnitude: 1.8, color: 0xFFD700},
+            {name: 'Mizar', x: 3.3, y: 0.7, z: -3, magnitude: 2.1, color: 0xFFD700},
+            {name: 'Alkaid', x: 4.3, y: 1.2, z: -3, magnitude: 1.9, color: 0xFFD700}
+        ],
+        lines: [
+            ['Dubhe', 'Merak'],
+            ['Merak', 'Phecda'],
+            ['Phecda', 'Megrez'],
+            ['Megrez', 'Dubhe'],
+            ['Megrez', 'Alioth'],
+            ['Alioth', 'Mizar'],
+            ['Mizar', 'Alkaid']
+        ]
     }
 }
 
@@ -39,13 +62,40 @@ export function drawConstellation(name: keyof typeof constellationData) {
             const starGeometry = new THREE.SphereGeometry(size, 32, 32) 
             const starMaterial = new THREE.MeshStandardMaterial({ 
                 color: color,
-                emissive: new THREE.Color(1,1,1).multiplyScalar(2.0 - magnitude/6), 
-                metalness: 0.3, 
-                roughness: 0.2, 
+                emissive: new THREE.Color(color).multiplyScalar(5.0 - magnitude/6),
+                metalness: 0.8,
+                roughness: 0.05,
+                emissiveIntensity: 3.0,
+                toneMapped: false
             })
             const starMesh = new THREE.Mesh(starGeometry, starMaterial)
             starMesh.position.set(x, y, z)         
             starGroup.add(starMesh)
+
+            // Add glowing sphere effect
+            const glowGeometry = new THREE.SphereGeometry(size * 2, 32, 32)
+            const glowMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                transparent: true,
+                opacity: 0.15,
+                side: THREE.BackSide
+            })
+            const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
+            glowMesh.position.set(x, y, z)
+            starGroup.add(glowMesh)
+
+            // Add outer glow
+            const outerGlowGeometry = new THREE.SphereGeometry(size * 3, 32, 32)
+            const outerGlowMaterial = new THREE.MeshBasicMaterial({
+                color: color,
+                transparent: true,
+                opacity: 0.05,
+                side: THREE.BackSide
+            })
+            const outerGlowMesh = new THREE.Mesh(outerGlowGeometry, outerGlowMaterial)
+            outerGlowMesh.position.set(x, y, z)
+            starGroup.add(outerGlowMesh)
+
             starPositions.set(name, new THREE.Vector3(x, y, z))
 
             const textGeometry = new TextGeometry(name, {
@@ -59,9 +109,8 @@ export function drawConstellation(name: keyof typeof constellationData) {
                 opacity: 0.8
             })
             const textMesh = new THREE.Mesh(textGeometry, textMaterial)
-            
+
             textMesh.position.set(x + 0.2, y + 0.2, z)
-            
             textMesh.rotation.y = Math.PI
             
             // starGroup.add(textMesh)
