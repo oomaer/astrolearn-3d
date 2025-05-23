@@ -113,7 +113,7 @@ export function drawConstellation(name: keyof typeof constellationData) {
             textMesh.position.set(x + 0.2, y + 0.2, z)
             textMesh.rotation.y = Math.PI
             
-            // starGroup.add(textMesh)
+            starGroup.add(textMesh)
         })
 
         // lines
