@@ -81,6 +81,29 @@ const planets: Record<string, Planet> = {
     }
 }
 
+// Function to create orbital path
+const createOrbitalPath = (radius: number, color: number) => {
+    const points: THREE.Vector3[] = []
+    const segments = 128
+    for (let i = 0; i <= segments; i++) {
+        const theta = (i / segments) * Math.PI * 2
+        points.push(new THREE.Vector3(
+            Math.cos(theta) * radius,
+            0,
+            Math.sin(theta) * radius
+        ))
+    }
+    
+    const geometry = new THREE.BufferGeometry().setFromPoints(points)
+    const material = new THREE.LineBasicMaterial({
+        color: color,
+        transparent: true,
+        opacity: 0.3
+    })
+    
+    return new THREE.Line(geometry, material)
+}
+
 export const renderPlanet = (planetName: keyof typeof planets) => {
     const scene = useScene()
     const planet = planets[planetName]
@@ -133,6 +156,12 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     
     // Add planet to the scene
     scene.add(planetMesh)
+    
+    // Add orbital path for non-sun planets
+    if (planetName !== 'sun') {
+        const orbitalPath = createOrbitalPath(planet.position.x, planet.color)
+        scene.add(orbitalPath)
+    }
     
     return planetMesh
 }
