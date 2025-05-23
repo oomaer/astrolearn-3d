@@ -133,7 +133,7 @@ export const animateStars = () => {
         const blinkSpeed = blinkSpeeds[i % blinkSpeeds.length]; // Cycle through the blink speeds
         const scale = Math.abs(Math.sin(Date.now() * 0.0005 * blinkSpeed)); // Scale based on time
         // star.scale.set(scale, scale, scale); // Apply the scale to the star
-        star.material.opacity = scale * 0.7; // Adjust opacity based on scale
+        (star.material as THREE.Material).opacity = scale * 0.7; // Adjust opacity based on scale
     }
 }
 
