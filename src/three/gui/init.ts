@@ -13,10 +13,10 @@ export const init3DWorld = () => {
     drawGalaxy();
     addStars();
     addStarPoints();
-    drawConstellation('cancer');
+    // drawConstellation('cancer');
     // drawConstellation('bigDipper')
     // renderPlanet('mercury')
-    // createSolarSystem()
+    createSolarSystem()
 }
 
 
