@@ -212,3 +212,99 @@ export const sunFragmentShader = `
         gl_FragColor = vec4(color, 1.0);
     }
 `
+
+export const earthVertexShader = `
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    varying vec3 vWorldPosition;
+    
+    void main() {
+        vUv = uv;
+        vNormal = normalize(normalMatrix * normal);
+        vPosition = position;
+        vWorldPosition = (modelMatrix * vec4(position, 1.0)).xyz;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`
+
+export const earthFragmentShader = `
+    precision highp float;
+    uniform float time;
+    uniform sampler2D earthTexture;
+    varying vec2 vUv;
+    varying vec3 vNormal;
+    varying vec3 vPosition;
+    varying vec3 vWorldPosition;
+
+    // Improved noise function for clouds
+    float hash(vec2 p) {
+        return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
+    }
+
+    float noise(vec2 p) {
+        vec2 i = floor(p);
+        vec2 f = fract(p);
+        f = f * f * (3.0 - 2.0 * f);
+        
+        float a = hash(i);
+        float b = hash(i + vec2(1.0, 0.0));
+        float c = hash(i + vec2(0.0, 1.0));
+        float d = hash(i + vec2(1.0, 1.0));
+        
+        return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+    }
+
+    // FBM (Fractal Brownian Motion) for more natural cloud patterns
+    float fbm(vec2 p) {
+        float value = 0.0;
+        float amplitude = 0.5;
+        float frequency = 0.0;
+        
+        for(int i = 0; i < 6; i++) {
+            value += amplitude * noise(p);
+            p *= 2.0;
+            amplitude *= 0.5;
+        }
+        
+        return value;
+    }
+
+    void main() {
+        // Base texture
+        vec4 texColor = texture2D(earthTexture, vUv);
+        
+        // Calculate light direction based on world position
+        vec3 lightDir = normalize(-vWorldPosition);
+        
+        // Calculate day/night transition
+        float dayNight = max(dot(vNormal, lightDir), 0.0);
+        
+        // Generate cloud pattern
+        vec2 cloudUv = vUv + time * 0.1;
+        float cloudPattern = fbm(cloudUv * 4.0);
+        float clouds = smoothstep(0.4, 0.6, cloudPattern);
+        
+        // Base color with day/night transition
+        vec3 finalColor = texColor.rgb;
+        
+        // Add clouds
+        vec3 cloudColor = vec3(1.0);
+        finalColor = mix(finalColor, cloudColor, clouds * 0.3);
+        
+        // Add atmospheric glow
+        float rim = 1.0 - max(dot(vNormal, normalize(cameraPosition - vWorldPosition)), 0.0);
+        rim = pow(rim, 3.0);
+        vec3 atmosphereColor = mix(vec3(0.1, 0.2, 0.4), vec3(0.3, 0.6, 1.0), dayNight);
+        finalColor = mix(finalColor, atmosphereColor, rim * 0.5);
+        
+        // Apply day/night transition
+        finalColor *= mix(0.3, 1.0, dayNight);
+        
+        // Add city lights on night side
+        float cityLights = noise(vUv * 20.0) * (1.0 - dayNight);
+        finalColor += vec3(1.0, 0.9, 0.7) * cityLights * 0.2;
+        
+        gl_FragColor = vec4(finalColor, 1.0);
+    }
+`
