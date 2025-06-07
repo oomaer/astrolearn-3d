@@ -1,6 +1,7 @@
 import * as THREE from 'three'
 import { useCamera } from '../init'
 import { setTargetPlanet } from '../animation/animationLoop'
+import { useSelectedObjectStore } from '../../stores/selectedObject'
 
 interface ClickableObject {
     object: THREE.Object3D;
@@ -45,7 +46,7 @@ const clearClickableObjects = () => {
 
 // Handle click event
 const handleClick = (event: MouseEvent) => {
-    console.log('Click detected'); 
+    const selectedObjectStore = useSelectedObjectStore()
     if (!canvas) return;
 
     // Calculate mouse position in normalized device coordinates
@@ -71,7 +72,7 @@ const handleClick = (event: MouseEvent) => {
         const clickableObject = clickableObjects.find(item => item.object === clickedObject);
         
         if (clickableObject) {
-            console.log('Clicked object:', clickedObject.userData.name || 'unnamed');
+            selectedObjectStore.setSelectedObject(clickedObject.userData.id)
             clickableObject.onClick(clickedObject);
             
             // Set the target planet
