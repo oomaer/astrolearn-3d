@@ -4,112 +4,8 @@ import { TextureLoader } from 'three'
 import { sunVertexShader, sunFragmentShader, earthVertexShader, earthFragmentShader } from '../shaders/shaders'
 import { addShaderMaterial, startCameraAnimation, addPlanetOrbit } from '../animation/animationLoop'
 import eventHandler from '../events/eventHandler'
-
-interface Planet {
-    name: string
-    texture: string
-    position: THREE.Vector3
-    radius: number
-    color: number
-    emissive?: boolean
-    shaders?: {
-        vertexShader: string
-        fragmentShader: string
-    }
-    orbitalSpeed: number  // Orbital speed in radians per second
-    rotationSpeed: number // Self-rotation speed in radians per second
-}
-
-// Actual distances from sun in AU (Astronomical Units)
-// 1 AU = average distance from Earth to Sun
-const planets: Record<string, Planet> = {
-    sun: {
-        name: 'sun',
-        texture: '/textures/sun.jpg',
-        position: new THREE.Vector3(0, 0, 0),
-        radius: 3,
-        color: 0xFFFF00,
-        emissive: true,
-        shaders: {
-            vertexShader: sunVertexShader,
-            fragmentShader: sunFragmentShader
-        },
-        orbitalSpeed: 0,  // Sun doesn't orbit
-        rotationSpeed: 0.01  // Sun rotates every ~27 Earth days
-    },
-    mercury: {
-        name: 'mercury',
-        texture: '/textures/mercury.jpg',
-        position: new THREE.Vector3(5, 0, 0),  // 0.4 AU
-        radius: 0.5,
-        color: 0x8C8C8C,
-        orbitalSpeed: 0.04,  // 88 Earth days per orbit
-        rotationSpeed: 0.005  // Mercury rotates every ~59 Earth days
-    },
-    venus: {
-        name: 'venus',
-        texture: '/textures/venus.jpg',
-        position: new THREE.Vector3(7, 0, 0),  // 0.7 AU
-        radius: 0.8,
-        color: 0xE39E1C,
-        orbitalSpeed: 0.015,  // 225 Earth days per orbit
-        rotationSpeed: -0.002  // Venus rotates retrograde every ~243 Earth days
-    },
-    earth: {
-        name: 'earth',
-        texture: '/textures/earth.jpg',
-        position: new THREE.Vector3(10, 0, 0),  // 1 AU
-        radius: 0.9,
-        color: 0x2233FF,
-        orbitalSpeed: 0.01,  // Base speed (365 Earth days per orbit)
-        rotationSpeed: 0.05  // Earth rotates every 24 hours
-    },
-    mars: {
-        name: 'mars',
-        texture: '/textures/mars.jpg',
-        position: new THREE.Vector3(13, 0, 0),  // 1.5 AU
-        radius: 0.6,
-        color: 0xC1440E,
-        orbitalSpeed: 0.005,  // 687 Earth days per orbit
-        rotationSpeed: 0.048  // Mars rotates every ~24.6 hours
-    },
-    jupiter: {
-        name: 'jupiter',
-        texture: '/textures/jupiter.jpg',
-        position: new THREE.Vector3(20, 0, 0),  // 5.2 AU
-        radius: 2,
-        color: 0xD8CA9D,
-        orbitalSpeed: 0.0008,  // 11.9 Earth years per orbit
-        rotationSpeed: 0.12  // Jupiter rotates every ~10 hours
-    },
-    saturn: {
-        name: 'saturn',
-        texture: '/textures/saturn.jpg',
-        position: new THREE.Vector3(25, 0, 0),  // 9.5 AU
-        radius: 1.8,
-        color: 0xE3BB76,
-        orbitalSpeed: 0.0003,  // 29.5 Earth years per orbit
-        rotationSpeed: 0.1  // Saturn rotates every ~10.7 hours
-    },
-    uranus: {
-        name: 'uranus',
-        texture: '/textures/uranus.jpg',
-        position: new THREE.Vector3(30, 0, 0),  // 19.2 AU
-        radius: 0.8,
-        color: 0x5580AA,
-        orbitalSpeed: 0.0001,  // 84 Earth years per orbit
-        rotationSpeed: -0.04  // Uranus rotates retrograde every ~17 hours
-    },
-    neptune: {
-        name: 'neptune',
-        texture: '/textures/neptune.jpg',
-        position: new THREE.Vector3(35, 0, 0),  // 30.1 AU
-        radius: 0.7,
-        color: 0x366896,
-        orbitalSpeed: 0.00006,  // 165 Earth years per orbit
-        rotationSpeed: 0.08  // Neptune rotates every ~16 hours
-    }
-}
+import { planets } from '../../data/planetData'
+import type { PlanetData } from '../../data/planetData'
 
 // Function to create orbital path
 const createOrbitalPath = (radius: number, color: number) => {
@@ -167,8 +63,8 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
         }
         
         material = new THREE.ShaderMaterial({
-            vertexShader: planet.shaders.vertexShader,
-            fragmentShader: planet.shaders.fragmentShader,
+            vertexShader: planet.shaders.vertexShader || sunVertexShader,
+            fragmentShader: planet.shaders.fragmentShader || sunFragmentShader,
             uniforms: uniforms,
             side: THREE.FrontSide
         })
@@ -180,29 +76,16 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
         const textureLoader = new TextureLoader()
         const planetTexture = textureLoader.load(planet.texture)
         
-        // Enhanced material settings for Earth
-        if (planetName === 'earth') {
-            material = new THREE.MeshStandardMaterial({
-                map: planetTexture,
-                roughness: 0.5,
-                metalness: 0.1,
-                color: planet.color,
-                emissive: 0x000000,
-                emissiveIntensity: 0,
-                envMapIntensity: 1.0,
-                normalScale: new THREE.Vector2(0.5, 0.5)
-            })
-        } else {
-            // Standard material for other planets
-            material = new THREE.MeshStandardMaterial({
-                map: planetTexture,
-                roughness: 0.6,
-                metalness: 0.1,
-                color: planet.color,
-                emissive: planet.emissive ? planet.color : undefined,
-                emissiveIntensity: planet.emissive ? 1 : 0
-            })
-        }
+        material = new THREE.MeshStandardMaterial({
+            map: planetTexture,
+            roughness: 0.5,
+            metalness: 0.1,
+            color: planet.color,
+            emissive: planet.emissive ? planet.color : 0x000000,
+            emissiveIntensity: planet.emissive ? 1 : 0,
+            envMapIntensity: 1.0,
+            normalScale: new THREE.Vector2(0.5, 0.5)
+        })
     }
     
     // Create planet mesh
@@ -222,7 +105,17 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     }
     
     // Add click handler
-    planetMesh.userData.name = planetName;
+    planetMesh.userData = {
+        id: planet.id,
+        name: planetName,
+        type: 'planet',
+        diameter: planet.radius * 2,
+        distanceFromSun: planet.position.length(),
+        orbitalPeriod: planet.orbitalSpeed,
+        temperature: planet.temperature,
+        description: planet.description
+    }
+    
     eventHandler.addClickableObject({
         object: planetMesh,
         onClick: (object) => {
@@ -301,4 +194,38 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
     }
     
     return planetMeshes
+}
+
+export const removeSolarSystem = () => {
+    const scene = useScene()
+    
+    // Remove all planets and their orbital paths
+    for (const planetName in planets) {
+        const planetMesh = scene.getObjectByName(planetName)
+        if (planetMesh) {
+            scene.remove(planetMesh)
+        }
+        
+        // Remove orbital path
+        const orbitalPath = scene.getObjectByName(`${planetName}-orbit`)
+        if (orbitalPath) {
+            scene.remove(orbitalPath)
+        }
+    }
+    
+    // Remove lights
+    const ambientLight = scene.getObjectByName('ambientLight')
+    if (ambientLight) {
+        scene.remove(ambientLight)
+    }
+    
+    const sunLight = scene.getObjectByName('sunLight')
+    if (sunLight) {
+        scene.remove(sunLight)
+    }
+    
+    const secondaryLight = scene.getObjectByName('secondaryLight')
+    if (secondaryLight) {
+        scene.remove(secondaryLight)
+    }
 }
