@@ -7,6 +7,10 @@ import { useSelectedObjectStore } from '../../stores/selectedObject'
 import { eventHandler } from '../events/eventHandler'
 import { setTargetPlanet } from '../animation/animationLoop'
 
+// Create a group to hold all constellation objects
+const constellationGroup = new THREE.Group()
+constellationGroup.name = 'constellations'
+
 export function drawConstellation(name: keyof typeof constellations) {
     const scene = useScene()
     const constellation = constellations[name]
@@ -114,15 +118,27 @@ export function drawConstellation(name: keyof typeof constellations) {
         // offset and scaling the group
         starGroup.position.add(constellation.offset)
         starGroup.scale.set(constellation.scale, constellation.scale, constellation.scale)
-        
-        // Make the entire constellation group clickable
+ 
         eventHandler.addClickableObject({
             object: starGroup
         })
 
-        scene.add(starGroup)
+        constellationGroup.add(starGroup)
+
+   
+        scene.add(constellationGroup)
+      
     })
 
-
     return starGroup
+}
+
+export const removeConstellations = () => {
+    const scene = useScene()
+    console.log("removing constellations")
+    const constellations = scene.getObjectByName('constellations')
+    if (constellations) {
+        scene.remove(constellations)
+        setTargetPlanet(null)
+    }
 }
