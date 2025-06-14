@@ -2,59 +2,32 @@ import { useScene } from "../init"
 import * as THREE from 'three'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
+import { constellations } from '../../data/constellationData'
+import { useSelectedObjectStore } from '../../stores/selectedObject'
+import { eventHandler } from '../events/eventHandler'
+import { setTargetPlanet } from '../animation/animationLoop'
 
-const constellationData = {
-    cancer: {
-        name: 'Cancer',
-        offset: { x: 0, y: 0, z: 0 },
-        scale: 0.7,
-        stars: [
-            {name: 'Altarf', x: -1.8, y: -2.0, z: -4.2, magnitude: 3.5, color: 0xFFA500}, 
-            {name: 'Acubens', x: 2.0, y: -1.6, z: -2.5, magnitude: 4.3, color: 0xFFFFFF}, 
-            {name: 'Asellus Borealis', x: 0.3, y: 2.4, z: -2.3, magnitude: 4.7, color: 0xFFFFFF}, 
-            {name: 'Asellus Australis', x: 0.0, y: 0.0, z: -1.9, magnitude: 3.9, color: 0xFFA500}, 
-            {name: 'Tegmine', x: -0.4, y: 1.2, z: -1.2, magnitude: 4.7, color: 0xFFFFFF} 
-        ],
-        lines: [
-            ['Asellus Borealis', 'Asellus Australis'],
-            ['Asellus Australis', 'Tegmine'],
-            ['Asellus Australis', 'Altarf'],
-            ['Asellus Australis', 'Acubens']
-        ]
-    },
-    bigDipper: {
-        name: 'Big Dipper',
-        offset: { x: 2, y: 1, z: 0 },
-        scale: 0.8,
-        stars: [
-            {name: 'Dubhe', x: 0, y: 0, z: -3, magnitude: 1.8, color: 0xFFD700},
-            {name: 'Merak', x: 0, y: -1, z: -3, magnitude: 2.4, color: 0xFFFFFF},
-            {name: 'Phecda', x: 1.2, y: -1.2, z: -3, magnitude: 2.4, color: 0xFFFFFF},
-            {name: 'Megrez', x: 1.2, y: 0, z: -3, magnitude: 3.3, color: 0xFFFFFF},
-            {name: 'Alioth', x: 2.3, y: 0.3, z: -3, magnitude: 1.8, color: 0xFFD700},
-            {name: 'Mizar', x: 3.3, y: 0.7, z: -3, magnitude: 2.1, color: 0xFFD700},
-            {name: 'Alkaid', x: 4.3, y: 1.2, z: -3, magnitude: 1.9, color: 0xFFD700}
-        ],
-        lines: [
-            ['Dubhe', 'Merak'],
-            ['Merak', 'Phecda'],
-            ['Phecda', 'Megrez'],
-            ['Megrez', 'Dubhe'],
-            ['Megrez', 'Alioth'],
-            ['Alioth', 'Mizar'],
-            ['Mizar', 'Alkaid']
-        ]
-    }
-}
-
-export function drawConstellation(name: keyof typeof constellationData) {
+export function drawConstellation(name: keyof typeof constellations) {
     const scene = useScene()
-    const constellation = constellationData[name]
+    const constellation = constellations[name]
     const starGroup = new THREE.Group()
     const starPositions = new Map<string, THREE.Vector3>()
+    const selectedObjectStore = useSelectedObjectStore()
+
+    // Add userData to the group for identification
+    starGroup.userData = {
+        id: constellation.id,
+        name: constellation.name,
+        type: 'constellation'
+    }
+
+    // Create a group for the constellation name
+    const nameGroup = new THREE.Group()
+    starGroup.add(nameGroup)
 
     const loader = new FontLoader()
     loader.load('/fonts/helvetiker_regular.typeface.json', function(font) {
+
         constellation.stars.forEach(star => {
             const { x, y, z, magnitude, name, color = 0xFFFFFF } = star
             const size = 0.05 * (6 - magnitude) 
@@ -69,7 +42,7 @@ export function drawConstellation(name: keyof typeof constellationData) {
                 toneMapped: false
             })
             const starMesh = new THREE.Mesh(starGeometry, starMaterial)
-            starMesh.position.set(x, y, z)         
+            starMesh.position.set(x, y, z)
             starGroup.add(starMesh)
 
             // Add glowing sphere effect
@@ -111,7 +84,6 @@ export function drawConstellation(name: keyof typeof constellationData) {
             const textMesh = new THREE.Mesh(textGeometry, textMaterial)
 
             textMesh.position.set(x + 0.2, y + 0.2, z)
-            textMesh.rotation.y = Math.PI
             
             starGroup.add(textMesh)
         })
@@ -136,14 +108,22 @@ export function drawConstellation(name: keyof typeof constellationData) {
         const center = box.getCenter(new THREE.Vector3())
         starGroup.position.sub(center)
 
+        starGroup.userData.name = constellation.name
+        starGroup.userData.id = constellation.id
+        starGroup.userData.type = "constellation"
+
         // offset and scaling the group
-        // i am adding this to move or scale the entire group containing the constellation
-        const offset = constellation.offset || { x: 0, y: 0, z: 0 }
-        starGroup.position.add(new THREE.Vector3(offset.x, offset.y, offset.z))
+        starGroup.position.add(constellation.offset)
         starGroup.scale.set(constellation.scale, constellation.scale, constellation.scale)
+        
+        // Make the entire constellation group clickable
+        eventHandler.addClickableObject({
+            object: starGroup
+        })
 
         scene.add(starGroup)
     })
+
 
     return starGroup
 }
