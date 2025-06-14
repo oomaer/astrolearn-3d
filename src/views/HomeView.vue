@@ -5,7 +5,7 @@
 <template>
   <div class="p-8 w-screen h-screen flex justify-center items-center fixed z-[999]">
    <div class="flex flex-col items-center justify-center">
-    <h1 class="text-4xl font-bold mb-8 text-white">Welcome to Space Explorer</h1>
+    <h1 class="text-4xl font-bold mb-8 text-white">Welcome to AstroLearn 3D</h1>
     <div class="flex justify-center gap-8 mt-8">
       <router-link 
         to="/planets" 
