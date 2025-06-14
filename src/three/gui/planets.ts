@@ -117,23 +117,7 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     }
     
     eventHandler.addClickableObject({
-        object: planetMesh,
-        onClick: (object) => {
-            const planetPosition = object.position.clone();
-            const camera = useCamera();
-            const controls = useControls();
-            const distance = 20;
-            const offset = new THREE.Vector3(0, distance * 0.5, distance);
-            
-            // Animate camera to planet
-            startCameraAnimation(
-                camera.position.clone(),
-                planetPosition.clone().add(offset),
-                controls.target.clone(),
-                planetPosition.clone(),
-                1000
-            );
-        }
+        object: planetMesh
     });
     
     // Add planet to the scene
