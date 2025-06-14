@@ -90,6 +90,8 @@ import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
 import { planets } from '../data/planetData'
 import { useRouter } from 'vue-router'
+import { removeConstellations } from '@/three/gui/constellations'
+import { animateToDefault } from '@/three/animation/animationLoop'
 
 const router = useRouter()
 const selectedObjectStore = useSelectedObjectStore()
@@ -112,6 +114,8 @@ watch(selectedObject, (newValue) => {
 
 onMounted(() => {
   // Initialize planet system
+  removeConstellations()
+  animateToDefault('planet')
   selectedObjectStore.clearSelectedObject()
   createSolarSystem()
 })
