@@ -112,13 +112,11 @@ watch(selectedObject, (newValue) => {
 
 onMounted(() => {
   // Initialize planet system
+  selectedObjectStore.clearSelectedObject()
   createSolarSystem()
 })
 
-onUnmounted(() => {
-  selectedObjectStore.clearSelectedObject()
-  removeSolarSystem()
-})
+
 </script>
 
 <style scoped>

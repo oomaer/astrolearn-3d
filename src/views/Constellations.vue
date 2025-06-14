@@ -92,6 +92,7 @@ import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
 import { constellations } from '../data/constellationData'
 import { useRouter } from 'vue-router'
+import { removeSolarSystem } from '@/three/gui/planets'
 
 const router = useRouter()
 const selectedObjectStore = useSelectedObjectStore()
@@ -113,16 +114,15 @@ watch(selectedObject, (newValue) => {
 })
 
 onMounted(() => {
+  
+  removeSolarSystem()
+  selectedObjectStore.clearSelectedObject()
   // Draw all constellations
   Object.keys(constellations).forEach(key => {
     drawConstellation(key as keyof typeof constellations)
   })
 })
 
-onUnmounted(() => {
-  setTargetPlanet(null)
-  selectedObjectStore.clearSelectedObject()
-})
 </script>
 
 <style scoped>
