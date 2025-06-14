@@ -12,7 +12,6 @@ export function drawConstellation(name: keyof typeof constellations) {
     const constellation = constellations[name]
     const starGroup = new THREE.Group()
     const starPositions = new Map<string, THREE.Vector3>()
-    const selectedObjectStore = useSelectedObjectStore()
 
     // Add userData to the group for identification
     starGroup.userData = {
