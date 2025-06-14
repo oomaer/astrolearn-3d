@@ -2,10 +2,13 @@ import { useScene, useCamera, useControls } from "../init"
 import * as THREE from 'three'
 import { TextureLoader } from 'three'
 import { sunVertexShader, sunFragmentShader, earthVertexShader, earthFragmentShader } from '../shaders/shaders'
-import { addShaderMaterial, startCameraAnimation, addPlanetOrbit } from '../animation/animationLoop'
+import { addShaderMaterial, startCameraAnimation, addPlanetOrbit, setTargetPlanet } from '../animation/animationLoop'
 import eventHandler from '../events/eventHandler'
 import { planets } from '../../data/planetData'
-import type { PlanetData } from '../../data/planetData'
+
+// Create a group to hold all solar system objects
+const planetGroup = new THREE.Group()
+planetGroup.name = 'solarSystem'
 
 // Function to create orbital path
 const createOrbitalPath = (radius: number, color: number) => {
@@ -43,6 +46,7 @@ const createSaturnRings = (radius: number) => {
     });
     
     const rings = new THREE.Mesh(ringGeometry, ringMaterial);
+    rings.name = 'saturnRings';
     rings.rotation.x = Math.PI / 2; // Rotate to be horizontal
     return rings;
 }
@@ -90,6 +94,7 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     
     // Create planet mesh
     const planetMesh = new THREE.Mesh(geometry, material)
+    planetMesh.name = planetName
     planetMesh.position.copy(planet.position)
     
     // Only enable shadow receiving for non-sun planets
@@ -126,7 +131,8 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     // Add orbital path for non-sun planets
     if (planetName !== 'sun') {
         const orbitalPath = createOrbitalPath(planet.position.x, planet.color)
-        scene.add(orbitalPath)
+        orbitalPath.name = `${planetName}-orbit`
+        planetGroup.add(orbitalPath) // Add to planet group instead of scene
     }
     
     return planetMesh
@@ -137,10 +143,12 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
     
     // Add ambient light for better visibility
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
-    scene.add(ambientLight)
+    ambientLight.name = 'ambientLight'
+    planetGroup.add(ambientLight)
     
     // Create strong point light at sun's position
     const sunLight = new THREE.PointLight(0xffffff, 30, 400)
+    sunLight.name = 'sunLight'
     sunLight.position.copy(planets.sun.position)
     sunLight.castShadow = true
     sunLight.shadow.mapSize.width = 2048
@@ -150,19 +158,21 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
     sunLight.shadow.bias = -0.0001
     sunLight.shadow.normalBias = 0.02
     sunLight.shadow.radius = 1
-    scene.add(sunLight)
+    planetGroup.add(sunLight)
     
     // Add a second, weaker point light to create some depth
     const secondaryLight = new THREE.PointLight(0xffffff, 1.0, 150)
+    secondaryLight.name = 'secondaryLight'
     secondaryLight.position.set(5, 3, 5)
     secondaryLight.castShadow = false
-    scene.add(secondaryLight)
+    planetGroup.add(secondaryLight)
     
     // Render all planets
     const planetMeshes: Record<string, THREE.Mesh> = {}
     for (const planetName in planets) {
         const mesh = renderPlanet(planetName as keyof typeof planets)
         planetMeshes[planetName] = mesh
+        planetGroup.add(mesh)
         
         // Add non-sun planets to orbital system with random starting positions
         if (planetName !== 'sun') {
@@ -177,39 +187,22 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
         }
     }
     
+    // Add the entire planet group to the scene
+    scene.add(planetGroup)
+    
     return planetMeshes
 }
 
 export const removeSolarSystem = () => {
     const scene = useScene()
+    const camera = useCamera()
+    const controls = useControls()
+    console.log("removing solar system")
     
-    // Remove all planets and their orbital paths
-    for (const planetName in planets) {
-        const planetMesh = scene.getObjectByName(planetName)
-        if (planetMesh) {
-            scene.remove(planetMesh)
-        }
-        
-        // Remove orbital path
-        const orbitalPath = scene.getObjectByName(`${planetName}-orbit`)
-        if (orbitalPath) {
-            scene.remove(orbitalPath)
-        }
-    }
-    
-    // Remove lights
-    const ambientLight = scene.getObjectByName('ambientLight')
-    if (ambientLight) {
-        scene.remove(ambientLight)
-    }
-    
-    const sunLight = scene.getObjectByName('sunLight')
-    if (sunLight) {
-        scene.remove(sunLight)
-    }
-    
-    const secondaryLight = scene.getObjectByName('secondaryLight')
-    if (secondaryLight) {
-        scene.remove(secondaryLight)
+    // Remove the entire planet group from the scene
+    const solarSystem = scene.getObjectByName('solarSystem')
+    if (solarSystem) {
+        scene.remove(solarSystem)
+        setTargetPlanet(null)
     }
 }
