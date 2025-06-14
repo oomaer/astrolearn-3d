@@ -19,7 +19,7 @@ const planetOrbits: PlanetOrbit[] = [];
 let speedMultiplier = 6;
 
 // Camera target planet
-let targetPlanet: THREE.Mesh | null = null;
+let targetPlanet: THREE.Mesh | THREE.Group | null = null;
 
 // Add a planet to the orbital system
 export const addPlanetOrbit = (mesh: THREE.Mesh, speed: number, radius: number, rotationSpeed: number) => {
@@ -27,8 +27,25 @@ export const addPlanetOrbit = (mesh: THREE.Mesh, speed: number, radius: number, 
 }
 
 // Function to set the target planet
-export const setTargetPlanet = (mesh: THREE.Mesh | null) => {
+export const setTargetPlanet = (mesh: THREE.Mesh | THREE.Group | null) => {
     targetPlanet = mesh;
+    if (mesh){
+        const isConstellation = mesh.userData.type === "constellation"
+        const planetPosition = mesh.position.clone();
+        const camera = useCamera();
+        const controls = useControls();
+        const distance =  isConstellation ? 10 : 20;
+        const offset = new THREE.Vector3(0, isConstellation ? 0 : distance * 0.5, distance);
+        
+        // Animate camera to planet
+        startCameraAnimation(
+            camera.position.clone(),
+            planetPosition.clone().add(offset),
+            controls.target.clone(),
+            planetPosition.clone(),
+            1000
+        );
+    }
 }
 
 // Camera animation state
