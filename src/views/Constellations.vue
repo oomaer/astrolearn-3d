@@ -87,7 +87,7 @@
 import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
 import { useScene } from '../three/init'
 import { drawConstellation } from '../three/gui/constellations'
-import { setTargetPlanet } from '../three/animation/animationLoop'
+import { animateToDefault, setTargetPlanet } from '../three/animation/animationLoop'
 import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
 import { constellations } from '../data/constellationData'
@@ -117,6 +117,7 @@ onMounted(() => {
   
   removeSolarSystem()
   selectedObjectStore.clearSelectedObject()
+  animateToDefault('constellation')
   // Draw all constellations
   Object.keys(constellations).forEach(key => {
     drawConstellation(key as keyof typeof constellations)
