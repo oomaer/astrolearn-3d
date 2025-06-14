@@ -1,11 +1,10 @@
 import * as THREE from 'three'
-import { useCamera } from '../init'
-import { setTargetPlanet } from '../animation/animationLoop'
+import { useCamera, useControls } from '../init'
+import { setTargetPlanet, startCameraAnimation } from '../animation/animationLoop'
 import { useSelectedObjectStore } from '../../stores/selectedObject'
 
 interface ClickableObject {
-    object: THREE.Object3D;
-    onClick: (object: THREE.Object3D) => void;
+    object: THREE.Object3D
 }
 
 // State
@@ -44,6 +43,7 @@ const clearClickableObjects = () => {
     console.log('Cleared all clickable objects');
 };
 
+
 // Handle click event
 const handleClick = (event: MouseEvent) => {
     const selectedObjectStore = useSelectedObjectStore()
@@ -69,14 +69,23 @@ const handleClick = (event: MouseEvent) => {
 
     if (intersects.length > 0) {
         const clickedObject = intersects[0].object;
-        const clickableObject = clickableObjects.find(item => item.object === clickedObject);
+
+        // Find the matching clickable object
+        const matchingIndex = clickableObjects.findIndex(item => 
+            item.object === clickedObject || item.object === clickedObject.parent
+        );
         
-        if (clickableObject) {
-            selectedObjectStore.setSelectedObject(clickedObject.userData.id)
-            clickableObject.onClick(clickedObject);
+        if (matchingIndex !== -1) {
+            const clickableObject = clickableObjects[matchingIndex];
+            // Use parent object if it matches, otherwise use clicked object
+            const targetObject = clickableObject.object === clickedObject.parent 
+                ? clickedObject.parent 
+                : clickedObject;
             
+            selectedObjectStore.setSelectedObject(targetObject.userData.id)
             // Set the target planet
-            setTargetPlanet(clickedObject as THREE.Mesh);
+            console.log(targetObject)
+            setTargetPlanet(targetObject as THREE.Group);
         }
     } 
 };
