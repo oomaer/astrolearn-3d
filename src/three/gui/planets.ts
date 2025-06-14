@@ -52,7 +52,7 @@ const createSaturnRings = (radius: number) => {
 }
 
 export const renderPlanet = (planetName: keyof typeof planets) => {
-    const scene = useScene()
+
     const planet = planets[planetName]
     
     // Create planet geometry
@@ -126,7 +126,7 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
     });
     
     // Add planet to the scene
-    scene.add(planetMesh)
+    planetGroup.add(planetMesh)
     
     // Add orbital path for non-sun planets
     if (planetName !== 'sun') {
@@ -195,13 +195,17 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
 
 export const removeSolarSystem = () => {
     const scene = useScene()
-    const camera = useCamera()
-    const controls = useControls()
     console.log("removing solar system")
     
-    // Remove the entire planet group from the scene
     const solarSystem = scene.getObjectByName('solarSystem')
     if (solarSystem) {
+        // Remove clickable objects for all planets
+        solarSystem.traverse((object) => {
+            if (object.userData.type === 'planet') {
+                eventHandler.removeClickableObject(object)
+            }
+        })
+        
         scene.remove(solarSystem)
         setTargetPlanet(null)
     }

@@ -136,8 +136,16 @@ export function drawConstellation(name: keyof typeof constellations) {
 export const removeConstellations = () => {
     const scene = useScene()
     console.log("removing constellations")
+    
     const constellations = scene.getObjectByName('constellations')
     if (constellations) {
+        // Remove clickable objects for all constellations
+        constellations.traverse((object) => {
+            if (object.userData.type === 'constellation') {
+                eventHandler.removeClickableObject(object)
+            }
+        })
+        
         scene.remove(constellations)
         setTargetPlanet(null)
     }
