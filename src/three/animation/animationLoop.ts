@@ -45,6 +45,20 @@ export const setTargetPlanet = (mesh: THREE.Mesh | THREE.Group | null) => {
             planetPosition.clone(),
             1000
         );
+    } else {
+        // When target is null, animate camera to center view
+        const camera = useCamera();
+        const controls = useControls();
+        const defaultPosition = new THREE.Vector3(0, 0, 20);
+        const defaultTarget = new THREE.Vector3(0, 0, 0);
+        
+        startCameraAnimation(
+            camera.position.clone(),
+            defaultPosition,
+            controls.target.clone(),
+            defaultTarget,
+            1000
+        );
     }
 }
 
