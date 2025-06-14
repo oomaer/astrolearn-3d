@@ -16,7 +16,7 @@ export const init3DWorld = () => {
     // drawConstellation('cancer');
     // drawConstellation('bigDipper')
     // renderPlanet('mercury')
-    createSolarSystem()
+    // createSolarSystem()
 }
 
 
