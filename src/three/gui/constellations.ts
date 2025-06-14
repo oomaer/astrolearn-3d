@@ -5,7 +5,7 @@ import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { constellations } from '../../data/constellationData'
 import { useSelectedObjectStore } from '../../stores/selectedObject'
 import { eventHandler } from '../events/eventHandler'
-import { setTargetPlanet } from '../animation/animationLoop'
+import { setTargetObject } from '../animation/animationLoop'
 
 // Create a group to hold all constellation objects
 const constellationGroup = new THREE.Group()
@@ -147,6 +147,6 @@ export const removeConstellations = () => {
         })
         
         scene.remove(constellations)
-        setTargetPlanet(null)
+        setTargetObject(null)
     }
 }

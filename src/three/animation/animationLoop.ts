@@ -18,35 +18,48 @@ const planetOrbits: PlanetOrbit[] = [];
 // Speed multiplier for orbital animations
 let speedMultiplier = 6;
 
-// Camera target planet
-let targetPlanet: THREE.Mesh | THREE.Group | null = null;
+// Camera target object
+let targetObject: THREE.Mesh | THREE.Group | null = null;
 
 // Add a planet to the orbital system
 export const addPlanetOrbit = (mesh: THREE.Mesh, speed: number, radius: number, rotationSpeed: number) => {
     planetOrbits.push({ mesh, speed, radius, rotationSpeed });
 }
 
-// Function to set the target planet
-export const setTargetPlanet = (mesh: THREE.Mesh | THREE.Group | null) => {
-    
-    targetPlanet = mesh;
+// Function to set the target object
+export const setTargetObject = (mesh: THREE.Mesh | THREE.Group | null) => {
+    targetObject = mesh;
     if (mesh){
         const isConstellation = mesh.userData.type === "constellation"
-        const planetPosition = mesh.position.clone();
+        const objectPosition = mesh.position.clone();
         const camera = useCamera();
         const controls = useControls();
         const distance =  isConstellation ? 10 : 20;
         const offset = new THREE.Vector3(0, isConstellation ? 0 : distance * 0.5, distance);
         
-        // Animate camera to planet
+        // Animate camera to object
         startCameraAnimation(
             camera.position.clone(),
-            planetPosition.clone().add(offset),
+            objectPosition.clone().add(offset),
             controls.target.clone(),
-            planetPosition.clone(),
+            objectPosition.clone(),
             1000
         );
-    } 
+    } else {
+        // When target is null, animate camera to center view
+        const camera = useCamera();
+        const controls = useControls();
+        const defaultPosition = new THREE.Vector3(0, 0, 20);
+        const defaultTarget = new THREE.Vector3(0, 0, 0);
+        
+        startCameraAnimation(
+            camera.position.clone(),
+            defaultPosition,
+            controls.target.clone(),
+            defaultTarget,
+            1000
+        );
+    }
 }
 
 export const animateToDefault = (view?: 'planet' | 'constellation' ) => {
@@ -136,9 +149,9 @@ const animationLoop = () => {
         planet.mesh.rotation.y += planet.rotationSpeed;
     });
 
-    if (targetPlanet) {
-        // Update controls target to the planet
-        controls.target.copy(targetPlanet.position);
+    if (targetObject) {
+        // Update controls target to the object
+        controls.target.copy(targetObject.position);
     }
 
     // Handle camera animation

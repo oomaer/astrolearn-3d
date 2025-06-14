@@ -2,7 +2,7 @@ import { useScene, useCamera, useControls } from "../init"
 import * as THREE from 'three'
 import { TextureLoader } from 'three'
 import { sunVertexShader, sunFragmentShader, earthVertexShader, earthFragmentShader } from '../shaders/shaders'
-import { addShaderMaterial, startCameraAnimation, addPlanetOrbit, setTargetPlanet } from '../animation/animationLoop'
+import { addShaderMaterial, startCameraAnimation, addPlanetOrbit, setTargetObject } from '../animation/animationLoop'
 import eventHandler from '../events/eventHandler'
 import { planets } from '../../data/planetData'
 
@@ -207,6 +207,6 @@ export const removeSolarSystem = () => {
         })
         
         scene.remove(solarSystem)
-        setTargetPlanet(null)
+        setTargetObject(null)
     }
 }
