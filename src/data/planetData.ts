@@ -7,9 +7,9 @@ export interface PlanetData {
     position: THREE.Vector3
     radius: number
     color: number
-    emissive?: boolean
+    emissive?: boolean          
     shaders?: {
-        vertexShader: string
+        vertexShader: string    // shaders for visaual effects
         fragmentShader: string
     }
     orbitalSpeed: number  // Orbital speed in radians per second
@@ -18,7 +18,6 @@ export interface PlanetData {
     description: string   // Planet description
 }
 
-// Actual distances from sun in AU (Astronomical Units)
 // 1 AU = average distance from Earth to Sun
 export const planets: Record<string, PlanetData> = {
     sun: {
@@ -30,11 +29,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0xFFFF00,
         emissive: true,
         shaders: {
-            vertexShader: '',  // Will be imported from shaders
-            fragmentShader: '' // Will be imported from shaders
+            vertexShader: '', 
+            fragmentShader: '' 
         },
-        orbitalSpeed: 0,  // Sun doesn't orbit
-        rotationSpeed: 0.01,  // Sun rotates every ~27 Earth days
+        orbitalSpeed: 0,  
+        rotationSpeed: 0.01, 
         temperature: 5778,
         description: 'The Sun is the star at the center of our solar system.'
     },
@@ -42,11 +41,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'mercury',
         name: 'mercury',
         texture: '/textures/mercury.jpg',
-        position: new THREE.Vector3(5, 0, 0),  // 0.4 AU
+        position: new THREE.Vector3(5, 0, 0),  
         radius: 0.5,
         color: 0x8C8C8C,
-        orbitalSpeed: 0.04,  // 88 Earth days per orbit
-        rotationSpeed: 0.005,  // Mercury rotates every ~59 Earth days
+        orbitalSpeed: 0.04, 
+        rotationSpeed: 0.005,  
         temperature: 440,
         description: 'Mercury is the smallest and innermost planet in the solar system.'
     },
@@ -54,11 +53,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'venus',
         name: 'venus',
         texture: '/textures/venus.jpg',
-        position: new THREE.Vector3(7, 0, 0),  // 0.7 AU
+        position: new THREE.Vector3(7, 0, 0), 
         radius: 0.8,
         color: 0xE39E1C,
-        orbitalSpeed: 0.015,  // 225 Earth days per orbit
-        rotationSpeed: -0.002,  // Venus rotates retrograde every ~243 Earth days
+        orbitalSpeed: 0.015, 
+        rotationSpeed: -0.002,  
         temperature: 737,
         description: 'Venus is the second planet from the Sun and the sixth largest.'
     },
@@ -69,7 +68,7 @@ export const planets: Record<string, PlanetData> = {
         position: new THREE.Vector3(10, 0, 0),  // 1 AU
         radius: 0.9,
         color: 0x2233FF,
-        orbitalSpeed: 0.01,  // Base speed (365 Earth days per orbit)
+        orbitalSpeed: 0.01,   // Base speed (365 Earth days per orbit)
         rotationSpeed: 0.05,  // Earth rotates every 24 hours
         temperature: 288,
         description: 'Earth is the third planet from the Sun and the only known planet to support life.'
@@ -81,8 +80,8 @@ export const planets: Record<string, PlanetData> = {
         position: new THREE.Vector3(13, 0, 0),  // 1.5 AU
         radius: 0.6,
         color: 0xC1440E,
-        orbitalSpeed: 0.005,  // 687 Earth days per orbit
-        rotationSpeed: 0.048,  // Mars rotates every ~24.6 hours
+        orbitalSpeed: 0.005,  
+        rotationSpeed: 0.048, 
         temperature: 210,
         description: 'Mars is the fourth planet from the Sun and the second smallest.'
     },
@@ -90,11 +89,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'jupiter',
         name: 'jupiter',
         texture: '/textures/jupiter.jpg',
-        position: new THREE.Vector3(20, 0, 0),  // 5.2 AU
+        position: new THREE.Vector3(20, 0, 0),
         radius: 2,
         color: 0xD8CA9D,
-        orbitalSpeed: 0.0008,  // 11.9 Earth years per orbit
-        rotationSpeed: 0.12,  // Jupiter rotates every ~10 hours
+        orbitalSpeed: 0.0008,  
+        rotationSpeed: 0.12,  
         temperature: -108,
         description: 'Jupiter is the fifth planet from the Sun and the largest.'
     },
@@ -102,11 +101,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'saturn',
         name: 'saturn',
         texture: '/textures/saturn.jpg',
-        position: new THREE.Vector3(25, 0, 0),  // 9.5 AU
+        position: new THREE.Vector3(25, 0, 0),
         radius: 1.8,
         color: 0xE3BB76,
-        orbitalSpeed: 0.0003,  // 29.5 Earth years per orbit
-        rotationSpeed: 0.1,  // Saturn rotates every ~10.7 hours
+        orbitalSpeed: 0.0003,
+        rotationSpeed: 0.1, 
         temperature: -178,
         description: 'Saturn is the sixth planet from the Sun and the second largest.'
     },
@@ -114,11 +113,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'uranus',
         name: 'uranus',
         texture: '/textures/uranus.jpg',
-        position: new THREE.Vector3(30, 0, 0),  // 19.2 AU
+        position: new THREE.Vector3(30, 0, 0), 
         radius: 0.8,
         color: 0x5580AA,
-        orbitalSpeed: 0.0001,  // 84 Earth years per orbit
-        rotationSpeed: -0.04,  // Uranus rotates retrograde every ~17 hours
+        orbitalSpeed: 0.0001,  
+        rotationSpeed: -0.04,  
         temperature: -220,
         description: 'Uranus is the seventh planet from the Sun and the third largest.'
     },
@@ -126,11 +125,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'neptune',
         name: 'neptune',
         texture: '/textures/neptune.jpg',
-        position: new THREE.Vector3(35, 0, 0),  // 30.1 AU
+        position: new THREE.Vector3(35, 0, 0),  
         radius: 0.7,
         color: 0x366896,
-        orbitalSpeed: 0.00006,  // 165 Earth years per orbit
-        rotationSpeed: 0.08,  // Neptune rotates every ~16 hours
+        orbitalSpeed: 0.00006,  
+        rotationSpeed: 0.08,
         temperature: -200,
         description: 'Neptune is the eighth and farthest known planet from the Sun.'
     }
