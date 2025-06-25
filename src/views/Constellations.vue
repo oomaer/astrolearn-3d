@@ -84,10 +84,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch, computed } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { useScene } from '../three/init'
 import { drawConstellation } from '../three/gui/constellations'
-import { animateToDefault, setTargetPlanet } from '../three/animation/animationLoop'
+import { animateToDefault } from '../three/animation/animationLoop'
 import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
 import { constellations } from '../data/constellationData'

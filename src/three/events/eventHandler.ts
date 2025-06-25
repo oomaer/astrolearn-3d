@@ -1,6 +1,6 @@
 import * as THREE from 'three'
 import { useCamera, useControls } from '../init'
-import { setTargetPlanet, startCameraAnimation } from '../animation/animationLoop'
+import { setTargetObject, startCameraAnimation } from '../animation/animationLoop'
 import { useSelectedObjectStore } from '../../stores/selectedObject'
 
 interface ClickableObject {
@@ -85,7 +85,7 @@ const handleClick = (event: MouseEvent) => {
             selectedObjectStore.setSelectedObject(targetObject.userData.id)
             // Set the target planet
             console.log(targetObject)
-            setTargetPlanet(targetObject as THREE.Group);
+            setTargetObject(targetObject as THREE.Group);
         }
     } 
 };

@@ -1,5 +1,7 @@
 <script setup lang="ts">
-// Component logic here if needed
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 </script>
 
 <template>
@@ -21,6 +23,13 @@
         <h2 class="text-2xl font-semibold mb-2 text-white">Constellations</h2>
         <p class="text-gray-300">Discover the patterns in the stars</p>
       </router-link>
+      <button
+        @click="router.push('/quiz')"
+        class="p-8 border border-gray-300 rounded-lg no-underline text-inherit transition-transform hover:-translate-y-1 bg-gray-800/50"
+      >
+        <h2 class="text-2xl font-semibold mb-2 text-white">Take Quiz</h2>
+        <p class="text-gray-300">Test your knowledge</p>
+      </button>
     </div>
     </div>
   </div>
