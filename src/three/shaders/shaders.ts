@@ -1,3 +1,4 @@
+// shaders (and its animations) were generated with AI
 export const spaceSphereVertexShader= `
           varying vec3 vPos;
           void main() {

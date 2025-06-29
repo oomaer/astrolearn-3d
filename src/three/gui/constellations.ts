@@ -3,11 +3,9 @@ import * as THREE from 'three'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader'
 import { constellations } from '../../data/constellationData'
-import { useSelectedObjectStore } from '../../stores/selectedObject'
 import { eventHandler } from '../events/eventHandler'
 import { setTargetObject } from '../animation/animationLoop'
 
-// Create a group to hold all constellation objects
 const constellationGroup = new THREE.Group()
 constellationGroup.name = 'constellations'
 
@@ -17,17 +15,12 @@ export function drawConstellation(name: keyof typeof constellations) {
     const starGroup = new THREE.Group()
     const starPositions = new Map<string, THREE.Vector3>()
 
-    // Add userData to the group for identification
     starGroup.userData = {
         id: constellation.id,
         name: constellation.name,
         type: 'constellation'
     }
-
-    // Create a group for the constellation name
-    const nameGroup = new THREE.Group()
-    starGroup.add(nameGroup)
-
+    
     const loader = new FontLoader()
     loader.load('/fonts/helvetiker_regular.typeface.json', function(font) {
 
@@ -48,7 +41,7 @@ export function drawConstellation(name: keyof typeof constellations) {
             starMesh.position.set(x, y, z)
             starGroup.add(starMesh)
 
-            // Add glowing sphere effect
+            //  glowing sphere effect
             const glowGeometry = new THREE.SphereGeometry(size * 2, 32, 32)
             const glowMaterial = new THREE.MeshBasicMaterial({
                 color: color,
@@ -60,7 +53,7 @@ export function drawConstellation(name: keyof typeof constellations) {
             glowMesh.position.set(x, y, z)
             starGroup.add(glowMesh)
 
-            // Add outer glow
+            //  outer glow
             const outerGlowGeometry = new THREE.SphereGeometry(size * 3, 32, 32)
             const outerGlowMaterial = new THREE.MeshBasicMaterial({
                 color: color,

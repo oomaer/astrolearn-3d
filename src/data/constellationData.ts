@@ -19,6 +19,8 @@ export interface ConstellationData {
     description: string
 }
 
+
+// Got Data from AI (might not be accurate)
 export const constellations: Record<string, ConstellationData> = {
     cancer: {
         id: 'cancer',

@@ -77,8 +77,6 @@ class GeneralLoader {
         return file
       }
 
-    
-
       default: {
         console.error(`GeneralLoader: File type ${fileType} is not supported.`)
         return file

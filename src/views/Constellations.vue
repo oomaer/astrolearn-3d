@@ -1,12 +1,9 @@
 <template>
   <div class="relative w-full h-screen">
     <div class="w-full h-full">
-      <!-- Title centered at the top -->
       <h2 class="text-xl font-semibold text-white z-[99] fixed top-10 left-1/2 -translate-x-1/2">
         {{ selectedConstellation?.name || 'Select a Constellation' }}
       </h2>
-      
-      <!-- Back Button -->
       <button 
         @click="$router.push('/')"
         class="fixed top-10 left-10 z-[99] bg-gray-800/50 hover:bg-gray-700/50 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
@@ -17,7 +14,6 @@
         <span>Back</span>
       </button>
 
-      <!-- Info Button - Only show when a constellation is selected -->
       <button 
         v-if="selectedObject"
         @click="showModal = true"
@@ -29,12 +25,9 @@
         </svg>
       </button>
 
-      <!-- Modal -->
       <div v-if="showModal" class="fixed inset-0 z-[999] flex items-center justify-center">
-        <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/50" @click="showModal = false"></div>
-        
-        <!-- Modal Content -->
+
         <div class="relative bg-gray-800/90 p-6 rounded-lg w-[90%] max-w-2xl text-white">
           <button 
             @click="showModal = false"
@@ -85,28 +78,23 @@
 
 <script setup lang="ts">
 import { onMounted, ref, watch, computed } from 'vue'
-import { useScene } from '../three/init'
 import { drawConstellation } from '../three/gui/constellations'
 import { animateToDefault } from '../three/animation/animationLoop'
 import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
 import { constellations } from '../data/constellationData'
-import { useRouter } from 'vue-router'
 import { removeSolarSystem } from '@/three/gui/planets'
 
-const router = useRouter()
 const selectedObjectStore = useSelectedObjectStore()
 const { selectedObject } = storeToRefs(selectedObjectStore)
-const scene = useScene()
+
 const showModal = ref(false)
 
-// Compute selected constellation data from the store's ID
 const selectedConstellation = computed(() => {
   if (!selectedObject.value) return null
   return constellations[selectedObject.value] || null
 })
 
-// Watch for changes in selectedObject to automatically show modal when a constellation is selected
 watch(selectedObject, (newValue) => {
   if (newValue) {
     showModal.value = true
@@ -114,37 +102,12 @@ watch(selectedObject, (newValue) => {
 })
 
 onMounted(() => {
-  
   removeSolarSystem()
   selectedObjectStore.clearSelectedObject()
   animateToDefault('constellation')
-  // Draw all constellations
   Object.keys(constellations).forEach(key => {
     drawConstellation(key as keyof typeof constellations)
   })
 })
 
 </script>
-
-<style scoped>
-.constellations-view {
-  position: relative;
-  width: 100%;
-  height: 100vh;
-}
-
-.canvas {
-  width: 100%;
-  height: 100%;
-}
-
-.constellation-info {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  background: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 1rem;
-  border-radius: 4px;
-}
-</style>

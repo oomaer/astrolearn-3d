@@ -1,16 +1,14 @@
-import { useScene, useCamera, useControls } from "../init"
+import { useScene } from "../init"
 import * as THREE from 'three'
 import { TextureLoader } from 'three'
-import { sunVertexShader, sunFragmentShader, earthVertexShader, earthFragmentShader } from '../shaders/shaders'
-import { addShaderMaterial, startCameraAnimation, addPlanetOrbit, setTargetObject } from '../animation/animationLoop'
+import { sunVertexShader, sunFragmentShader } from '../shaders/shaders'
+import { addShaderMaterial, addPlanetOrbit, setTargetObject } from '../animation/animationLoop'
 import eventHandler from '../events/eventHandler'
 import { planets } from '../../data/planetData'
 
-// Create a group to hold all solar system objects
 const planetGroup = new THREE.Group()
 planetGroup.name = 'solarSystem'
 
-// Function to create orbital path
 const createOrbitalPath = (radius: number, color: number) => {
     const points: THREE.Vector3[] = []
     const segments = 128
@@ -33,7 +31,6 @@ const createOrbitalPath = (radius: number, color: number) => {
     return new THREE.Line(geometry, material)
 }
 
-// Function to create Saturn's rings
 const createSaturnRings = (radius: number) => {
     const ringGeometry = new THREE.RingGeometry(radius * 1.4, radius * 2.2, 64);
     const ringMaterial = new THREE.MeshStandardMaterial({
@@ -47,7 +44,7 @@ const createSaturnRings = (radius: number) => {
     
     const rings = new THREE.Mesh(ringGeometry, ringMaterial);
     rings.name = 'saturnRings';
-    rings.rotation.x = Math.PI / 2; // Rotate to be horizontal
+    rings.rotation.x = Math.PI / 2; 
     return rings;
 }
 
@@ -55,13 +52,11 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
 
     const planet = planets[planetName]
     
-    // Create planet geometry
     const geometry = new THREE.SphereGeometry(planet.radius, 64, 64)
     
     let material: THREE.Material
     
     if (planet.shaders) {
-        // Create shader material if shaders are provided
         const uniforms: { [key: string]: { value: any } } = {
             time: { value: 0 }
         }
@@ -73,10 +68,8 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
             side: THREE.FrontSide
         })
         
-        // Add to centralized animation system
         addShaderMaterial(material as THREE.ShaderMaterial)
     } else {
-        // Load planet texture
         const textureLoader = new TextureLoader()
         const planetTexture = textureLoader.load(planet.texture)
         
@@ -92,24 +85,19 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
         })
     }
     
-    // Create planet mesh
     const planetMesh = new THREE.Mesh(geometry, material)
     planetMesh.name = planetName
     planetMesh.position.copy(planet.position)
     
-    // Only enable shadow receiving for non-sun planets
     if (planetName !== 'sun') {
         planetMesh.castShadow = false
         planetMesh.receiveShadow = true
     }
-
-    // Add Saturn's rings if it's Saturn
     if (planetName === 'saturn') {
         const rings = createSaturnRings(planet.radius);
-        planetMesh.add(rings); // Add rings as a child of the planet mesh
+        planetMesh.add(rings); 
     }
     
-    // Add click handler
     planetMesh.userData = {
         id: planet.id,
         name: planetName,
@@ -125,14 +113,12 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
         object: planetMesh
     });
     
-    // Add planet to the scene
     planetGroup.add(planetMesh)
     
-    // Add orbital path for non-sun planets
     if (planetName !== 'sun') {
         const orbitalPath = createOrbitalPath(planet.position.x, planet.color)
         orbitalPath.name = `${planetName}-orbit`
-        planetGroup.add(orbitalPath) // Add to planet group instead of scene
+        planetGroup.add(orbitalPath) 
     }
     
     return planetMesh
@@ -141,12 +127,10 @@ export const renderPlanet = (planetName: keyof typeof planets) => {
 export const createSolarSystem = (): Record<string, THREE.Mesh> => {
     const scene = useScene()
     
-    // Add ambient light for better visibility
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.4)
     ambientLight.name = 'ambientLight'
     planetGroup.add(ambientLight)
     
-    // Create strong point light at sun's position
     const sunLight = new THREE.PointLight(0xffffff, 30, 400)
     sunLight.name = 'sunLight'
     sunLight.position.copy(planets.sun.position)
@@ -160,36 +144,25 @@ export const createSolarSystem = (): Record<string, THREE.Mesh> => {
     sunLight.shadow.radius = 1
     planetGroup.add(sunLight)
     
-    // Add a second, weaker point light to create some depth
     const secondaryLight = new THREE.PointLight(0xffffff, 1.0, 150)
     secondaryLight.name = 'secondaryLight'
     secondaryLight.position.set(5, 3, 5)
     secondaryLight.castShadow = false
     planetGroup.add(secondaryLight)
     
-    // Render all planets
     const planetMeshes: Record<string, THREE.Mesh> = {}
     for (const planetName in planets) {
         const mesh = renderPlanet(planetName as keyof typeof planets)
         planetMeshes[planetName] = mesh
         planetGroup.add(mesh)
         
-        // Add non-sun planets to orbital system with random starting positions
         if (planetName !== 'sun') {
             const planet = planets[planetName]
-            // Generate random angle for initial position
-            const randomAngle = Math.random() * Math.PI * 2
-            // Set initial position based on random angle
-            mesh.position.x = Math.cos(randomAngle) * planet.position.x
-            mesh.position.z = Math.sin(randomAngle) * planet.position.x
-            // Add to orbital system with rotation speed
             addPlanetOrbit(mesh, planet.orbitalSpeed, planet.position.x, planet.rotationSpeed)
         }
     }
     
-    // Add the entire planet group to the scene
     scene.add(planetGroup)
-    
     return planetMeshes
 }
 
@@ -199,7 +172,7 @@ export const removeSolarSystem = () => {
     
     const solarSystem = scene.getObjectByName('solarSystem')
     if (solarSystem) {
-        // Remove clickable objects for all planets
+ 
         solarSystem.traverse((object) => {
             if (object.userData.type === 'planet') {
                 eventHandler.removeClickableObject(object)

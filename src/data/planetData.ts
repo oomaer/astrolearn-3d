@@ -12,13 +12,13 @@ export interface PlanetData {
         vertexShader: string    // shaders for visaual effects
         fragmentShader: string
     }
-    orbitalSpeed: number  // Orbital speed in radians per second
-    rotationSpeed: number // Self-rotation speed in radians per second
-    temperature: number   // Surface temperature in Celsius
-    description: string   // Planet description
+    orbitalSpeed: number  // speed of orbit around sun
+    rotationSpeed: number // speed of rotation on its axis
+    temperature: number  
+    description: string 
 }
 
-// 1 AU = average distance from Earth to Sun
+// Data got from AI (might not be accurate)
 export const planets: Record<string, PlanetData> = {
     sun: {
         id: 'sun',
@@ -65,11 +65,11 @@ export const planets: Record<string, PlanetData> = {
         id: 'earth',
         name: 'earth',
         texture: '/textures/earth.jpg',
-        position: new THREE.Vector3(10, 0, 0),  // 1 AU
+        position: new THREE.Vector3(10, 0, 0), 
         radius: 0.9,
         color: 0x2233FF,
-        orbitalSpeed: 0.01,   // Base speed (365 Earth days per orbit)
-        rotationSpeed: 0.05,  // Earth rotates every 24 hours
+        orbitalSpeed: 0.01,  
+        rotationSpeed: 0.05, 
         temperature: 288,
         description: 'Earth is the third planet from the Sun and the only known planet to support life.'
     },
@@ -77,7 +77,7 @@ export const planets: Record<string, PlanetData> = {
         id: 'mars',
         name: 'mars',
         texture: '/textures/mars.jpg',
-        position: new THREE.Vector3(13, 0, 0),  // 1.5 AU
+        position: new THREE.Vector3(13, 0, 0), 
         radius: 0.6,
         color: 0xC1440E,
         orbitalSpeed: 0.005,  
