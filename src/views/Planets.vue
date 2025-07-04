@@ -2,7 +2,7 @@
   <div class="relative w-full h-screen">
     <div class="w-full h-full">
       <h2 class="text-xl font-semibold text-white z-[99] fixed top-10 left-1/2 -translate-x-1/2">
-        {{ selectedPlanet?.name || 'Select a Planet' }}
+        {{ capitalize(selectedPlanet?.name) || 'Select a Planet' }}
       </h2>
       <button 
         @click="$router.push('/')"
@@ -35,7 +35,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <h3 class="text-2xl font-bold mb-4">{{ selectedPlanet?.name || 'Select a Planet' }}</h3>
+          <h3 class="text-2xl font-bold mb-4">{{ capitalize(selectedPlanet?.name) || 'Select a Planet' }}</h3>
            <div v-if="selectedPlanet" class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
               <div class="bg-gray-700/50 p-4 rounded-lg">
@@ -88,11 +88,11 @@ const selectedPlanet = computed(() => {
   return planets[selectedObject.value] || null
 })
 
-watch(selectedObject, (newValue) => {
-  if (newValue) {
-    showModal.value = true
-  }
-})
+// watch(selectedObject, (newValue) => {
+//   if (newValue) {
+//     showModal.value = true
+//   }
+// })
 
 onMounted(() => {
   removeConstellations()
@@ -101,6 +101,10 @@ onMounted(() => {
   createSolarSystem()
 })
 
+function capitalize(str?: string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
 
 </script>
 

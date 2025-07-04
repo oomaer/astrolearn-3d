@@ -2,7 +2,7 @@
   <div class="relative w-full h-screen">
     <div class="w-full h-full">
       <h2 class="text-xl font-semibold text-white z-[99] fixed top-10 left-1/2 -translate-x-1/2">
-        {{ selectedConstellation?.name || 'Select a Constellation' }}
+        {{ capitalize(selectedConstellation?.name) || 'Select a Constellation' }}
       </h2>
       <button 
         @click="$router.push('/')"
@@ -38,7 +38,7 @@
             </svg>
           </button>
           
-          <h3 class="text-2xl font-bold mb-4">{{ selectedConstellation?.name || 'Select a Constellation' }}</h3>
+          <h3 class="text-2xl font-bold mb-4">{{ capitalize(selectedConstellation?.name) || 'Select a Constellation' }}</h3>
           
           <div v-if="selectedConstellation" class="space-y-4">
             <div class="grid grid-cols-2 gap-4">
@@ -95,11 +95,16 @@ const selectedConstellation = computed(() => {
   return constellations[selectedObject.value] || null
 })
 
-watch(selectedObject, (newValue) => {
-  if (newValue) {
-    showModal.value = true
-  }
-})
+function capitalize(str?: string) {
+  if (!str) return '';
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+// watch(selectedObject, (newValue) => {
+//   if (newValue) {
+//     showModal.value = true
+//   }
+// })
 
 onMounted(() => {
   removeSolarSystem()
