@@ -14,8 +14,11 @@ export interface PlanetData {
     }
     orbitalSpeed: number  // speed of orbit around sun
     rotationSpeed: number // speed of rotation on its axis
-    temperature: number  
+    temperature: number // Celsius
     description: string 
+    realDistance: number // AU
+    realDiameter: number // km
+    realOrbitalPeriod: number // earth days
 }
 
 // Data got from AI (might not be accurate)
@@ -34,8 +37,11 @@ export const planets: Record<string, PlanetData> = {
         },
         orbitalSpeed: 0,  
         rotationSpeed: 0.01, 
-        temperature: 5778,
-        description: 'The Sun is the star at the center of our solar system.'
+        temperature: 5504.85,
+        description: 'The Sun is the star at the center of our solar system.',
+        realDistance: 0,
+        realDiameter: 1391016,
+        realOrbitalPeriod: 0
     },
     mercury: {
         id: 'mercury',
@@ -46,8 +52,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0x8C8C8C,
         orbitalSpeed: 0.04, 
         rotationSpeed: 0.005,  
-        temperature: 440,
-        description: 'Mercury is the smallest and innermost planet in the solar system.'
+        temperature: 166.85,
+        description: 'Mercury is the smallest and innermost planet in the solar system.',
+        realDistance: 0.39,
+        realDiameter: 4880,
+        realOrbitalPeriod: 88
     },
     venus: {
         id: 'venus',
@@ -58,8 +67,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0xE39E1C,
         orbitalSpeed: 0.015, 
         rotationSpeed: -0.002,  
-        temperature: 737,
-        description: 'Venus is the second planet from the Sun and the sixth largest.'
+        temperature: 463.85,
+        description: 'Venus is the second planet from the Sun and the sixth largest.',
+        realDistance: 0.72,
+        realDiameter: 12104,
+        realOrbitalPeriod: 225
     },
     earth: {
         id: 'earth',
@@ -70,8 +82,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0x2233FF,
         orbitalSpeed: 0.01,  
         rotationSpeed: 0.05, 
-        temperature: 288,
-        description: 'Earth is the third planet from the Sun and the only known planet to support life.'
+        temperature: 14.85,
+        description: 'Earth is the third planet from the Sun and the only known planet to support life.',
+        realDistance: 1.00,
+        realDiameter: 12742,
+        realOrbitalPeriod: 365.25
     },
     mars: {
         id: 'mars',
@@ -82,8 +97,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0xC1440E,
         orbitalSpeed: 0.005,  
         rotationSpeed: 0.048, 
-        temperature: 210,
-        description: 'Mars is the fourth planet from the Sun and the second smallest.'
+        temperature: -63.15,
+        description: 'Mars is the fourth planet from the Sun and the second smallest.',
+        realDistance: 1.52,
+        realDiameter: 6779,
+        realOrbitalPeriod: 687
     },
     jupiter: {
         id: 'jupiter',
@@ -94,8 +112,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0xD8CA9D,
         orbitalSpeed: 0.0008,  
         rotationSpeed: 0.12,  
-        temperature: -108,
-        description: 'Jupiter is the fifth planet from the Sun and the largest.'
+        temperature: -108.15,
+        description: 'Jupiter is the fifth planet from the Sun and the largest.',
+        realDistance: 5.20,
+        realDiameter: 139820,
+        realOrbitalPeriod: 4332.59
     },
     saturn: {
         id: 'saturn',
@@ -106,8 +127,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0xE3BB76,
         orbitalSpeed: 0.0003,
         rotationSpeed: 0.1, 
-        temperature: -178,
-        description: 'Saturn is the sixth planet from the Sun and the second largest.'
+        temperature: -139.15,
+        description: 'Saturn is the sixth planet from the Sun and the second largest.',
+        realDistance: 9.58,
+        realDiameter: 116460,
+        realOrbitalPeriod: 10759
     },
     uranus: {
         id: 'uranus',
@@ -118,8 +142,11 @@ export const planets: Record<string, PlanetData> = {
         color: 0x5580AA,
         orbitalSpeed: 0.0001,  
         rotationSpeed: -0.04,  
-        temperature: -220,
-        description: 'Uranus is the seventh planet from the Sun and the third largest.'
+        temperature: -197.15,
+        description: 'Uranus is the seventh planet from the Sun and the third largest.',
+        realDistance: 19.18,
+        realDiameter: 50724,
+        realOrbitalPeriod: 30688
     },
     neptune: {
         id: 'neptune',
@@ -130,7 +157,10 @@ export const planets: Record<string, PlanetData> = {
         color: 0x366896,
         orbitalSpeed: 0.00006,  
         rotationSpeed: 0.08,
-        temperature: -200,
-        description: 'Neptune is the eighth and farthest known planet from the Sun.'
+        temperature: -201.15,
+        description: 'Neptune is the eighth and farthest known planet from the Sun.',
+        realDistance: 30.07,
+        realDiameter: 49244,
+        realOrbitalPeriod: 60182
     }
 }

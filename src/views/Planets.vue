@@ -40,19 +40,19 @@
             <div class="grid grid-cols-2 gap-4">
               <div class="bg-gray-700/50 p-4 rounded-lg">
                 <h4 class="text-sm text-gray-400 mb-1">Diameter</h4>
-                <p class="text-lg">{{ selectedPlanet.radius * 2 }} km</p>
+                <p class="text-lg">{{ selectedPlanet.realDiameter }} km</p>
               </div>
               <div class="bg-gray-700/50 p-4 rounded-lg">
                 <h4 class="text-sm text-gray-400 mb-1">Distance from Sun</h4>
-                <p class="text-lg">{{ selectedPlanet.position.length() }} AU</p>
+                <p class="text-lg">{{ selectedPlanet.realDistance }} AU</p>
               </div>
               <div class="bg-gray-700/50 p-4 rounded-lg">
                 <h4 class="text-sm text-gray-400 mb-1">Orbital Period</h4>
-                <p class="text-lg">{{ (2 * Math.PI / selectedPlanet.orbitalSpeed).toFixed(1) }} Earth days</p>
+                <p class="text-lg">{{ selectedPlanet.realOrbitalPeriod }} Earth days</p>
               </div>
               <div class="bg-gray-700/50 p-4 rounded-lg">
                 <h4 class="text-sm text-gray-400 mb-1">Surface Temperature</h4>
-                <p class="text-lg">{{ selectedPlanet.temperature }}°C</p>
+                <p class="text-lg">{{ selectedPlanet.temperature }} C</p>
               </div>
             </div>  
             <div class="bg-gray-700/50 p-4 rounded-lg">
