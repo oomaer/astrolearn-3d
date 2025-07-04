@@ -1,5 +1,14 @@
 <template>
   <div class="fixed inset-0 flex items-center justify-center p-4">
+    <button 
+        @click="$router.push('/')"
+        class="fixed top-10 left-10 z-[99] bg-gray-800/50 hover:bg-gray-700/50 text-white px-4 py-2 rounded-lg transition-colors flex items-center gap-2"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+        </svg>
+        <span>Back</span>
+      </button>
     <div v-if="showScore" class="bg-gray-800/70 backdrop-blur-md p-12 rounded-lg shadow-2xl max-w-2xl w-full">
       <h2 class="text-3xl font-bold mb-6 text-center text-white">Quiz Complete!</h2>
       <p class="text-2xl mb-8 text-center text-white">
