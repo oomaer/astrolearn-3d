@@ -77,8 +77,8 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch, computed } from 'vue'
-import { drawConstellation } from '../three/gui/constellations'
+import { onMounted, ref, watch, computed, onUnmounted } from 'vue'
+import { drawConstellation, removeConstellations } from '../three/gui/constellations'
 import { animateToDefault } from '../three/animation/animationLoop'
 import { useSelectedObjectStore } from '../stores/selectedObject'
 import { storeToRefs } from 'pinia'
@@ -108,6 +108,10 @@ onMounted(() => {
   Object.keys(constellations).forEach(key => {
     drawConstellation(key as keyof typeof constellations)
   })
+})
+
+onUnmounted(() => {
+  removeConstellations()
 })
 
 </script>
