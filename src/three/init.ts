@@ -35,7 +35,7 @@ export const initEngine = async () => {
   controls.update();
   controls.enableDamping = true;
   controls.dampingFactor = 0.05;
-  controls.minDistance = 5;
+  controls.minDistance = 10;
   controls.maxDistance = 100;
 
   renderer.setSize(size.width, size.height)
